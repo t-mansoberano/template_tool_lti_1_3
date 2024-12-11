@@ -1,0 +1,37 @@
+<div class="container">
+  <h1 class="title">🎉 Información del Usuario y del Curso</h1>
+
+  <div *ngIf="loading" class="loading">
+    Cargando información... ⏳
+  </div>
+
+  <div *ngIf="!loading && error" class="error">
+    <p>Error al cargar los datos: {{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error">
+    <!-- Información del Usuario -->
+    <div class="card">
+      <h2>👤 Usuario</h2>
+      <img [src]="user.picture" alt="Imagen de perfil" class="profile-picture" />
+      <p><strong>Nombre:</strong> {{ user.name }}</p>
+      <p><strong>Correo:</strong> {{ user.email }}</p>
+      <p><strong>Roles:</strong> {{ user.roles?.join(', ') }}</p>
+    </div>
+
+    <!-- Información del Curso -->
+    <div class="card">
+      <h2>📚 Curso</h2>
+      <p><strong>Nombre:</strong> {{ course.title }}</p>
+      <p><strong>Etiqueta:</strong> {{ course.label }}</p>
+      <p><strong>Descripción:</strong> {{ course.description || 'No disponible' }}</p>
+      <p><strong>Type:</strong> {{ course.type?.join(', ') }}</p>
+    </div>
+
+    <!-- GIF Chusco -->
+    <div class="dance">
+      <img src="https://i.gifer.com/7Uz.gif" alt="Baile de felicidad" />
+      <p class="caption">¡Estamos listos! 🕺💃</p>
+    </div>
+  </div>
+</div>
