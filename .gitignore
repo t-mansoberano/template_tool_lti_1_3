@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.idea
+/.vs/gec
+/gec.Server/bin
+/gec.Server/obj
+/gec.client/.vscode
+/gec.client/obj
+/gec.client/public
