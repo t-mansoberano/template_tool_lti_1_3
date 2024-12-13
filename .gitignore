@@ -9,3 +9,6 @@
 /gec.client/.vscode
 /gec.client/obj
 /gec.client/public
+/gec.Infrastructure/bin
+/gec.Infrastructure/obj
+/gec.sln.DotSettings.user
