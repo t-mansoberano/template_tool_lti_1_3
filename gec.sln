@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gec.Server", "gec.Server\ge
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "gec.client", "gec.client\gec.client.esproj", "{B7DCCC92-AC9B-43D9-BA1C-EE4992AEE7AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gec.Infrastructure", "gec.Infrastructure\gec.Infrastructure.csproj", "{5CC41204-4153-4197-BF90-DE1C790BD8DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{B7DCCC92-AC9B-43D9-BA1C-EE4992AEE7AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7DCCC92-AC9B-43D9-BA1C-EE4992AEE7AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7DCCC92-AC9B-43D9-BA1C-EE4992AEE7AD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5CC41204-4153-4197-BF90-DE1C790BD8DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC41204-4153-4197-BF90-DE1C790BD8DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC41204-4153-4197-BF90-DE1C790BD8DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC41204-4153-4197-BF90-DE1C790BD8DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

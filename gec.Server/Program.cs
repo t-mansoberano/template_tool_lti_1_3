@@ -1,3 +1,4 @@
+using gec.Infrastructure;
 
 namespace gec.Server
 {
@@ -7,7 +8,19 @@ namespace gec.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            ConfigureServices(builder);
+
+            var app = builder.Build();
+
+            ConfigurePipeline(app);
+
+            app.Run();
+        }
+
+        private static void ConfigureServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddInfrastructureServices();
+            
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -34,15 +47,15 @@ namespace gec.Server
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+        }
 
-            var app = builder.Build();
-
+        private static void ConfigurePipeline(WebApplication app)
+        {
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseCors();
             app.UseSession();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -50,15 +63,9 @@ namespace gec.Server
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.MapFallbackToFile("/index.html");
-
-            app.Run();
         }
     }
 }

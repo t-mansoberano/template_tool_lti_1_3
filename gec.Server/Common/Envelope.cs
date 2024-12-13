@@ -17,18 +17,18 @@ public class Envelope<T>
 public class Envelope : Envelope<string>
 {
     protected Envelope(string errorMessage)
-        : base(null, errorMessage)
+        : base(null!, errorMessage)
     {
     }
 
     public static Envelope<T> Ok<T>(T result)
     {
-        return new Envelope<T>(result, null);
+        return new Envelope<T>(result, null!);
     }
 
     public static Envelope Ok()
     {
-        return new Envelope(null);
+        return new Envelope(null!);
     }
 
     public static Envelope Error(string errorMessage)
