@@ -7,9 +7,9 @@ namespace gec.Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             ConfigureServices(builder);
-
+            
             var app = builder.Build();
 
             ConfigurePipeline(app);
@@ -20,7 +20,18 @@ namespace gec.Server
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
             builder.Services.AddInfrastructureServices();
-            
+
+            builder.WebHost.UseSentry(o =>
+            {
+                o.Dsn = "https://70801557168fc87f254a77ff783afb6c@o4508458878500864.ingest.us.sentry.io/4508458976870400";
+                // When configuring for the first time, to see what the SDK is doing:
+                o.Debug = true;
+                // Set TracesSampleRate to 1.0 to capture 100%
+                // of transactions for tracing.
+                // We recommend adjusting this value in production
+                o.TracesSampleRate = 1.0;
+            });
+
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -67,5 +78,22 @@ namespace gec.Server
             app.MapControllers();
             app.MapFallbackToFile("/index.html");
         }
+        
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    // Add the following line:
+                    webBuilder.UseSentry(o =>
+                    {
+                        o.Dsn = "https://70801557168fc87f254a77ff783afb6c@o4508458878500864.ingest.us.sentry.io/4508458976870400";
+                        // When configuring for the first time, to see what the SDK is doing:
+                        o.Debug = true;
+                        // Set TracesSampleRate to 1.0 to capture 100%
+                        // of transactions for tracing.
+                        // We recommend adjusting this value in production
+                        o.TracesSampleRate = 1.0;
+                    });
+                });
     }
 }
