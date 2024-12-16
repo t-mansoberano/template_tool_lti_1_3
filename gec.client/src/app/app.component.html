@@ -15,6 +15,7 @@
       <h2>👤 Usuario</h2>
       <img [src]="user.picture" alt="Imagen de perfil" class="profile-picture" />
       <p><strong>Nombre:</strong> {{ user.name }}</p>
+      <p><strong>Id:</strong> {{ user.userId }}</p>
       <p><strong>Correo:</strong> {{ user.email }}</p>
       <p><strong>Roles:</strong> {{ user.roles?.join(', ') }}</p>
     </div>
@@ -23,6 +24,7 @@
     <div class="card">
       <h2>📚 Curso</h2>
       <p><strong>Nombre:</strong> {{ course.title }}</p>
+      <p><strong>Id:</strong> {{ course.id }}</p>
       <p><strong>Etiqueta:</strong> {{ course.label }}</p>
       <p><strong>Descripción:</strong> {{ course.description || 'No disponible' }}</p>
       <p><strong>Type:</strong> {{ course.type?.join(', ') }}</p>

@@ -2,19 +2,34 @@
 using System.Text.Json;
 using CSharpFunctionalExtensions;
 using gec.Infrastructure.Lti.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace gec.Infrastructure.Lti;
 
 public class LtiService : ILtiService
 {
+    private readonly string _urlBase;
+    private readonly string _redirectUri;
+    
+    public LtiService(IConfiguration configuration)
+    {
+        if (configuration == null)
+        {
+            throw new ArgumentNullException(nameof(configuration), "La configuración no puede ser null.");
+        }
+
+        _urlBase = configuration["LtiSettings:UrlBase"] 
+                   ?? throw new InvalidOperationException("LtiSettings:UrlBase no está configurado en la configuración.");
+        _redirectUri = configuration["LtiSettings:RedirectUri"] 
+                       ?? throw new InvalidOperationException("LtiSettings:RedirectUri no está configurado en la configuración.");
+    }
+    
     public Result<string> BuildAuthorizationUrl(LoginInitiationResponse form)
     {
         var validate = form.Validate();
         if (validate.IsFailure) return validate;
 
-        var urlBase = "https://sso.test.canvaslms.com";
-        var redirectUri = "https://manuelsoberano.ngrok.dev/api/lti/redirect";
         var state = Guid.NewGuid().ToString();
         var nonce = Guid.NewGuid().ToString();
 
@@ -23,7 +38,7 @@ public class LtiService : ILtiService
             $"scope=openid",
             $"response_type=id_token",
             $"client_id={form.ClientId}",
-            $"redirect_uri={Uri.EscapeDataString(redirectUri)}",
+            $"redirect_uri={Uri.EscapeDataString(_redirectUri)}",
             $"login_hint={Uri.EscapeDataString(form.LoginHint)}",
             $"lti_message_hint={Uri.EscapeDataString(form.LtiMessageHint)}",
             $"state={Uri.EscapeDataString(state)}",
@@ -32,7 +47,7 @@ public class LtiService : ILtiService
             $"prompt=none"
         };
 
-        var redirectUrl = $"{urlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
+        var redirectUrl = $"{_urlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
 
         return Result.Success(redirectUrl);
     }
@@ -65,6 +80,9 @@ public class LtiService : ILtiService
                 .GroupBy(c => c.Type)
                 .ToDictionary(g => g.Key, g => g.Select(c => c.Value).ToList());
 
+            // **Extraer el ID del Usuario**
+            var userId = claims.ContainsKey("sub") ? claims["sub"].FirstOrDefault() : "Desconocido";
+            
             // Extraer datos del usuario
             var name = claims.ContainsKey("name") ? claims["name"].FirstOrDefault() : "Desconocido";
             var email = claims.ContainsKey("email") ? claims["email"].FirstOrDefault() : "No proporcionado";
@@ -78,6 +96,7 @@ public class LtiService : ILtiService
             {
                 Name = name ?? string.Empty,
                 Email = email ?? string.Empty,
+                UserId = userId ?? string.Empty,
                 Roles = roles,
                 Picture = picture ?? string.Empty
             };
