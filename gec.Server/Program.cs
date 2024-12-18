@@ -19,7 +19,7 @@ namespace gec.Server
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddInfrastructureServices();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.WebHost.UseSentry(o =>
             {

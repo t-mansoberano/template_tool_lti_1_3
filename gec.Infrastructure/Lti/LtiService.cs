@@ -11,6 +11,8 @@ public class LtiService : ILtiService
 {
     private readonly string _urlBase;
     private readonly string _redirectUri;
+    private readonly string _clientId;
+    private readonly string _clientSecret;
     
     public LtiService(IConfiguration configuration)
     {
@@ -23,6 +25,10 @@ public class LtiService : ILtiService
                    ?? throw new InvalidOperationException("LtiSettings:UrlBase no está configurado en la configuración.");
         _redirectUri = configuration["LtiSettings:RedirectUri"] 
                        ?? throw new InvalidOperationException("LtiSettings:RedirectUri no está configurado en la configuración.");
+        _clientId = configuration["LtiSettings:ClientId"]
+                       ?? throw new InvalidOperationException("LtiSettings:ClientId no está configurado en la configuración.");
+        _clientSecret = configuration["LtiSettings:ClientSecret"]
+                           ?? throw new InvalidOperationException("LtiSettings:ClientSecret no está configurado en la configuración.");
     }
     
     public Result<string> BuildAuthorizationUrl(LoginInitiationResponse form)
@@ -52,9 +58,10 @@ public class LtiService : ILtiService
         return Result.Success(redirectUrl);
     }
 
-    public async Task<Result<ResourceContext>> HandleRedirectAsync(AuthenticationResponse form)
+    public async Task<Result<ResourceContext>> HandleRedirectAsync(Dictionary<string, string> form)
     {
-        var validate = form.Validate();
+        var authenticationResponse = new AuthenticationResponse(form);
+        var validate = authenticationResponse.Validate();
         if (validate.IsFailure) return Result.Failure<ResourceContext>(validate.Error);
 
         // Paso 2: Validar y decodificar el token
@@ -72,7 +79,7 @@ public class LtiService : ILtiService
         try
         {
             // Validar el token
-            handler.ValidateToken(form.IdToken, validationParameters, out var securityToken);
+            handler.ValidateToken(authenticationResponse.IdToken, validationParameters, out var securityToken);
 
             // Decodificar información útil
             var jwtToken = (JwtSecurityToken)securityToken;
@@ -80,8 +87,22 @@ public class LtiService : ILtiService
                 .GroupBy(c => c.Type)
                 .ToDictionary(g => g.Key, g => g.Select(c => c.Value).ToList());
 
-            // **Extraer el ID del Usuario**
-            var userId = claims.ContainsKey("sub") ? claims["sub"].FirstOrDefault() : "Desconocido";
+            // Extraer el claim "custom" y parsear los valores relevantes
+            var customClaimJson = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/custom")
+                ? claims["https://purl.imsglobal.org/spec/lti/claim/custom"].FirstOrDefault()
+                : null;
+            
+            var customData = !string.IsNullOrEmpty(customClaimJson)
+                ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson)
+                : null;            
+
+            var userId = customData != null && customData.ContainsKey("user_id")
+                ? customData["user_id"].GetString() ?? "Desconocido"
+                : "Desconocido";
+
+            var courseId = customData != null && customData.ContainsKey("course_id")
+                ? customData["course_id"].GetString() ?? "Desconocido"
+                : "Desconocido";
             
             // Extraer datos del usuario
             var name = claims.ContainsKey("name") ? claims["name"].FirstOrDefault() : "Desconocido";
@@ -109,9 +130,7 @@ public class LtiService : ILtiService
 
             var courseData = new Course()
             {
-                Id = course != null && course.ContainsKey("id") && course["id"].GetString() != null 
-                    ? course["id"].GetString()! 
-                    : "Desconocido",
+                Id = courseId,
                 Label = course != null && course.ContainsKey("label") && course["label"].GetString() != null 
                     ? course["label"].GetString()! 
                     : "Sin etiqueta",
@@ -166,4 +185,36 @@ public class LtiService : ILtiService
         var jsonJwks = JsonSerializer.Serialize(jwks);
         return Result.Success(jsonJwks);
     }
+    
+    public async Task<Result<string>> GetUserAccessTokenAsync(int userId)
+    {
+        var tokenEndpoint = $"{_urlBase}/login/oauth2/token";
+
+
+        // Construir el cuerpo de la solicitud
+        var requestData = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("grant_type", "client_credentials"),
+            new KeyValuePair<string, string>("client_id", _clientId),
+            new KeyValuePair<string, string>("client_secret", _clientSecret)
+        });
+
+        using var httpClient = new HttpClient();
+        var response = await httpClient.PostAsync(tokenEndpoint, requestData);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return Result.Failure<string>($"Error en la solicitud del token: {response.StatusCode} - {errorContent}");
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        return Result.Success(tokenResponse.AccessToken);
+    }
+    
 }

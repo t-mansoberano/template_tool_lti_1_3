@@ -32,6 +32,23 @@ export class AppComponent implements OnInit {
           this.user = response.result.user || {};
           this.course = response.result.course || {};
           this.loading = false;
+          this.getStudents(this.course.id);
+        },
+        (err) => {
+          console.error('Error al obtener los datos:', err);
+          this.error = err?.error?.message || 'Error desconocido';
+          this.loading = false;
+        }
+      );
+  }
+
+  getStudents(courseId: string) {
+    this.http.get<Response>(`/api/canvas/courses/${courseId}/students`, { withCredentials: true })
+      .subscribe(
+        (response: any) => {
+          // Extraer datos del endpoint
+          console.log(response.result);
+          this.loading = false;
         },
         (err) => {
           console.error('Error al obtener los datos:', err);
