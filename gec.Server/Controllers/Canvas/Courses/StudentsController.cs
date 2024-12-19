@@ -39,29 +39,11 @@ public class StudentsController : BaseController
         
         // Deserializar el contexto del recurso
         var resourceContext = JsonSerializer.Deserialize<ResourceContext>(resourceContextJson);
-        var tokenResponse = JsonSerializer.Deserialize<TokenResponse2>(tokenResponseJson);
-
-        if (tokenResponse.User.Id == null)
-        {
-            return BadRequest("No se pudo determinar el ID del usuario desde el contexto.");
-        }
-
-        if (string.IsNullOrEmpty(resourceContext.Course.Id))
-        {
-            return BadRequest("No se pudo determinar el ID del curso desde el contexto.");
-        }
-
-        // // Obtener el token de acceso específico del usuario
-        // var accessTokenResult = await _ltiService.GetUserAccessTokenAsync(tokenResponse.User.Id);
-        // if (accessTokenResult.IsFailure)
-        // {
-        //     return BadRequest($"Error al obtener el token de acceso: {accessTokenResult.Error}");
-        // }
 
         try
         {
             // Obtener la lista de estudiantes usando el token y el ID del curso
-            var students = await _canvasService.GetStudentsAsync(tokenResponse.AccessToken, resourceContext.Course.Id);
+            var students = await _canvasService.GetStudentsAsync("", resourceContext.Course.Id);
             return Ok(students);
         }
         catch (Exception ex)

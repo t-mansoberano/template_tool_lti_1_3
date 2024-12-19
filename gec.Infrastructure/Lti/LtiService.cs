@@ -170,36 +170,4 @@ public class LtiService : ILtiService
         var jsonJwks = JsonSerializer.Serialize(jwks);
         return Result.Success(jsonJwks);
     }
-    
-    public async Task<Result<string>> GetUserAccessTokenAsync(int userId)
-    {
-        var tokenEndpoint = $"{_appSettings.LtiUrlBase}/login/oauth2/token";
-
-
-        // Construir el cuerpo de la solicitud
-        var requestData = new FormUrlEncodedContent(new[]
-        {
-            new KeyValuePair<string, string>("grant_type", "client_credentials"),
-            new KeyValuePair<string, string>("client_id", _appSettings.LtiClientId),
-            new KeyValuePair<string, string>("client_secret", _appSettings.LtiClientSecret)
-        });
-
-        using var httpClient = new HttpClient();
-        var response = await httpClient.PostAsync(tokenEndpoint, requestData);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            return Result.Failure<string>($"Error en la solicitud del token: {response.StatusCode} - {errorContent}");
-        }
-
-        var content = await response.Content.ReadAsStringAsync();
-        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
-
-        return Result.Success(tokenResponse.AccessToken);
-    }
-
 }
