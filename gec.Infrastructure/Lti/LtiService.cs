@@ -1,36 +1,21 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 using CSharpFunctionalExtensions;
+using gec.Infrastructure.Common;
 using gec.Infrastructure.Lti.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace gec.Infrastructure.Lti;
 
 public class LtiService : ILtiService
 {
-    private readonly string _urlBase;
-    private readonly string _redirectUri;
-    private readonly string _clientId;
-    private readonly string _clientSecret;
+    private readonly AppSettingsService _appSettings;
     
-    public LtiService(IConfiguration configuration)
+    public LtiService(AppSettingsService appSettings)
     {
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration), "La configuración no puede ser null.");
-        }
-
-        _urlBase = configuration["LtiSettings:UrlBase"] 
-                   ?? throw new InvalidOperationException("LtiSettings:UrlBase no está configurado en la configuración.");
-        _redirectUri = configuration["LtiSettings:RedirectUri"] 
-                       ?? throw new InvalidOperationException("LtiSettings:RedirectUri no está configurado en la configuración.");
-        _clientId = configuration["LtiSettings:ClientId"]
-                       ?? throw new InvalidOperationException("LtiSettings:ClientId no está configurado en la configuración.");
-        _clientSecret = configuration["LtiSettings:ClientSecret"]
-                           ?? throw new InvalidOperationException("LtiSettings:ClientSecret no está configurado en la configuración.");
+        _appSettings = appSettings;
     }
-    
+
     public Result<string> BuildAuthorizationUrl(LoginInitiationResponse form)
     {
         var validate = form.Validate();
@@ -44,7 +29,7 @@ public class LtiService : ILtiService
             $"scope=openid",
             $"response_type=id_token",
             $"client_id={form.ClientId}",
-            $"redirect_uri={Uri.EscapeDataString(_redirectUri)}",
+            $"redirect_uri={Uri.EscapeDataString(_appSettings.LtiRedirectUri)}",
             $"login_hint={Uri.EscapeDataString(form.LoginHint)}",
             $"lti_message_hint={Uri.EscapeDataString(form.LtiMessageHint)}",
             $"state={Uri.EscapeDataString(state)}",
@@ -53,7 +38,7 @@ public class LtiService : ILtiService
             $"prompt=none"
         };
 
-        var redirectUrl = $"{_urlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
+        var redirectUrl = $"{_appSettings.LtiUrlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
 
         return Result.Success(redirectUrl);
     }
@@ -188,15 +173,15 @@ public class LtiService : ILtiService
     
     public async Task<Result<string>> GetUserAccessTokenAsync(int userId)
     {
-        var tokenEndpoint = $"{_urlBase}/login/oauth2/token";
+        var tokenEndpoint = $"{_appSettings.LtiUrlBase}/login/oauth2/token";
 
 
         // Construir el cuerpo de la solicitud
         var requestData = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
-            new KeyValuePair<string, string>("client_id", _clientId),
-            new KeyValuePair<string, string>("client_secret", _clientSecret)
+            new KeyValuePair<string, string>("client_id", _appSettings.LtiClientId),
+            new KeyValuePair<string, string>("client_secret", _appSettings.LtiClientSecret)
         });
 
         using var httpClient = new HttpClient();
@@ -216,5 +201,5 @@ public class LtiService : ILtiService
 
         return Result.Success(tokenResponse.AccessToken);
     }
-    
+
 }

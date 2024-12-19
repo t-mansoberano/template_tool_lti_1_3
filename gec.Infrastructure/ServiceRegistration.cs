@@ -1,4 +1,5 @@
 ﻿using gec.Infrastructure.Canvas;
+using gec.Infrastructure.Common;
 using gec.Infrastructure.Lti;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ public static class ServiceRegistration
         {
             client.BaseAddress = new Uri(configuration["Canvas:ApiBaseUrl"]);
         });
+        services.AddSingleton<AppSettingsService>();
         services.AddSingleton<ICanvasOAuthService, CanvasOAuthService>();
         services.AddScoped<ICanvasService, CanvasService>();
 
