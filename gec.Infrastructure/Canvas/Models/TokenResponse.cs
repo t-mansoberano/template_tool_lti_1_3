@@ -18,6 +18,11 @@ public class TokenResponse
         }
     }
 
+    public void SetRefreshToken(string refreshToken)
+    {
+        RefreshToken = refreshToken;
+    }
+
     public bool IsValid()
     {
         return !string.IsNullOrEmpty(AccessToken) &&

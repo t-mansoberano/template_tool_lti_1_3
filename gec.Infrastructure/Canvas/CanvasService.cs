@@ -18,7 +18,7 @@ public class CanvasService : ICanvasService
 
     public async Task<IEnumerable<Enrollment>> GetStudentsByCourseAsync(string accessToken, string courseId)
     {
-        var url = $"/api/v1/courses/{courseId}/enrollments";
+        var url = $"/api/v1/courses/{courseId}/enrollments?type[]=StudentEnrollment";
 
         // Configurar el encabezado de autorización con el token
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

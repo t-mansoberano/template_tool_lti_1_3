@@ -118,6 +118,7 @@ public class CanvasOAuthService : ICanvasOAuthService
             };
             var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
             tokenResponse.CalculateExpirationTime();
+            tokenResponse.SetRefreshToken(refreshToken);
 
             return Result.Success(tokenResponse);
         }

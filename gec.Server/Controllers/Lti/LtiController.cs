@@ -55,7 +55,7 @@ public class LtiController : BaseController
         
         HttpContext.Session.SetString("resourceContext", JsonSerializer.Serialize(context.Value));
 
-        return Redirect("/api/lti/oauth/authorize");        
+        return Redirect("/api/lti/oauth/token/validate");        
     }
     
     [HttpGet]

@@ -13,8 +13,8 @@ public class CanvasController : BaseController
     public CanvasController(ICanvasOAuthService canvasOAuthService)
     {
         _canvasOAuthService = canvasOAuthService;
-    }   
-    
+    }
+
     [HttpGet]
     [Route("api/lti/oauth/authorize")]
     public IActionResult AuthorizeUser()
@@ -35,4 +35,25 @@ public class CanvasController : BaseController
         return Redirect("/");
     }
 
+    [HttpGet]
+    [Route("api/lti/oauth/token/validate")]
+    public async Task<IActionResult> ValidateOrRefreshToken()
+    {
+        // Leer el token almacenado en sesión
+        var tokenResponseJson = HttpContext.Session.GetString("tokenResponse");
+        if (string.IsNullOrEmpty(tokenResponseJson))
+        {
+            // Si no hay token, redirigir para solicitar autorización
+            return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
+        }
+
+        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(tokenResponseJson);
+
+        var token = await _canvasOAuthService.GetTokenAsync(tokenResponse);
+        if (token.IsFailure) return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
+
+        HttpContext.Session.SetString("tokenResponse", JsonSerializer.Serialize(token.Value));
+
+        return Ok();
+    }
 }
