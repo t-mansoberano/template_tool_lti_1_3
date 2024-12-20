@@ -19,6 +19,7 @@ public static class ServiceRegistration
             client.BaseAddress = new Uri(configuration["Canvas:ApiBaseUrl"]);
         });
         services.AddSingleton<AppSettingsService>();
+        services.AddSingleton<IJwtValidationService, JwtValidationService>();
         services.AddSingleton<ICanvasOAuthService, CanvasOAuthService>();
         services.AddScoped<ICanvasService, CanvasService>();
 

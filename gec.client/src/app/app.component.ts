@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
         },
         (err) => {
           console.error('Error al obtener los datos:', err);
-          this.error = err?.error?.message || 'Error desconocido';
+          // this.error = err?.error?.message || 'Error desconocido';
           this.loading = false;
         }
       );

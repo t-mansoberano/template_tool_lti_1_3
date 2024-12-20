@@ -11,6 +11,7 @@ public class AppSettingsService
     public string CanvasRedirectUri { get; }
 
     public string LtiUrlBase { get; }
+    public string LtiValidIssuer { get; }
     public string LtiRedirectUri { get; }
     public string LtiClientId { get; }
     public string LtiClientSecret { get; }
@@ -25,6 +26,8 @@ public class AppSettingsService
         // LtiSettings
         LtiUrlBase = configuration["LtiSettings:UrlBase"]
                      ?? throw new InvalidOperationException("LtiSettings:UrlBase no está configurado.");
+        LtiValidIssuer = configuration["LtiSettings:ValidIssuer"]
+                      ?? throw new InvalidOperationException("LtiSettings:ValidIssuer no está configurado.");
         LtiRedirectUri = configuration["LtiSettings:RedirectUri"]
                          ?? throw new InvalidOperationException("LtiSettings:RedirectUri no está configurado.");
         LtiClientId = configuration["LtiSettings:ClientId"]

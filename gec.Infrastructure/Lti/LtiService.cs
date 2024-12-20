@@ -10,10 +10,12 @@ namespace gec.Infrastructure.Lti;
 public class LtiService : ILtiService
 {
     private readonly AppSettingsService _appSettings;
-    
-    public LtiService(AppSettingsService appSettings)
+    private readonly IJwtValidationService _jwtValidationService;
+
+    public LtiService(AppSettingsService appSettings, IJwtValidationService jwtValidationService)
     {
         _appSettings = appSettings;
+        _jwtValidationService = jwtValidationService;
     }
 
     public Result<string> BuildAuthorizationUrl(LoginInitiationResponse form)
@@ -39,7 +41,6 @@ public class LtiService : ILtiService
         };
 
         var redirectUrl = $"{_appSettings.LtiUrlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
-
         return Result.Success(redirectUrl);
     }
 
@@ -49,102 +50,25 @@ public class LtiService : ILtiService
         var validate = authenticationResponse.Validate();
         if (validate.IsFailure) return Result.Failure<ResourceContext>(validate.Error);
 
-        // Paso 2: Validar y decodificar el token
-        var validationParameters = new TokenValidationParameters
-        {
-            ValidIssuer = "https://canvas.test.instructure.com",
-            ValidAudience = "143280000000000292", // Cambia a tu client_id
-            IssuerSigningKeys =
-                await GetSigningKeysFromJwksAsync("https://canvas.test.instructure.com/api/lti/security/jwks"),
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true
-        };
+        var result = await _jwtValidationService.ValidateTokenAsync(authenticationResponse.IdToken);
+        if (result.IsFailure) return Result.Failure<ResourceContext>(result.Error);
+        
+        var claims = result.Value.Claims.GroupBy(c => c.Type)
+            .ToDictionary(g => g.Key, g => g.Select(v => v.Value).ToList());
 
-        var handler = new JwtSecurityTokenHandler();
-        try
-        {
-            // Validar el token
-            handler.ValidateToken(authenticationResponse.IdToken, validationParameters, out var securityToken);
+        // Extraer y deserializar el claim "custom"
+        var customClaimJson = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/custom")
+            ? claims["https://purl.imsglobal.org/spec/lti/claim/custom"].FirstOrDefault()
+            : null;
 
-            // Decodificar información útil
-            var jwtToken = (JwtSecurityToken)securityToken;
-            var claims = jwtToken.Claims
-                .GroupBy(c => c.Type)
-                .ToDictionary(g => g.Key, g => g.Select(c => c.Value).ToList());
+        var customData = !string.IsNullOrEmpty(customClaimJson)
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson)
+            : null;
+        
+        var user = ParseUser(claims, customData);
+        var course = ParseCourse(claims, customData);
 
-            // Extraer el claim "custom" y parsear los valores relevantes
-            var customClaimJson = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/custom")
-                ? claims["https://purl.imsglobal.org/spec/lti/claim/custom"].FirstOrDefault()
-                : null;
-            
-            var customData = !string.IsNullOrEmpty(customClaimJson)
-                ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson)
-                : null;            
-
-            var userId = customData != null && customData.ContainsKey("user_id")
-                ? customData["user_id"].GetString() ?? "Desconocido"
-                : "Desconocido";
-
-            var courseId = customData != null && customData.ContainsKey("course_id")
-                ? customData["course_id"].GetString() ?? "Desconocido"
-                : "Desconocido";
-            
-            // Extraer datos del usuario
-            var name = claims.ContainsKey("name") ? claims["name"].FirstOrDefault() : "Desconocido";
-            var email = claims.ContainsKey("email") ? claims["email"].FirstOrDefault() : "No proporcionado";
-            var picture = claims.ContainsKey("picture") ? claims["picture"].FirstOrDefault() : null;
-            var roles = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/roles")
-                ? claims["https://purl.imsglobal.org/spec/lti/claim/roles"]
-                : new List<string> { "Sin roles" };
-
-            // Crear objetos para usuario y curso
-            var user = new User()
-            {
-                Name = name ?? string.Empty,
-                Email = email ?? string.Empty,
-                UserId = userId ?? string.Empty,
-                Roles = roles,
-                Picture = picture ?? string.Empty
-            };
-
-            // Extraer datos del curso
-            var course = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/context")
-                ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
-                    claims["https://purl.imsglobal.org/spec/lti/claim/context"].FirstOrDefault() ?? "{}")
-                : null;
-
-            var courseData = new Course()
-            {
-                Id = courseId,
-                Label = course != null && course.ContainsKey("label") && course["label"].GetString() != null 
-                    ? course["label"].GetString()! 
-                    : "Sin etiqueta",
-                Title = course != null && course.ContainsKey("title") && course["title"].GetString() != null
-                    ? course["title"].GetString()! 
-                    : "Sin título",
-                Description = (course != null && course.ContainsKey("description") 
-                    ? course["description"].GetString() 
-                    : null) ?? string.Empty,
-                Type = course != null && course.ContainsKey("type") && course["type"].ValueKind == JsonValueKind.Array
-                    ? course["type"].EnumerateArray().Select(x => x.GetString() ?? "").ToList()
-                    : new List<string>()
-            };            
-
-            return Result.Success(new ResourceContext() { User = user, Course = courseData });
-        }
-        catch (SecurityTokenException ex)
-        {
-            return Result.Failure<ResourceContext>($"El token es inválido: {ex.Message}");
-        }
-    }
-
-    private async Task<IEnumerable<SecurityKey>> GetSigningKeysFromJwksAsync(string jwksUrl)
-    {
-        using var httpClient = new HttpClient();
-        var response = await httpClient.GetStringAsync(jwksUrl);
-
-        var jwks = new JsonWebKeySet(response);
-        return jwks.Keys;
+        return Result.Success(new ResourceContext { User = user, Course = course });
     }
 
     public Result<string> GetJwks()
@@ -169,5 +93,46 @@ public class LtiService : ILtiService
 
         var jsonJwks = JsonSerializer.Serialize(jwks);
         return Result.Success(jsonJwks);
+    }
+    
+    private User ParseUser(Dictionary<string, List<string>> claims, Dictionary<string, JsonElement> customData)
+    {
+        var userId = customData != null && customData.ContainsKey("user_id")
+            ? customData["user_id"].GetString() ?? "Desconocido"
+            : "Desconocido";
+
+        return new User
+        {
+            Name = claims.ContainsKey("name") ? claims["name"].FirstOrDefault() ?? "Desconocido" : "Desconocido",
+            Email = claims.ContainsKey("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress") ? claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"].FirstOrDefault() ?? "No proporcionado" : "No proporcionado",
+            Picture = claims.ContainsKey("picture") ? claims["picture"].FirstOrDefault() : null,
+            Roles = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/roles")
+                ? claims["https://purl.imsglobal.org/spec/lti/claim/roles"]
+                : new List<string> { "Sin roles" },
+            UserId = userId
+        };
+    }
+
+    private Course ParseCourse(Dictionary<string, List<string>> claims, Dictionary<string, JsonElement> customData)
+    {
+        var courseId = customData != null && customData.ContainsKey("course_id")
+            ? customData["course_id"].GetString() ?? "Desconocido"
+            : "Desconocido";
+
+        var contextData = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/context")
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                claims["https://purl.imsglobal.org/spec/lti/claim/context"].FirstOrDefault() ?? "{}")
+            : null;
+
+        return new Course
+        {
+            Id = courseId,
+            Label = contextData != null && contextData.ContainsKey("label") ? contextData["label"].GetString() ?? "Sin etiqueta" : "Sin etiqueta",
+            Title = contextData != null && contextData.ContainsKey("title") ? contextData["title"].GetString() ?? "Sin título" : "Sin título",
+            Description = contextData != null && contextData.ContainsKey("description") ? contextData["description"].GetString() ?? string.Empty : string.Empty,
+            Type = contextData != null && contextData.ContainsKey("type") && contextData["type"].ValueKind == JsonValueKind.Array
+                ? contextData["type"].EnumerateArray().Select(x => x.GetString() ?? "").ToList()
+                : new List<string>()
+        };
     }
 }
