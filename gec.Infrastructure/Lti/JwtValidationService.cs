@@ -47,7 +47,6 @@ public class JwtValidationService : IJwtValidationService
 
     private async Task<TokenValidationParameters> BuildTokenValidationParametersAsync()
     {
-        // var signingKeys = await GetSigningKeysFromJwksAsync($"{_appSettings.LtiUrlBase}/.well-known/jwks.json");
         var signingKeys = await GetSigningKeysFromJwksAsync($"{_appSettings.LtiUrlBase}/api/lti/security/jwks");
 
         return new TokenValidationParameters

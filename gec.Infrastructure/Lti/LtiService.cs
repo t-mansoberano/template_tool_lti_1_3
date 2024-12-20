@@ -1,9 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json;
+﻿using System.Text.Json;
 using CSharpFunctionalExtensions;
 using gec.Infrastructure.Common;
 using gec.Infrastructure.Lti.Models;
-using Microsoft.IdentityModel.Tokens;
 
 namespace gec.Infrastructure.Lti;
 
