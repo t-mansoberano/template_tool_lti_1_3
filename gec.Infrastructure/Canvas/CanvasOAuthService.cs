@@ -61,13 +61,14 @@ public class CanvasOAuthService : ICanvasOAuthService
         };
 
         var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
+        tokenResponse.CalculateExpirationTime();
 
         return Result.Success(tokenResponse);
     }
 
     public async Task<Result<TokenResponse>> GetTokenAsync(TokenResponse tokenResponse)
     {
-        if (IsTokenValid(tokenResponse))
+        if (tokenResponse.IsValid())
         {
             return Result.Success(tokenResponse);
         }
@@ -99,17 +100,24 @@ public class CanvasOAuthService : ICanvasOAuthService
         try
         {
             var response = await _httpClient.PostAsync($"{_appSettings.CanvasBaseUrl}/login/oauth2/token", requestData);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            {
+                var retryAfter = response.Headers.RetryAfter?.Delta ?? TimeSpan.FromSeconds(60);
+                await Task.Delay(retryAfter);
+                return await RefreshAccessTokenAsync(refreshToken); // Reintento
+            }
+            
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            
-            // Opciones de deserialización
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = new SnakeCaseNamingPolicy()
-            };            
+            };
             var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
+            tokenResponse.CalculateExpirationTime();
 
             return Result.Success(tokenResponse);
         }

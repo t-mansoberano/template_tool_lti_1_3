@@ -8,6 +8,22 @@ public class TokenResponse
     public string RefreshToken { get; set; }
     public UserInfo User { get; set; }
     public string CanvasRegion { get; set; }
+    public DateTime? ExpirationTime { get; set; }
+    
+    public void CalculateExpirationTime()
+    {
+        if (ExpiresIn > 0)
+        {
+            ExpirationTime = DateTime.UtcNow.AddSeconds(ExpiresIn);
+        }
+    }
+
+    public bool IsValid()
+    {
+        return !string.IsNullOrEmpty(AccessToken) &&
+               ExpirationTime.HasValue &&
+               DateTime.UtcNow < ExpirationTime.Value;
+    }  
 }
 
 public class UserInfo
