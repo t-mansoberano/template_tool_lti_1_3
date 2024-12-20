@@ -15,7 +15,7 @@ public class CanvasOAuthService : ICanvasOAuthService
         _appSettings = appSettings;
         _httpClient = httpClientFactory.CreateClient("CanvasClient");
     }
-    
+
     public string BuildAuthorizationUrl()
     {
         return $"{_appSettings.CanvasBaseUrl}/login/oauth2/auth?" +
@@ -31,7 +31,7 @@ public class CanvasOAuthService : ICanvasOAuthService
         var oAuthQuery = new OAuthQuery(query);
         var validate = oAuthQuery.Validate();
         if (validate.IsFailure) return Result.Failure<TokenResponse>(validate.Error);
-        
+
         // Construir el cuerpo de la solicitud para el Token Endpoint
         var requestData = new FormUrlEncodedContent(new[]
         {
@@ -65,4 +65,61 @@ public class CanvasOAuthService : ICanvasOAuthService
         return Result.Success(tokenResponse);
     }
 
+    public async Task<Result<TokenResponse>> GetTokenAsync(TokenResponse tokenResponse)
+    {
+        if (IsTokenValid(tokenResponse))
+        {
+            return Result.Success(tokenResponse);
+        }
+
+        // Si el token no es válido o no está disponible, intentar renovar
+        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+        {
+            var newTokenResult = await RefreshAccessTokenAsync(tokenResponse.RefreshToken);
+
+            if (newTokenResult.IsSuccess)
+            {
+                return newTokenResult;
+            }
+        }
+
+        return Result.Failure<TokenResponse>("No se encontró un token válido y no se pudo renovar.");
+    }
+
+    private async Task<Result<TokenResponse>> RefreshAccessTokenAsync(string refreshToken)
+    {
+        var requestData = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("grant_type", "refresh_token"),
+            new KeyValuePair<string, string>("client_id", _appSettings.CanvasClientId),
+            new KeyValuePair<string, string>("client_secret", _appSettings.CanvasClientSecret),
+            new KeyValuePair<string, string>("refresh_token", refreshToken)
+        });
+
+        try
+        {
+            var response = await _httpClient.PostAsync($"{_appSettings.CanvasBaseUrl}/login/oauth2/token", requestData);
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return Result.Success(tokenResponse);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure<TokenResponse>($"Error al renovar el token: {ex.Message}");
+        }
+    }
+
+    private bool IsTokenValid(TokenResponse token)
+    {
+        if (string.IsNullOrEmpty(token.AccessToken))
+            return false;
+
+        // Verificar si el token ha expirado
+        var expirationDate = DateTime.UtcNow.AddSeconds(-token.ExpiresIn);
+        return DateTime.UtcNow < expirationDate;
+    }
 }

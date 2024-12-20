@@ -4,5 +4,5 @@ namespace gec.Infrastructure.Canvas;
 
 public interface ICanvasService
 {
-    Task<IEnumerable<Student>> GetStudentsAsync(string accessToken, string courseId);
+    Task<IEnumerable<Student>> GetStudentsByCourseAsync(string accessToken, string courseId);
 }

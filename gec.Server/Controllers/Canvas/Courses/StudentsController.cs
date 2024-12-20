@@ -43,7 +43,7 @@ public class StudentsController : BaseController
         try
         {
             // Obtener la lista de estudiantes usando el token y el ID del curso
-            var students = await _canvasService.GetStudentsAsync("", resourceContext.Course.Id);
+            var students = await _canvasService.GetStudentsByCourseAsync("", resourceContext.Course.Id);
             return Ok(students);
         }
         catch (Exception ex)
