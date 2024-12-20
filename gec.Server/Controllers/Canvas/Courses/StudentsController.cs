@@ -1,10 +1,7 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using gec.Infrastructure.Canvas;
-using gec.Infrastructure.Lti;
 using gec.Infrastructure.Lti.Models;
 using gec.Server.Common;
-using gec.Server.Controllers.Lti;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gec.Server.Controllers.Canvas.Courses;
@@ -14,12 +11,12 @@ namespace gec.Server.Controllers.Canvas.Courses;
 public class StudentsController : BaseController
 {
     private readonly ICanvasService _canvasService;
-    private readonly ILtiService _ltiService;
+    private readonly ICanvasOAuthService _canvasOAuthService;
 
-    public StudentsController(ICanvasService canvasService, ILtiService ltiService)
+    public StudentsController(ICanvasService canvasService, ICanvasOAuthService canvasOAuthService)
     {
         _canvasService = canvasService;
-        _ltiService = ltiService;
+        _canvasOAuthService = canvasOAuthService;
     }
 
     [HttpGet]
@@ -39,11 +36,16 @@ public class StudentsController : BaseController
         
         // Deserializar el contexto del recurso
         var resourceContext = JsonSerializer.Deserialize<ResourceContext>(resourceContextJson);
+        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(tokenResponseJson);
 
         try
         {
+            // Actualizar el token del servicio de Canvas
+            var token = await _canvasOAuthService.GetTokenAsync(tokenResponse);
+            if (token.IsFailure) return Redirect("/api/lti/oauth/authorize");
+
             // Obtener la lista de estudiantes usando el token y el ID del curso
-            var students = await _canvasService.GetStudentsByCourseAsync("", resourceContext.Course.Id);
+            var students = await _canvasService.GetStudentsByCourseAsync(token.Value.AccessToken, resourceContext.Course.Id);
             return Ok(students);
         }
         catch (Exception ex)

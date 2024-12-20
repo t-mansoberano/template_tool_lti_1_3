@@ -16,7 +16,7 @@ public class CanvasService : ICanvasService
         _httpClient = httpClientFactory.CreateClient("CanvasClient");
     }
 
-    public async Task<IEnumerable<Student>> GetStudentsByCourseAsync(string accessToken, string courseId)
+    public async Task<IEnumerable<Enrollment>> GetStudentsByCourseAsync(string accessToken, string courseId)
     {
         var url = $"/api/v1/courses/{courseId}/enrollments";
 
@@ -32,23 +32,17 @@ public class CanvasService : ICanvasService
             // Leer el contenido de la respuesta
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            // Deserializar la respuesta JSON
-            var students = JsonSerializer.Deserialize<List<CanvasEnrollment>>(jsonResponse, new JsonSerializerOptions
+            // Opciones de deserialización
+            var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
-            });
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = new SnakeCaseNamingPolicy()
+            }; 
+            
+            // Deserializar la respuesta JSON
+            var students = JsonSerializer.Deserialize<List<Enrollment>>(jsonResponse, options);
 
-            // Mapear los datos al modelo Student
-            var studentList = students?
-                .Where(e => e.User != null)
-                .Select(e => new Student
-                {
-                    Id = e.User.Id,
-                    Name = e.User.Name,
-                    Email = e.User.Email
-                }).ToList();
-
-            return studentList ?? new List<Student>();
+            return students;
         }
         catch (HttpRequestException ex)
         {

@@ -2,7 +2,12 @@
 
 public class User
 {
-    public string Id { get; set; }
+    public long Id { get; set; }
     public string Name { get; set; }
-    public string Email { get; set; }    
+    public DateTime CreatedAt { get; set; }
+    public string SortableName { get; set; }
+    public string ShortName { get; set; }
+    public string SisUserId { get; set; }
+    public string IntegrationId { get; set; }
+    public string LoginId { get; set; }
 }

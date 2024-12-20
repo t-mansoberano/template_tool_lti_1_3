@@ -102,8 +102,14 @@ public class CanvasOAuthService : ICanvasOAuthService
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            
+            // Opciones de deserialización
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = new SnakeCaseNamingPolicy()
+            };            
+            var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
 
             return Result.Success(tokenResponse);
         }
