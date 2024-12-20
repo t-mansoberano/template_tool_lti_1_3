@@ -54,6 +54,6 @@ public class CanvasController : BaseController
 
         HttpContext.Session.SetString("tokenResponse", JsonSerializer.Serialize(token.Value));
 
-        return Ok();
+        return Redirect("/");
     }
 }
