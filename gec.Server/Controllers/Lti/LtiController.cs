@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using gec.Infrastructure.Lti;
 using gec.Infrastructure.Lti.Models;
 using gec.Server.Common;
@@ -11,28 +10,26 @@ namespace gec.Server.Controllers.Lti;
 public class LtiController : BaseController
 {
     private readonly ILtiService _ltiService;
-    private readonly IConfiguration _configuration;
+    private readonly ISessionStorageService _sessionStorageService;
 
-    public LtiController(ILtiService ltiService, IConfiguration configuration)
+    public LtiController(ILtiService ltiService, ISessionStorageService sessionStorageService)
     {
         _ltiService = ltiService;
-        _configuration = configuration;
+        _sessionStorageService = sessionStorageService;
     }
 
     [HttpGet]
     [Route("api/lti")]
-    public Task<IActionResult> Get()
+    public IActionResult Get()
     {
-        var resourceContextJson = HttpContext.Session.GetString("resourceContext");
+        var resourceContext = _sessionStorageService.Retrieve<ResourceContext>("ResourceContext");
 
-        if (string.IsNullOrEmpty(resourceContextJson))
+        if (resourceContext == null)
         {
-            return Task.FromResult(Error("No hay datos guardados en la sesión."));
+            return Error("No hay datos guardados en el sistema.");
         }
 
-        var resourceContext = JsonSerializer.Deserialize<ResourceContext>(resourceContextJson);
-
-        return Task.FromResult(Ok(resourceContext));
+        return Ok(resourceContext);
     }
     
     [HttpPost]
@@ -53,7 +50,7 @@ public class LtiController : BaseController
         var context = await _ltiService.HandleRedirectAsync(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
         if (context.IsFailure) return Error(context.Error);
         
-        HttpContext.Session.SetString("resourceContext", JsonSerializer.Serialize(context.Value));
+        _sessionStorageService.Store("ResourceContext", context.Value);
 
         return Redirect("/api/lti/oauth/token/validate");        
     }

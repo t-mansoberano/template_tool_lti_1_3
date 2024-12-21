@@ -19,6 +19,7 @@ namespace gec.Server
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddServerServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
             builder.WebHost.UseSentry(o =>
@@ -42,6 +43,9 @@ namespace gec.Server
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Solo envía cookies en HTTPS
                 options.Cookie.SameSite = SameSiteMode.None; // Permite cookies en solicitudes cruzadas
             });
+
+            builder.Services.AddHttpContextAccessor();
+            
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>

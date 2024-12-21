@@ -9,10 +9,12 @@ namespace gec.Server.Controllers.Canvas;
 public class CanvasController : BaseController
 {
     private readonly ICanvasOAuthService _canvasOAuthService;
+    private readonly ISessionStorageService _sessionStorageService;
 
-    public CanvasController(ICanvasOAuthService canvasOAuthService)
+    public CanvasController(ICanvasOAuthService canvasOAuthService, ISessionStorageService sessionStorageService)
     {
         _canvasOAuthService = canvasOAuthService;
+        _sessionStorageService = sessionStorageService;
     }
 
     [HttpGet]
@@ -29,9 +31,11 @@ public class CanvasController : BaseController
     {
         var query = HttpContext.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
         var tokenResponse = await _canvasOAuthService.HandleOAuthCallbackAsync(query);
+        
         if (tokenResponse.IsFailure) return Error(tokenResponse.Error);
 
-        HttpContext.Session.SetString("tokenResponse", JsonSerializer.Serialize(tokenResponse.Value));
+        _sessionStorageService.Store("CanvasToken", tokenResponse.Value);
+
         return Redirect("/");
     }
 
@@ -39,20 +43,16 @@ public class CanvasController : BaseController
     [Route("api/lti/oauth/token/validate")]
     public async Task<IActionResult> ValidateOrRefreshToken()
     {
-        // Leer el token almacenado en sesión
-        var tokenResponseJson = HttpContext.Session.GetString("tokenResponse");
-        if (string.IsNullOrEmpty(tokenResponseJson))
+        var tokenResponse = _sessionStorageService.Retrieve<TokenResponse>("CanvasToken");
+        if (tokenResponse == null)
         {
-            // Si no hay token, redirigir para solicitar autorización
             return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
         }
 
-        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(tokenResponseJson);
-
         var token = await _canvasOAuthService.GetTokenAsync(tokenResponse);
         if (token.IsFailure) return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
-
-        HttpContext.Session.SetString("tokenResponse", JsonSerializer.Serialize(token.Value));
+        
+        _sessionStorageService.Store("CanvasToken", token.Value);
 
         return Redirect("/");
     }
