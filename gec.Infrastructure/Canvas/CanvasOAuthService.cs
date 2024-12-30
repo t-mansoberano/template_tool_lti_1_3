@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using CSharpFunctionalExtensions;
-using gec.Infrastructure.Canvas.Models;
+using gec.Application.Contracts.Infrastructure.Canvas;
+using gec.Application.Contracts.Infrastructure.Canvas.Models;
 using gec.Infrastructure.Common;
 
 namespace gec.Infrastructure.Canvas;
@@ -26,11 +27,11 @@ public class CanvasOAuthService : ICanvasOAuthService
                $"&state={Guid.NewGuid()}";
     }
 
-    public async Task<Result<TokenResponse>> HandleOAuthCallbackAsync(Dictionary<string, string> query)
+    public async Task<Result<CanvasAuthToken>> HandleOAuthCallbackAsync(Dictionary<string, string> query)
     {
         var oAuthQuery = new OAuthQuery(query);
         var validate = oAuthQuery.Validate();
-        if (validate.IsFailure) return Result.Failure<TokenResponse>(validate.Error);
+        if (validate.IsFailure) return Result.Failure<CanvasAuthToken>(validate.Error);
 
         // Construir el cuerpo de la solicitud para el Token Endpoint
         var requestData = new FormUrlEncodedContent(new[]
@@ -48,7 +49,7 @@ public class CanvasOAuthService : ICanvasOAuthService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            return Result.Failure<TokenResponse>($"Error al obtener el token: {errorContent}");
+            return Result.Failure<CanvasAuthToken>($"Error al obtener el token: {errorContent}");
         }
 
         var content = await response.Content.ReadAsStringAsync();
@@ -60,23 +61,25 @@ public class CanvasOAuthService : ICanvasOAuthService
             PropertyNamingPolicy = new SnakeCaseNamingPolicy()
         };
 
-        var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
+        var tokenResponse = JsonSerializer.Deserialize<CanvasAuthToken>(content, options);
+        if (tokenResponse == null) return Result.Failure<CanvasAuthToken>("No se pudo deserializar el token.");
+
         tokenResponse.CalculateExpirationTime();
 
         return Result.Success(tokenResponse);
     }
 
-    public async Task<Result<TokenResponse>> GetTokenAsync(TokenResponse tokenResponse)
+    public async Task<Result<CanvasAuthToken>> GetTokenAsync(CanvasAuthToken canvasAuthToken)
     {
-        if (tokenResponse.IsValid())
+        if (canvasAuthToken.IsValid())
         {
-            return Result.Success(tokenResponse);
+            return Result.Success(canvasAuthToken);
         }
 
         // Si el token no es válido o no está disponible, intentar renovar
-        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+        if (!string.IsNullOrEmpty(canvasAuthToken.RefreshToken))
         {
-            var newTokenResult = await RefreshAccessTokenAsync(tokenResponse.RefreshToken);
+            var newTokenResult = await RefreshAccessTokenAsync(canvasAuthToken.RefreshToken);
 
             if (newTokenResult.IsSuccess)
             {
@@ -84,10 +87,10 @@ public class CanvasOAuthService : ICanvasOAuthService
             }
         }
 
-        return Result.Failure<TokenResponse>("No se encontró un token válido y no se pudo renovar.");
+        return Result.Failure<CanvasAuthToken>("No se encontró un token válido y no se pudo renovar.");
     }
 
-    private async Task<Result<TokenResponse>> RefreshAccessTokenAsync(string refreshToken)
+    private async Task<Result<CanvasAuthToken>> RefreshAccessTokenAsync(string refreshToken)
     {
         var requestData = new FormUrlEncodedContent(new[]
         {
@@ -116,7 +119,9 @@ public class CanvasOAuthService : ICanvasOAuthService
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = new SnakeCaseNamingPolicy()
             };
-            var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(content, options);
+            var tokenResponse = JsonSerializer.Deserialize<CanvasAuthToken>(content, options);
+            if (tokenResponse == null) return Result.Failure<CanvasAuthToken>("No se pudo deserializar el token.");
+
             tokenResponse.CalculateExpirationTime();
             tokenResponse.SetRefreshToken(refreshToken);
 
@@ -124,17 +129,7 @@ public class CanvasOAuthService : ICanvasOAuthService
         }
         catch (Exception ex)
         {
-            return Result.Failure<TokenResponse>($"Error al renovar el token: {ex.Message}");
+            return Result.Failure<CanvasAuthToken>($"Error al renovar el token: {ex.Message}");
         }
-    }
-
-    private bool IsTokenValid(TokenResponse token)
-    {
-        if (string.IsNullOrEmpty(token.AccessToken))
-            return false;
-
-        // Verificar si el token ha expirado
-        var expirationDate = DateTime.UtcNow.AddSeconds(-token.ExpiresIn);
-        return DateTime.UtcNow < expirationDate;
     }
 }

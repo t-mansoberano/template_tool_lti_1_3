@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using CSharpFunctionalExtensions;
+using gec.Application.Contracts.Infrastructure.Lti;
+using gec.Application.Contracts.Infrastructure.Lti.Models;
 using gec.Infrastructure.Common;
-using gec.Infrastructure.Lti.Models;
 
 namespace gec.Infrastructure.Lti;
 
@@ -42,15 +43,15 @@ public class LtiService : ILtiService
         return Result.Success(redirectUrl);
     }
 
-    public async Task<Result<ResourceContext>> HandleRedirectAsync(Dictionary<string, string> form)
+    public async Task<Result<LtiContext>> HandleRedirectAsync(Dictionary<string, string> form)
     {
         var authenticationResponse = new AuthenticationResponse(form);
         var validate = authenticationResponse.Validate();
-        if (validate.IsFailure) return Result.Failure<ResourceContext>(validate.Error);
+        if (validate.IsFailure) return Result.Failure<LtiContext>(validate.Error);
 
         var result = await _jwtValidationService.ValidateTokenAsync(authenticationResponse.IdToken);
-        if (result.IsFailure) return Result.Failure<ResourceContext>(result.Error);
-        
+        if (result.IsFailure) return Result.Failure<LtiContext>(result.Error);
+
         var claims = result.Value.Claims.GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.Select(v => v.Value).ToList());
 
@@ -60,13 +61,14 @@ public class LtiService : ILtiService
             : null;
 
         var customData = !string.IsNullOrEmpty(customClaimJson)
-            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson)
-            : null;
-        
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson) ??
+              new Dictionary<string, JsonElement>()
+            : new Dictionary<string, JsonElement>();
+
         var user = ParseUser(claims, customData);
         var course = ParseCourse(claims, customData);
 
-        return Result.Success(new ResourceContext { User = user, Course = course });
+        return Result.Success(new LtiContext { User = user, Course = course });
     }
 
     public Result<string> GetJwks()
@@ -92,7 +94,7 @@ public class LtiService : ILtiService
         var jsonJwks = JsonSerializer.Serialize(jwks);
         return Result.Success(jsonJwks);
     }
-    
+
     private User ParseUser(Dictionary<string, List<string>> claims, Dictionary<string, JsonElement> customData)
     {
         var userId = customData != null && customData.ContainsKey("user_id")
@@ -102,8 +104,11 @@ public class LtiService : ILtiService
         return new User
         {
             Name = claims.ContainsKey("name") ? claims["name"].FirstOrDefault() ?? "Desconocido" : "Desconocido",
-            Email = claims.ContainsKey("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress") ? claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"].FirstOrDefault() ?? "No proporcionado" : "No proporcionado",
-            Picture = claims.ContainsKey("picture") ? claims["picture"].FirstOrDefault() : null,
+            Email = claims.ContainsKey("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+                ? claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"].FirstOrDefault() ??
+                  "No proporcionado"
+                : "No proporcionado",
+            Picture = claims.ContainsKey("picture") ? claims["picture"].FirstOrDefault() ?? "" : "",
             Roles = claims.ContainsKey("https://purl.imsglobal.org/spec/lti/claim/roles")
                 ? claims["https://purl.imsglobal.org/spec/lti/claim/roles"]
                 : new List<string> { "Sin roles" },
@@ -125,10 +130,17 @@ public class LtiService : ILtiService
         return new Course
         {
             Id = courseId,
-            Label = contextData != null && contextData.ContainsKey("label") ? contextData["label"].GetString() ?? "Sin etiqueta" : "Sin etiqueta",
-            Title = contextData != null && contextData.ContainsKey("title") ? contextData["title"].GetString() ?? "Sin título" : "Sin título",
-            Description = contextData != null && contextData.ContainsKey("description") ? contextData["description"].GetString() ?? string.Empty : string.Empty,
-            Type = contextData != null && contextData.ContainsKey("type") && contextData["type"].ValueKind == JsonValueKind.Array
+            Label = contextData != null && contextData.ContainsKey("label")
+                ? contextData["label"].GetString() ?? "Sin etiqueta"
+                : "Sin etiqueta",
+            Title = contextData != null && contextData.ContainsKey("title")
+                ? contextData["title"].GetString() ?? "Sin título"
+                : "Sin título",
+            Description = contextData != null && contextData.ContainsKey("description")
+                ? contextData["description"].GetString() ?? string.Empty
+                : string.Empty,
+            Type = contextData != null && contextData.ContainsKey("type") &&
+                   contextData["type"].ValueKind == JsonValueKind.Array
                 ? contextData["type"].EnumerateArray().Select(x => x.GetString() ?? "").ToList()
                 : new List<string>()
         };

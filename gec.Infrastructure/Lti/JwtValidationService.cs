@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CSharpFunctionalExtensions;
+using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Infrastructure.Common;
 using Microsoft.IdentityModel.Tokens;
 
@@ -33,7 +34,7 @@ public class JwtValidationService : IJwtValidationService
         }
         catch (SecurityTokenExpiredException ex)
         {
-            return Result.Failure<ClaimsPrincipal>("El token ha expirado.");
+            return Result.Failure<ClaimsPrincipal>($"El token ha expirado: {ex.Message}");
         }
         catch (SecurityTokenException ex)
         {
@@ -41,7 +42,7 @@ public class JwtValidationService : IJwtValidationService
         }
         catch (Exception ex)
         {
-            return Result.Failure<ClaimsPrincipal>("Ocurrió un error al validar el token.");
+            return Result.Failure<ClaimsPrincipal>($"Ocurrió un error al validar el token: {ex.Message}");
         }
     }
 

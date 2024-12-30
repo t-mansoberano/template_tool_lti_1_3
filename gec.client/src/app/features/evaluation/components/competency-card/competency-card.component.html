@@ -1,0 +1,10 @@
+<div *ngIf="competency" class="competency-card">
+  <h4>{{ competency.name }}</h4>
+  <p>{{ competency.description }}</p>
+  <div class="actions">
+    <button (click)="evaluateCompetency('Outstanding')">Outstanding</button>
+    <button (click)="evaluateCompetency('Satisfactory')">Satisfactory</button>
+    <button (click)="evaluateCompetency('Basic')">Basic</button>
+    <button (click)="evaluateCompetency('Needs Improvement')">Needs Improvement</button>
+  </div>
+</div>

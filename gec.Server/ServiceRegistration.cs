@@ -1,4 +1,5 @@
-﻿using gec.Server.Common;
+﻿using gec.Application.Contracts.Server;
+using gec.Server.Common;
 
 namespace gec.Server;
 

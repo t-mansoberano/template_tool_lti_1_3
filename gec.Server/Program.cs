@@ -1,3 +1,4 @@
+using gec.Application;
 using gec.Infrastructure;
 
 namespace gec.Server
@@ -19,6 +20,7 @@ namespace gec.Server
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddApplicationServices();
             builder.Services.AddServerServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
 

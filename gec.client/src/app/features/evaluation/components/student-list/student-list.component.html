@@ -1,0 +1,5 @@
+<ul class="student-list">
+  <li *ngFor="let student of students" (click)="selectStudent(student.id)" class="student-item">
+    {{ student.name }} - {{ student.evaluated }}/{{ student.total }}
+  </li>
+</ul>

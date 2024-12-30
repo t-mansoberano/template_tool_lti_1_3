@@ -11,4 +11,7 @@
 /gec.client/public
 /gec.Infrastructure/bin
 /gec.Infrastructure/obj
+/gec.Application/obj
+/gec.Application/public
+/gec.Application/bin
 /gec.sln.DotSettings.user

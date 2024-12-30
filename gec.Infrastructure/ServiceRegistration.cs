@@ -1,4 +1,8 @@
-﻿using gec.Infrastructure.Canvas;
+﻿using gec.Application.Contracts.Infrastructure.Canvas;
+using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
+using gec.Application.Contracts.Infrastructure.Lti;
+using gec.Infrastructure.Canvas;
+using gec.Infrastructure.Canvas.Enrollments;
 using gec.Infrastructure.Common;
 using gec.Infrastructure.Lti;
 using Microsoft.Extensions.Configuration;
@@ -10,18 +14,21 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<AppSettingsService>();
+
         // Servicios relacionados con LTI
         services.AddScoped<ILtiService, LtiService>();
+        services.AddScoped<IJwtValidationService, JwtValidationService>();
         
         // Servicios relacionados con Canvas
-        services.AddHttpClient("CanvasClient", client =>
+        services.AddHttpClient("CanvasClient", (provider, client) =>
         {
-            client.BaseAddress = new Uri(configuration["Canvas:ApiBaseUrl"]);
+            var appSettings = provider.GetRequiredService<AppSettingsService>();
+            client.BaseAddress = new Uri(appSettings.CanvasBaseUrl);
         });
-        services.AddSingleton<AppSettingsService>();
-        services.AddSingleton<IJwtValidationService, JwtValidationService>();
-        services.AddSingleton<ICanvasOAuthService, CanvasOAuthService>();
-        services.AddScoped<ICanvasService, CanvasService>();
+        services.AddScoped<ICanvasOAuthService, CanvasOAuthService>();
+        services.AddScoped<ICanvasApiClient, CanvasApiClient>();
+        services.AddScoped<IEnrollmentsService, EnrollmentsService>();
 
         return services;
     }

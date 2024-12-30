@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {HeaderComponent} from './shared/components/header/header.component';
 
 interface Response {
   errorMessage: string,
@@ -9,52 +10,13 @@ interface Response {
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    HeaderComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  user: any = {}; // Datos del usuario
-  course: any = {}; // Datos del curso
-  loading: boolean = true; // Indicador de carga
-  error: string | null = null; // Mensaje de error
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.getContext();
-  }
-
-  getContext() {
-    this.http.get<Response>('/api/lti', { withCredentials: true })
-      .subscribe(
-        (response: any) => {
-          // Extraer datos del endpoint
-          this.user = response.result.user || {};
-          this.course = response.result.course || {};
-          this.loading = false;
-          this.getStudents(this.course.id);
-        },
-        (err) => {
-          console.error('Error al obtener los datos:', err);
-          this.error = err?.error?.message || 'Error desconocido';
-          this.loading = false;
-        }
-      );
-  }
-
-  getStudents(courseId: string) {
-    this.http.get<Response>(`/api/canvas/courses/${courseId}/students`, { withCredentials: true })
-      .subscribe(
-        (response: any) => {
-          // Extraer datos del endpoint
-          console.log(response.result);
-          this.loading = false;
-        },
-        (err) => {
-          console.error('Error al obtener los datos:', err);
-          // this.error = err?.error?.message || 'Error desconocido';
-          this.loading = false;
-        }
-      );
-  }
+export class AppComponent {
 }
