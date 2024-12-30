@@ -23,8 +23,8 @@ public class StudentsController : BaseController
     public async Task<IActionResult> GetStudents()
     {
         // Obtener el contexto del recurso desde la sesión
-        var resourceContextJson = HttpContext.Session.GetString("resourceContext");
-        var tokenResponseJson = HttpContext.Session.GetString("tokenResponse");
+        var resourceContextJson = HttpContext.Session.GetString("ResourceContext");
+        var tokenResponseJson = HttpContext.Session.GetString("CanvasToken");
         if (string.IsNullOrEmpty(resourceContextJson))
         {
             return Error("El contexto del recurso no está disponible en la sesión.");
