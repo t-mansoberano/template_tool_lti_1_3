@@ -8,7 +8,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\gec.client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\core\components\" />
     <Folder Include="src\app\core\interceptors\" />
+    <Folder Include="src\app\core\resolvers\" />
     <Folder Include="src\app\features\components\" />
   </ItemGroup>
 </Project>

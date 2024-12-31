@@ -9,6 +9,7 @@ import {StudentHeaderComponent} from '../../components/student-header/student-he
 import {FeedbackCardComponent} from '../../components/feedback-card/feedback-card.component';
 import {CompetencyCardComponent} from '../../components/competency-card/competency-card.component';
 import {NgForOf, NgIf} from '@angular/common';
+import {HeaderComponent} from '../../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-professor-view',
@@ -23,6 +24,7 @@ import {NgForOf, NgIf} from '@angular/common';
     CompetencyCardComponent,
     NgIf,
     NgForOf,
+    HeaderComponent,
   ],
   templateUrl: './professor-view.component.html',
   styleUrl: './professor-view.component.css'

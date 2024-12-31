@@ -26,7 +26,7 @@ public class LtiController : BaseController
         if (ltiContext.IsFailure)
             return Error(ltiContext.Error);
 
-        return Ok(ltiContext);
+        return Ok(ltiContext.Value);
     }
     
     [HttpPost]
