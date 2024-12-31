@@ -6,7 +6,7 @@ using gec.Server.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace gec.Server.Features.Enrollments;
+namespace gec.Server.Features.Teachers.Evaluations;
 
 [ApiController]
 [Route("api/teachers/courses/{courseId}/evaluations")]
