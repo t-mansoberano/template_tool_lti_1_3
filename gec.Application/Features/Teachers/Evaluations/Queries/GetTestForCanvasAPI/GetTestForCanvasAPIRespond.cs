@@ -2,7 +2,7 @@
 
 public class GetTestForCanvasAPIRespond
 {
-    public List<Enrollment> Enrollments { get; set; }
+    public List<Enrollment> Enrollments { get; set; } = new();
 }
 
 public class Enrollment
@@ -10,14 +10,14 @@ public class Enrollment
     public long Id { get; set; }
     public long UserId { get; set; }
     public long CourseId { get; set; }
-    public string Type { get; set; } = null!;
-    public Grades Grades { get; set; } = null!;
-    public User User { get; set; } = null!;
+    public string Type { get; set; } = "";
+    public Grades Grades { get; set; } = new ();
+    public User User { get; set; } = new ();
 }
 
 public class Grades
 {
-    public string HtmlUrl { get; set; } = null!;
+    public string HtmlUrl { get; set; } = "";
     public double? CurrentGrade { get; set; }
     public double? CurrentScore { get; set; }
     public double? FinalGrade { get; set; }
