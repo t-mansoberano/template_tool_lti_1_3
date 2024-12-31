@@ -19,13 +19,36 @@ public class CanvasOAuthService : ICanvasOAuthService
 
     public string BuildAuthorizationUrl()
     {
-        return $"{_appSettings.CanvasBaseUrl}/login/oauth2/auth?" +
-               $"client_id={_appSettings.CanvasClientId}&" +
-               $"response_type=code&" +
-               $"redirect_uri={Uri.EscapeDataString(_appSettings.CanvasRedirectUri)}&" +
-               $"scope=url:GET|/api/v1/courses/:id url:GET|/api/v1/courses/:course_id/enrollments url:GET|/api/v1/courses/:course_id/folders url:GET|/api/v1/folders/:id/folders url:GET|/api/v1/folders/:id/files url:GET|/api/v1/courses/:course_id/assignments url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions/:user_id url:GET|/api/v1/announcements url:GET|/api/v1/users/self/favorites/courses url:GET|/api/v1/users/:id url:GET|/api/v1/courses url:GET|/api/v1/accounts/:account_id/sub_accounts url:GET|/api/v1/courses/:course_id/todo url:GET|/api/v1/users/:user_id/courses url:GET|/api/v1/courses/:id&" +
-               $"&state={Guid.NewGuid()}";
+        var queryParams = new Dictionary<string, string>
+        {
+            { "client_id", _appSettings.CanvasClientId },
+            { "response_type", "code" },
+            { "redirect_uri", Uri.EscapeDataString(_appSettings.CanvasRedirectUri) },
+            { "scope", Uri.EscapeDataString(Scopes) },
+            { "state", Guid.NewGuid().ToString() }
+        };
+
+        var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+        return $"{_appSettings.CanvasBaseUrl}/login/oauth2/auth?{queryString}";
     }
+    
+    private static string Scopes => string.Join(" ", new[]
+    {
+        "url:GET|/api/v1/courses/:id",
+        "url:GET|/api/v1/courses/:course_id/enrollments",
+        "url:GET|/api/v1/courses/:course_id/folders",
+        "url:GET|/api/v1/folders/:id/folders",
+        "url:GET|/api/v1/folders/:id/files",
+        "url:GET|/api/v1/courses/:course_id/assignments",
+        "url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions/:user_id",
+        "url:GET|/api/v1/announcements",
+        "url:GET|/api/v1/users/self/favorites/courses",
+        "url:GET|/api/v1/users/:id",
+        "url:GET|/api/v1/courses",
+        "url:GET|/api/v1/accounts/:account_id/sub_accounts",
+        "url:GET|/api/v1/courses/:course_id/todo",
+        "url:GET|/api/v1/users/:user_id/courses",
+    });
 
     public async Task<Result<CanvasAuthToken>> HandleOAuthCallbackAsync(Dictionary<string, string> query)
     {
