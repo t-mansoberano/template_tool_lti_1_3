@@ -125,7 +125,8 @@ public class LtiService : ILtiService
             UserId = customData.GetValueOrDefault(ClaimTypes.UserId).GetString() ?? "Unknown",
             IsInstructor = isInstructor,
             IsStudent = isStudent,
-            IsWithoutRole = isWithoutRole
+            IsWithoutRole = isWithoutRole,
+            IsExternalCollaborator = false
         };
     }
 

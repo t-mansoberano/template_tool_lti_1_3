@@ -1,35 +1,32 @@
-import {CommonModule} from '@angular/common'; // Importar CommonModule
+import {CommonModule, NgForOf, NgIf} from '@angular/common';
 import {Component, inject} from '@angular/core';
 import {Evaluation} from '../../models/evaluation.model';
 import {EvaluationDataService} from '../../services/evaluation-data.service';
 import {TabsComponent} from '../../components/tabs/tabs.component';
-import {ProfessorHeaderComponent} from '../../components/professor-header/professor-header.component';
+import {InstructorHeaderComponent} from '../../components/instructor-header/instructor-header.component';
 import {StudentListComponent} from '../../components/student-list/student-list.component';
 import {StudentHeaderComponent} from '../../components/student-header/student-header.component';
 import {FeedbackCardComponent} from '../../components/feedback-card/feedback-card.component';
 import {CompetencyCardComponent} from '../../components/competency-card/competency-card.component';
-import {NgForOf, NgIf} from '@angular/common';
-import {HeaderComponent} from '../../../../shared/components/header/header.component';
 
 @Component({
-  selector: 'app-professor-view',
+  selector: 'app-instructor-view',
   standalone: true,
   imports: [
     CommonModule,
     TabsComponent,
-    ProfessorHeaderComponent,
+    InstructorHeaderComponent,
     StudentListComponent,
     StudentHeaderComponent,
     FeedbackCardComponent,
     CompetencyCardComponent,
     NgIf,
     NgForOf,
-    HeaderComponent,
   ],
-  templateUrl: './professor-view.component.html',
-  styleUrl: './professor-view.component.css'
+  templateUrl: './instructor-view.component.html',
+  styleUrl: './instructor-view.component.css'
 })
-export class ProfessorViewComponent {
+export class InstructorViewComponent {
   private evaluationDataService = inject(EvaluationDataService);
   evaluation: Evaluation | null = null;
   canvasData: any = null;

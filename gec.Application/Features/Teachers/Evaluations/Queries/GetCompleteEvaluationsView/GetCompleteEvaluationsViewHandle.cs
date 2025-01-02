@@ -10,6 +10,8 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
     {
         try
         {
+            await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
+
             // Datos dummy del curso
             var course = new CourseDTO
             {

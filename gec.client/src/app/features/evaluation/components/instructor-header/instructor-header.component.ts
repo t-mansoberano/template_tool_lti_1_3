@@ -7,10 +7,10 @@ import {NgIf} from '@angular/common';
   imports: [
     NgIf
   ],
-  templateUrl: './professor-header.component.html',
-  styleUrl: './professor-header.component.css'
+  templateUrl: './instructor-header.component.html',
+  styleUrl: './instructor-header.component.css'
 })
-export class ProfessorHeaderComponent {
+export class InstructorHeaderComponent {
   @Input() title: string = '';
   @Input() subtitle: string = '';
 }

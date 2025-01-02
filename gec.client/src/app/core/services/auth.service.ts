@@ -2,7 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
-import {LtiContext, Resolve} from '../models/lti-context.model';
+import {LtiContext} from '../models/lti-context.model';
+import {Resolve} from '../models/resolve.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,18 +15,37 @@ export class AuthService {
   private _isStudent = false;
   private _isWithoutRole = false;
   private _isError = false;
+  private _isExternalCollaborator = false;
 
   getLtiContext(): Observable<Resolve> {
     return this.apiService.get<Resolve>('/api/lti').pipe(
       tap((context: Resolve) => {
         this._isInstructor = context.result.user.isInstructor;
         this._isStudent = context.result.user.isStudent;
+        this._isExternalCollaborator = context.result.user.isExternalCollaborator;
+        this._isWithoutRole = context.result.user.isWithoutRole;
+        this._isError = false;
+      }),
+      catchError((err) => {
+        console.error('Error en LTI, intentando Federación...', err);
+        return this.getFederationContext();
+      }),
+    );
+  }
+
+  getFederationContext(): Observable<Resolve> {
+    return this.apiService.get<Resolve>('/api/federation').pipe(
+      tap((context: Resolve) => {
+        this._isInstructor = context.result.user.isInstructor;
+        this._isStudent = context.result.user.isStudent;
+        this._isExternalCollaborator = context.result.user.isExternalCollaborator;
         this._isWithoutRole = context.result.user.isWithoutRole;
         this._isError = false;
       }),
       catchError((err) => {
         this._isInstructor = false;
         this._isStudent = false;
+        this._isExternalCollaborator = false;
         this._isWithoutRole = false;
         this._isError = true;
         throw err;
@@ -39,6 +59,10 @@ export class AuthService {
 
   isStudent(): boolean {
     return this._isStudent;
+  }
+
+  isExternalCollaborator(): boolean {
+    return this._isExternalCollaborator;
   }
 
   isWithoutRole(): boolean {
