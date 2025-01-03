@@ -1,5 +1,6 @@
 using gec.Application;
 using gec.Infrastructure;
+using Serilog;
 
 namespace gec.Server
 {
@@ -7,15 +8,27 @@ namespace gec.Server
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-            
-            ConfigureServices(builder);
-            
-            var app = builder.Build();
+            ConfigureLogging();
 
-            ConfigurePipeline(app);
+            try
+            {
+                var builder = WebApplication.CreateBuilder(args);
+                ConfigureServices(builder);
+            
+                var app = builder.Build();
+                ConfigurePipeline(app);
 
-            app.Run();
+                app.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "La aplicación no pudo iniciarse correctamente.");
+                throw;
+            }
+            finally
+            {
+                Log.CloseAndFlush(); // Asegurar que los logs pendientes se envíen antes de cerrar
+            }
         }
 
         private static void ConfigureServices(WebApplicationBuilder builder)
@@ -23,17 +36,6 @@ namespace gec.Server
             builder.Services.AddApplicationServices();
             builder.Services.AddServerServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
-
-            builder.WebHost.UseSentry(o =>
-            {
-                o.Dsn = "https://70801557168fc87f254a77ff783afb6c@o4508458878500864.ingest.us.sentry.io/4508458976870400";
-                // When configuring for the first time, to see what the SDK is doing:
-                o.Debug = true;
-                // Set TracesSampleRate to 1.0 to capture 100%
-                // of transactions for tracing.
-                // We recommend adjusting this value in production
-                o.TracesSampleRate = 1.0;
-            });
 
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -84,22 +86,29 @@ namespace gec.Server
             app.MapControllers();
             app.MapFallbackToFile("/index.html");
         }
-        
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+
+        private static void ConfigureLogging()
+        {
+            // Configurar Serilog
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console() // Logs en consola
+                .WriteTo.File(@"C:\Log\GestorEvaluacionesCompetencia-.log", rollingInterval: RollingInterval.Day) // Logs en archivos rotados
+                .WriteTo.Sentry(o =>
                 {
-                    // Add the following line:
-                    webBuilder.UseSentry(o =>
-                    {
-                        o.Dsn = "https://70801557168fc87f254a77ff783afb6c@o4508458878500864.ingest.us.sentry.io/4508458976870400";
-                        // When configuring for the first time, to see what the SDK is doing:
-                        o.Debug = true;
-                        // Set TracesSampleRate to 1.0 to capture 100%
-                        // of transactions for tracing.
-                        // We recommend adjusting this value in production
-                        o.TracesSampleRate = 1.0;
-                    });
-                });
+                    o.Dsn = "https://70801557168fc87f254a77ff783afb6c@o4508458878500864.ingest.us.sentry.io/4508458976870400";
+                    o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
+                    o.MinimumEventLevel = Serilog.Events.LogEventLevel.Debug;
+                    o.AttachStacktrace = true;
+                    o.Release = "gec@0.0.1";
+                    o.Environment = "Development";
+                    // When configuring for the first time, to see what the SDK is doing:
+                    o.Debug = true;
+                    // Set TracesSampleRate to 1.0 to capture 100%
+                    // of transactions for tracing.
+                    // We recommend adjusting this value in production
+                    o.TracesSampleRate = 1.0;                    
+                })
+                .CreateLogger();            
+        }
     }
 }

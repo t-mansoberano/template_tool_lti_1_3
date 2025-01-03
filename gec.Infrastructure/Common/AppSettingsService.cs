@@ -22,7 +22,7 @@ public class AppSettingsService
         {
             throw new ArgumentNullException(nameof(configuration), "La configuración no puede ser null.");
         }
-        
+
         // LtiSettings
         LtiUrlBase = configuration["LtiSettings:UrlBase"]
                      ?? throw new InvalidOperationException("LtiSettings:UrlBase no está configurado.");
