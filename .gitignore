@@ -6,6 +6,7 @@
 /.vs/gec
 /gec.Server/bin
 /gec.Server/obj
+/gec.Server/appsettings.Secrets.json
 /gec.client/.vscode
 /gec.client/obj
 /gec.client/public

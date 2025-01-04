@@ -19,4 +19,8 @@
       <ProjectReference Include="..\gec.Application\gec.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Configuration\" />
+    </ItemGroup>
+
 </Project>

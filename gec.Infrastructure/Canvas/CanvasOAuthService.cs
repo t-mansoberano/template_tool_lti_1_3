@@ -2,16 +2,17 @@
 using CSharpFunctionalExtensions;
 using gec.Application.Contracts.Infrastructure.Canvas;
 using gec.Application.Contracts.Infrastructure.Canvas.Models;
+using gec.Application.Contracts.Server.Configuration;
 using gec.Infrastructure.Common;
 
 namespace gec.Infrastructure.Canvas;
 
 public class CanvasOAuthService : ICanvasOAuthService
 {
-    private readonly AppSettingsService _appSettings;
+    private readonly IAppSettingsService _appSettings;
     private readonly HttpClient _httpClient;
 
-    public CanvasOAuthService(AppSettingsService appSettings, IHttpClientFactory httpClientFactory)
+    public CanvasOAuthService(IAppSettingsService appSettings, IHttpClientFactory httpClientFactory)
     {
         _appSettings = appSettings;
         _httpClient = httpClientFactory.CreateClient("CanvasClient");
@@ -21,15 +22,15 @@ public class CanvasOAuthService : ICanvasOAuthService
     {
         var queryParams = new Dictionary<string, string>
         {
-            { "client_id", _appSettings.CanvasClientId },
+            { "client_id", _appSettings.Canvas.ClientId },
             { "response_type", "code" },
-            { "redirect_uri", Uri.EscapeDataString(_appSettings.CanvasRedirectUri) },
+            { "redirect_uri", Uri.EscapeDataString(_appSettings.Canvas.RedirectUri) },
             { "scope", Uri.EscapeDataString(Scopes) },
             { "state", Guid.NewGuid().ToString() }
         };
 
         var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-        return $"{_appSettings.CanvasBaseUrl}/login/oauth2/auth?{queryString}";
+        return $"{_appSettings.Canvas.ApiBaseUrl}/login/oauth2/auth?{queryString}";
     }
     
     private static string Scopes => string.Join(" ", new[]
@@ -60,14 +61,14 @@ public class CanvasOAuthService : ICanvasOAuthService
         var requestData = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("client_id", _appSettings.CanvasClientId),
-            new KeyValuePair<string, string>("client_secret", _appSettings.CanvasClientSecret),
-            new KeyValuePair<string, string>("redirect_uri", _appSettings.CanvasRedirectUri),
+            new KeyValuePair<string, string>("client_id", _appSettings.Canvas.ClientId),
+            new KeyValuePair<string, string>("client_secret", _appSettings.Canvas.ClientSecret),
+            new KeyValuePair<string, string>("redirect_uri", _appSettings.Canvas.RedirectUri),
             new KeyValuePair<string, string>("code", oAuthQuery.Code)
         });
 
         // Realizar la solicitud al Token Endpoint
-        var response = await _httpClient.PostAsync(_appSettings.CanvasTokenEndpoint, requestData);
+        var response = await _httpClient.PostAsync(_appSettings.Canvas.TokenEndpoint, requestData);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -118,14 +119,14 @@ public class CanvasOAuthService : ICanvasOAuthService
         var requestData = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("grant_type", "refresh_token"),
-            new KeyValuePair<string, string>("client_id", _appSettings.CanvasClientId),
-            new KeyValuePair<string, string>("client_secret", _appSettings.CanvasClientSecret),
+            new KeyValuePair<string, string>("client_id", _appSettings.Canvas.ClientId),
+            new KeyValuePair<string, string>("client_secret", _appSettings.Canvas.ClientSecret),
             new KeyValuePair<string, string>("refresh_token", refreshToken)
         });
 
         try
         {
-            var response = await _httpClient.PostAsync($"{_appSettings.CanvasBaseUrl}/login/oauth2/token", requestData);
+            var response = await _httpClient.PostAsync($"{_appSettings.Canvas.ApiBaseUrl}/login/oauth2/token", requestData);
             
             if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
             {

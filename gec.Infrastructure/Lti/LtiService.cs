@@ -3,16 +3,16 @@ using System.Text.Json;
 using CSharpFunctionalExtensions;
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Infrastructure.Lti.Models;
-using gec.Infrastructure.Common;
+using gec.Application.Contracts.Server.Configuration;
 
 namespace gec.Infrastructure.Lti;
 
 public class LtiService : ILtiService
 {
-    private readonly AppSettingsService _appSettings;
+    private readonly IAppSettingsService _appSettings;
     private readonly IJwtValidationService _jwtValidationService;
 
-    public LtiService(AppSettingsService appSettings, IJwtValidationService jwtValidationService)
+    public LtiService(IAppSettingsService appSettings, IJwtValidationService jwtValidationService)
     {
         _appSettings = appSettings;
         _jwtValidationService = jwtValidationService;
@@ -29,7 +29,7 @@ public class LtiService : ILtiService
 
         var queryParams = BuildQueryParameters(form, state, nonce);
 
-        var redirectUrl = $"{_appSettings.LtiUrlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
+        var redirectUrl = $"{_appSettings.Lti.UrlBase}/api/lti/authorize_redirect?" + string.Join("&", queryParams);
         return Result.Success(redirectUrl);
     }
 
@@ -40,7 +40,7 @@ public class LtiService : ILtiService
             "scope=openid",
             "response_type=id_token",
             $"client_id={form.ClientId}",
-            $"redirect_uri={Uri.EscapeDataString(_appSettings.LtiRedirectUri)}",
+            $"redirect_uri={Uri.EscapeDataString(_appSettings.Lti.RedirectUri)}",
             $"login_hint={Uri.EscapeDataString(form.LoginHint)}",
             $"lti_message_hint={Uri.EscapeDataString(form.LtiMessageHint)}",
             $"state={Uri.EscapeDataString(state)}",

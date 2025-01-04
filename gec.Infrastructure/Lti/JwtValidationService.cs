@@ -2,16 +2,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CSharpFunctionalExtensions;
 using gec.Application.Contracts.Infrastructure.Lti;
-using gec.Infrastructure.Common;
+using gec.Application.Contracts.Server.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace gec.Infrastructure.Lti;
 
 public class JwtValidationService : IJwtValidationService
 {
-    private readonly AppSettingsService _appSettings;
+    private readonly IAppSettingsService _appSettings;
 
-    public JwtValidationService(AppSettingsService appSettings)
+    public JwtValidationService(IAppSettingsService appSettings)
     {
         _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     }
@@ -48,12 +48,12 @@ public class JwtValidationService : IJwtValidationService
 
     private async Task<TokenValidationParameters> BuildTokenValidationParametersAsync()
     {
-        var signingKeys = await GetSigningKeysFromJwksAsync($"{_appSettings.LtiUrlBase}/api/lti/security/jwks");
+        var signingKeys = await GetSigningKeysFromJwksAsync($"{_appSettings.Lti.UrlBase}/api/lti/security/jwks");
 
         return new TokenValidationParameters
         {
-            ValidIssuer = _appSettings.LtiValidIssuer, // URL base del emisor
-            ValidAudience = _appSettings.LtiClientId, // ID de cliente configurado
+            ValidIssuer = _appSettings.Lti.ValidIssuer, // URL base del emisor
+            ValidAudience = _appSettings.Lti.ClientId, // ID de cliente configurado
             IssuerSigningKeys = signingKeys,
             ValidateIssuer = true,
             ValidateAudience = true,

@@ -1,20 +1,16 @@
-﻿using gec.Application;
-using gec.Infrastructure;
+﻿using gec.Application.Contracts.Server.Configuration;
 
 namespace gec.Server.Startup;
 
 public static class ServiceConfiguration
 {
-    public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddCustomServices(this IServiceCollection services, IAppSettingsService appSettings)
     {
-        services.AddApplicationServices();
-        services.AddInfrastructureServices(configuration);
-
         services.AddDistributedMemoryCache();
         services.AddSession(options =>
         {
-            options.Cookie.Domain = "manuelsoberano.ngrok.dev";
-            options.IdleTimeout = TimeSpan.FromMinutes(480);
+            options.Cookie.Domain = appSettings.Session.CookieDomain;
+            options.IdleTimeout = TimeSpan.FromMinutes(appSettings.Session.IdleTimeoutMinutes);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -26,10 +22,7 @@ public static class ServiceConfiguration
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
-                policy.WithOrigins("https://localhost:4200",
-                        "https://localhost:7051",
-                        "http://localhost:5156",
-                        "https://manuelsoberano.ngrok.dev")
+                policy.WithOrigins(appSettings.Cors.AllowedOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
