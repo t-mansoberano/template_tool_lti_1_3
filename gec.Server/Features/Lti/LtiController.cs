@@ -35,7 +35,8 @@ public class LtiController : BaseController
     {
         var formModel = new LoginInitiationResponse(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
         var redirectUrl = _ltiService.BuildAuthorizationUrl(formModel);
-        if (redirectUrl.IsFailure) return Error(redirectUrl.Error);
+        if (redirectUrl.IsFailure) 
+            return Error(redirectUrl.Error);
         
         return Redirect(redirectUrl.Value);
     }
@@ -45,7 +46,8 @@ public class LtiController : BaseController
     public async Task<IActionResult> HandleRedirect([FromForm] IFormCollection form)
     {
         var context = await _ltiService.HandleRedirectAsync(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
-        if (context.IsFailure) return Error(context.Error);
+        if (context.IsFailure) 
+            return Error(context.Error);
         
         _sessionStorageService.Store("LtiContext", context.Value);
 

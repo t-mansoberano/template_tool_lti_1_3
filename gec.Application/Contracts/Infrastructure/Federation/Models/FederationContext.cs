@@ -1,6 +1,6 @@
 ﻿namespace gec.Application.Contracts.Infrastructure.Federation.Models;
 
-public class FederetionContext
+public class FederationContext
 {
     public User User { get; set; } = new();
 }

@@ -6,7 +6,7 @@ namespace gec.Infrastructure.Federation;
 
 public class FederationService : IFederationService
 {
-    public async Task<Result<FederetionContext>> HandleAuthAsync()
+    public async Task<Result<FederationContext>> HandleAuthAsync()
     {
         await Task.Delay(100); // Simula una llamada asíncrona.
 
@@ -25,7 +25,7 @@ public class FederationService : IFederationService
         };
 
         // Crear el contexto de federación con el usuario autenticado.
-        var context = new FederetionContext
+        var context = new FederationContext
         {
             User = user
         };

@@ -19,6 +19,8 @@ public static class ServiceRegistration
         services.AddSingleton<IAppSettingsService, AppSettingsService>();
 
         services.AddScoped<ISessionStorageService, SessionStorageService>();
+        
+        services.AddScoped<ValidateCanvasTokenAttribute>();
 
         return services;
     }
