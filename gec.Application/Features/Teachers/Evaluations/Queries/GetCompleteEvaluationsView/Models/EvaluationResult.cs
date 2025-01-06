@@ -1,6 +1,6 @@
-﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Dtos;
+﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Models;
 
-public class EvaluationResultDTO
+public class EvaluationResult
 {
     public string Id { get; set; } = ""; // Matches the Id of an EvaluationStructureDTO
     public string AchievementLevel { get; set; } = "";

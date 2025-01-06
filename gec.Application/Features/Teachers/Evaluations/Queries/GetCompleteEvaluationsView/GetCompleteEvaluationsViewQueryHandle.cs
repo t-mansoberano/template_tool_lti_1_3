@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Dtos;
+using gec.Application.Common;
+using gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Models;
 using MediatR;
 
 namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView;
@@ -10,10 +11,14 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
     {
         try
         {
+            var validationResult = await new GetCompleteEvaluationsViewQueryValidator().ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+                return Result.Failure<GetCompleteEvaluationsViewRespond>(validationResult.ErrorMessages());
+            
             await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
 
             // Datos dummy del curso
-            var course = new CourseDTO
+            var course = new Course
             {
                 Id = "COURSE001",
                 Key = "COURSE_KEY",
@@ -21,7 +26,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             };
 
             // Datos dummy del estado del curso
-            var courseState = new CourseStateDTO
+            var courseState = new CourseState
             {
                 TotalStudents = 10,
                 EvaluatedStudents = 6,
@@ -30,7 +35,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             };
 
             // Datos dummy de estudiantes
-            var students = Enumerable.Range(1, 10).Select(i => new StudentEvaluationDTO
+            var students = Enumerable.Range(1, 10).Select(i => new StudentEvaluation
             {
                 Id = $"STUDENT{i}",
                 Name = $"Student {i}",
@@ -38,9 +43,9 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 TotalEvaluations = 5,
                 CompletedEvaluations = i <= 6 ? 5 : 3,
                 PendingEvaluations = i <= 6 ? 0 : 2,
-                Evidences = new List<EvidenceDTO>
+                Evidences = new List<Evidence>
                 {
-                    new EvidenceDTO
+                    new Evidence
                     {
                         Id = $"EVIDENCE{i}A",
                         Name = "Evidence A",
@@ -49,7 +54,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         SpeedGraderLink = "https://speedgrader.example.com",
                         FileType = "pdf"
                     },
-                    new EvidenceDTO
+                    new Evidence
                     {
                         Id = $"EVIDENCE{i}B",
                         Name = "Evidence B",
@@ -59,16 +64,16 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         FileType = "docx"
                     }
                 },
-                EvaluationResults = new List<EvaluationResultDTO>
+                EvaluationResults = new List<EvaluationResult>
                 {
-                    new EvaluationResultDTO
+                    new EvaluationResult
                     {
                         Id = $"COMP{i}A",
                         AchievementLevel = "Solid",
                         Comments = "Solid understanding.",
                         IsEvaluated = true
                     },
-                    new EvaluationResultDTO
+                    new EvaluationResult
                     {
                         Id = $"COMP{i}B",
                         AchievementLevel = "Basic",
@@ -79,9 +84,9 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             }).ToList();
 
             // Datos dummy de la estructura de evaluación
-            var evaluationStructures = new List<EvaluationStructureDTO>
+            var evaluationStructures = new List<EvaluationStructure>
             {
-                new EvaluationStructureDTO
+                new EvaluationStructure
                 {
                     Id = "COMP1",
                     Key = "COMP_KEY_1",
@@ -90,15 +95,15 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     Type = "Competency",
                     ParentId = null,
                     ParentName = null,
-                    Descriptors = new List<DescriptorDTO>
+                    Descriptors = new List<Descriptor>
                     {
-                        new DescriptorDTO { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new DescriptorDTO { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new DescriptorDTO { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new DescriptorDTO { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new Descriptor { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
+                        new Descriptor { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
+                        new Descriptor { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
+                        new Descriptor { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
                     }
                 },
-                new EvaluationStructureDTO
+                new EvaluationStructure
                 {
                     Id = "COMP2",
                     Key = "COMP_KEY_2",
@@ -107,12 +112,12 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     Type = "Subcompetency",
                     ParentId = "COMP1",
                     ParentName = "Competency 1",
-                    Descriptors = new List<DescriptorDTO>
+                    Descriptors = new List<Descriptor>
                     {
-                        new DescriptorDTO { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new DescriptorDTO { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new DescriptorDTO { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new DescriptorDTO { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new Descriptor { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
+                        new Descriptor { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
+                        new Descriptor { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
+                        new Descriptor { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
                     }
                 }
             };

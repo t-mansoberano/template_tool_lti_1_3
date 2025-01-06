@@ -1,7 +1,7 @@
 ﻿import {User} from './user.model';
 import {Course} from './course.model';
 
-export interface LtiContext {
+export interface Context {
   user: User;
   course: Course;
 }

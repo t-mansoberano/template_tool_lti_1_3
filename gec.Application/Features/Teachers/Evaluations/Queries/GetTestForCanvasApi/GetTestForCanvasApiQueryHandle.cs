@@ -1,22 +1,27 @@
 ﻿using CSharpFunctionalExtensions;
+using gec.Application.Common;
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
 using MediatR;
 
-namespace gec.Application.Features.Teachers.Evaluations.Queries.GetTestForCanvasAPI;
+namespace gec.Application.Features.Teachers.Evaluations.Queries.GetTestForCanvasApi;
 
-public class GetTestForCanvasAPIHandle : IRequestHandler<GetTestForCanvasAPIQuery, Result<GetTestForCanvasAPIRespond>>
+public class GetTestForCanvasApiHandle : IRequestHandler<GetTestForCanvasApiQuery, Result<GetTestForCanvasApiRespond>>
 {
     private readonly IEnrollmentsService _enrollmentsService;
 
-    public GetTestForCanvasAPIHandle(IEnrollmentsService enrollmentsService)
+    public GetTestForCanvasApiHandle(IEnrollmentsService enrollmentsService)
     {
         _enrollmentsService = enrollmentsService;
     }
 
-    public async Task<Result<GetTestForCanvasAPIRespond>> Handle(GetTestForCanvasAPIQuery request,
+    public async Task<Result<GetTestForCanvasApiRespond>> Handle(GetTestForCanvasApiQuery request,
         CancellationToken cancellationToken)
     {
-        var result = await _enrollmentsService.GetStudentsByCourseAsync();
+        var validationResult = await new GetTestForCanvasApiQueryValidator().ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+            return Result.Failure<GetTestForCanvasApiRespond>(validationResult.ErrorMessages());
+        
+        var result = await _enrollmentsService.GetStudentsByCourseAsync(request.CourseId);
 
         var resultCoverted = result.Value.Select(s => new Enrollment()
         {
@@ -29,7 +34,7 @@ public class GetTestForCanvasAPIHandle : IRequestHandler<GetTestForCanvasAPIQuer
             User = new User() { Id = s.User.Id, Name = s.User.Name }
         }).ToList(); 
         
-        var resultFinal = new GetTestForCanvasAPIRespond() { Enrollments = resultCoverted };
+        var resultFinal = new GetTestForCanvasApiRespond() { Enrollments = resultCoverted };
         
         return Result.Success(resultFinal);
     }

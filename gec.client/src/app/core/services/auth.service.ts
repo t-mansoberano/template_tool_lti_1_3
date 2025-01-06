@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
-import {LtiContext} from '../models/lti-context.model';
+import {Context} from '../models/context.model';
 import {Resolve} from '../models/resolve.model';
 
 @Injectable({
@@ -16,10 +16,12 @@ export class AuthService {
   private _isWithoutRole = false;
   private _isError = false;
   private _isExternalCollaborator = false;
+  private _courseId = "";
 
   getLtiContext(): Observable<Resolve> {
     return this.apiService.get<Resolve>('/api/lti').pipe(
       tap((context: Resolve) => {
+        this._courseId = context.result.course.id;
         this._isInstructor = context.result.user.isInstructor;
         this._isStudent = context.result.user.isStudent;
         this._isExternalCollaborator = context.result.user.isExternalCollaborator;
@@ -36,6 +38,7 @@ export class AuthService {
   getFederationContext(): Observable<Resolve> {
     return this.apiService.get<Resolve>('/api/federation').pipe(
       tap((context: Resolve) => {
+        this._courseId = "";
         this._isInstructor = context.result.user.isInstructor;
         this._isStudent = context.result.user.isStudent;
         this._isExternalCollaborator = context.result.user.isExternalCollaborator;
@@ -71,6 +74,10 @@ export class AuthService {
 
   isError(): boolean {
     return this._isError;
+  }
+
+  getCourseId(): string {
+    return this._courseId;
   }
 
 }

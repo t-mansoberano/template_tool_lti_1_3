@@ -18,10 +18,12 @@ public class GetCompleteEvaluationsViewController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetStudentsByCourseAsync([FromQuery] GetCompleteEvaluationsViewQuery query)
+    public async Task<IActionResult> GetStudentsByCourseAsync([FromRoute] string courseId,
+        [FromQuery] GetCompleteEvaluationsViewQuery query)
     {
+        query.CourseId = courseId;
         var result = await _mediator.Send(query);
-        if (result.IsFailure) 
+        if (result.IsFailure)
             return Error(result.Error);
 
         return Ok(result.Value);

@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {ApiService} from '../../../core/services/api.service';
 import {Evaluation} from '../models/evaluation.model';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvaluationDataService {
   private apiService = inject(ApiService); // Uso de inject para inyectar ApiService
+  private authService = inject(AuthService); // Uso de inject para inyectar ApiService
 
   getEvaluations(): Observable<Evaluation> {
     return of({
@@ -28,7 +30,8 @@ export class EvaluationDataService {
   }
 
   getTestCanvasAPI(): Observable<any> {
-    const canvasApiUrl = '/api/teachers/courses/123/testapicanvas';
+    const courseId = this.authService.getCourseId();
+    const canvasApiUrl = `/api/teachers/courses/${courseId}/testapicanvas`;
     return this.apiService.get<any>(canvasApiUrl);
   }
 

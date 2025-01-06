@@ -90,7 +90,7 @@ public class CanvasApiClient : ICanvasApiClient
         }
 
         if (response == null)
-            return Result.Failure<T>("No hay respuesta del servidor."); ;
+            return Result.Failure<T>("No hay respuesta del servidor.");
 
         // Check and store new quota
         if (response.Headers.TryGetValues("X-Rate-Limit-Remaining", out var values))

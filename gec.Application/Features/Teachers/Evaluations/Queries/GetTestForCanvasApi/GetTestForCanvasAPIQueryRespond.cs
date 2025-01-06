@@ -1,6 +1,6 @@
-﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetTestForCanvasAPI;
+﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetTestForCanvasApi;
 
-public class GetTestForCanvasAPIRespond
+public class GetTestForCanvasApiRespond
 {
     public List<Enrollment> Enrollments { get; set; } = new();
 }

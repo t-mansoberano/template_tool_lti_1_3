@@ -1,6 +1,6 @@
-﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Dtos;
+﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Models;
 
-public class CourseStateDTO
+public class CourseState
 {
     public int TotalStudents { get; set; }
     public int EvaluatedStudents { get; set; }

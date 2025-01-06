@@ -1,6 +1,6 @@
-﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Dtos;
+﻿namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView.Models;
 
-public class StudentEvaluationDTO
+public class StudentEvaluation
 {
     public string Id { get; set; } = "";
     public string Name { get; set; } = "";
@@ -8,6 +8,6 @@ public class StudentEvaluationDTO
     public int TotalEvaluations { get; set; } // Total evaluations (e.g., 10)
     public int CompletedEvaluations { get; set; } // Completed evaluations (e.g., 2)
     public int PendingEvaluations { get; set; } // Pending evaluations (e.g., 8)
-    public IEnumerable<EvidenceDTO> Evidences { get; set; } = new List<EvidenceDTO>();
-    public IEnumerable<EvaluationResultDTO> EvaluationResults { get; set; } = new List<EvaluationResultDTO>();
+    public IEnumerable<Evidence> Evidences { get; set; } = new List<Evidence>();
+    public IEnumerable<EvaluationResult> EvaluationResults { get; set; } = new List<EvaluationResult>();
 }

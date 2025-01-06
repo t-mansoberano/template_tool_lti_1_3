@@ -5,5 +5,5 @@ namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvalu
 
 public class GetCompleteEvaluationsViewQuery : IRequest<Result<GetCompleteEvaluationsViewRespond>>
 {
-    
+    public string CourseId { get; set; } = string.Empty;
 }
