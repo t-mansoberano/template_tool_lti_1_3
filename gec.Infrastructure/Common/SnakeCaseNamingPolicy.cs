@@ -8,5 +8,5 @@ public class SnakeCaseNamingPolicy : JsonNamingPolicy
     {
         return string.Concat(name.Select((c, i) =>
             i > 0 && char.IsUpper(c) ? "_" + char.ToLower(c) : char.ToLower(c).ToString()));
-    }    
+    }
 }

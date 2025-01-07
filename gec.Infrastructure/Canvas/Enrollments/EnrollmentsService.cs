@@ -12,7 +12,7 @@ public class EnrollmentsService : IEnrollmentsService
     {
         _canvasApiClient = canvasApiClient;
     }
-    
+
     public async Task<Result<List<Enrollment>>> GetStudentsByCourseAsync(string courseId)
     {
         var endpoint = $"/api/v1/courses/{courseId}/enrollments?type[]=StudentEnrollment";

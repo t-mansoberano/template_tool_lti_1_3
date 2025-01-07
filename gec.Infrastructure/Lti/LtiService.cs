@@ -33,23 +33,6 @@ public class LtiService : ILtiService
         return Result.Success(redirectUrl);
     }
 
-    private List<string> BuildQueryParameters(LoginInitiationResponse form, string state, string nonce)
-    {
-        return new List<string>
-        {
-            "scope=openid",
-            "response_type=id_token",
-            $"client_id={form.ClientId}",
-            $"redirect_uri={Uri.EscapeDataString(_appSettings.Lti.RedirectUri)}",
-            $"login_hint={Uri.EscapeDataString(form.LoginHint)}",
-            $"lti_message_hint={Uri.EscapeDataString(form.LtiMessageHint)}",
-            $"state={Uri.EscapeDataString(state)}",
-            "response_mode=form_post",
-            $"nonce={Uri.EscapeDataString(nonce)}",
-            "prompt=none"
-        };
-    }
-
     public async Task<Result<LtiContext>> HandleRedirectAsync(Dictionary<string, string> form)
     {
         var authenticationResponse = new AuthenticationResponse(form);
@@ -68,21 +51,6 @@ public class LtiService : ILtiService
         var course = BuildCourse(claims, customData);
 
         return Result.Success(new LtiContext { User = user, Course = course });
-    }
-
-    private Dictionary<string, List<string>> ParseClaims(IEnumerable<Claim> claims)
-    {
-        return claims
-            .GroupBy(c => c.Type)
-            .ToDictionary(g => g.Key, g => g.Select(v => v.Value).ToList());
-    }
-
-    private Dictionary<string, JsonElement> ExtractCustomData(Dictionary<string, List<string>> claims)
-    {
-        var customClaimJson = claims.GetValueOrDefault(ClaimTypes.Custom)?.FirstOrDefault();
-        return !string.IsNullOrEmpty(customClaimJson)
-            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson) ?? new()
-            : new();
     }
 
     public Result<string> GetJwks()
@@ -109,13 +77,46 @@ public class LtiService : ILtiService
         return Result.Success(jsonJwks);
     }
 
+    private List<string> BuildQueryParameters(LoginInitiationResponse form, string state, string nonce)
+    {
+        return new List<string>
+        {
+            "scope=openid",
+            "response_type=id_token",
+            $"client_id={form.ClientId}",
+            $"redirect_uri={Uri.EscapeDataString(_appSettings.Lti.RedirectUri)}",
+            $"login_hint={Uri.EscapeDataString(form.LoginHint)}",
+            $"lti_message_hint={Uri.EscapeDataString(form.LtiMessageHint)}",
+            $"state={Uri.EscapeDataString(state)}",
+            "response_mode=form_post",
+            $"nonce={Uri.EscapeDataString(nonce)}",
+            "prompt=none"
+        };
+    }
+
+    private Dictionary<string, List<string>> ParseClaims(IEnumerable<Claim> claims)
+    {
+        return claims
+            .GroupBy(c => c.Type)
+            .ToDictionary(g => g.Key, g => g.Select(v => v.Value).ToList());
+    }
+
+    private Dictionary<string, JsonElement> ExtractCustomData(Dictionary<string, List<string>> claims)
+    {
+        var customClaimJson = claims.GetValueOrDefault(ClaimTypes.Custom)?.FirstOrDefault();
+        return !string.IsNullOrEmpty(customClaimJson)
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(customClaimJson) ??
+              new Dictionary<string, JsonElement>()
+            : new Dictionary<string, JsonElement>();
+    }
+
     private User BuildUser(Dictionary<string, List<string>> claims, Dictionary<string, JsonElement> customData)
     {
         var roles = claims.GetValueOrDefault(ClaimTypes.Roles) ?? new List<string>();
 
-        bool isInstructor = roles.Contains(ClaimTypes.RoleInstructor);
-        bool isStudent = roles.Contains(ClaimTypes.RoleStudent);
-        bool isWithoutRole = !isInstructor && !isStudent;
+        var isInstructor = roles.Contains(ClaimTypes.RoleInstructor);
+        var isStudent = roles.Contains(ClaimTypes.RoleStudent);
+        var isWithoutRole = !isInstructor && !isStudent;
 
         return new User
         {
@@ -135,8 +136,9 @@ public class LtiService : ILtiService
         var contextData = claims.GetValueOrDefault(ClaimTypes.Context)?.FirstOrDefault();
 
         var context = !string.IsNullOrEmpty(contextData)
-            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(contextData) ?? new()
-            : new();
+            ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(contextData) ??
+              new Dictionary<string, JsonElement>()
+            : new Dictionary<string, JsonElement>();
 
         return new Course
         {

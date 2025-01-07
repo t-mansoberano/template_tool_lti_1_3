@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using CSharpFunctionalExtensions;
-using gec.Application.Contracts;
 using gec.Application.Contracts.Infrastructure.Canvas;
 using gec.Application.Contracts.Infrastructure.Canvas.Models;
 using gec.Application.Contracts.Server;
@@ -13,10 +12,9 @@ namespace gec.Infrastructure.Canvas;
 
 public class CanvasApiClient : ICanvasApiClient
 {
+    private const int MaxRetries = 3; // Maximum retries for rate-limited requests
     private readonly HttpClient _httpClient;
     private readonly ISessionStorageService _sessionStorageService;
-
-    private const int MaxRetries = 3; // Maximum retries for rate-limited requests
 
     public CanvasApiClient(IHttpClientFactory httpClientFactory, ISessionStorageService sessionStorageService)
     {
@@ -69,7 +67,7 @@ public class CanvasApiClient : ICanvasApiClient
 
         // Retry Logic
         HttpResponseMessage? response = null;
-        for (int attempt = 1; attempt <= MaxRetries; attempt++)
+        for (var attempt = 1; attempt <= MaxRetries; attempt++)
         {
             response = await _httpClient.SendAsync(request, cancellationToken);
 
@@ -94,12 +92,8 @@ public class CanvasApiClient : ICanvasApiClient
 
         // Check and store new quota
         if (response.Headers.TryGetValues("X-Rate-Limit-Remaining", out var values))
-        {
             if (float.TryParse(values.FirstOrDefault(), out var newQuota))
-            {
                 _sessionStorageService.Store("X-Rate-Limit-Remaining", newQuota);
-            }
-        }
 
         // Deserialize response
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -108,10 +102,10 @@ public class CanvasApiClient : ICanvasApiClient
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = new SnakeCaseNamingPolicy()
         });
-        
-        if (result == null) 
+
+        if (result == null)
             return Result.Failure<T>("No se pudo deserializar el resultado.");
-        
+
         return Result.Success(result);
     }
 
@@ -122,13 +116,9 @@ public class CanvasApiClient : ICanvasApiClient
         var delay = baseDelayMilliseconds * Math.Pow(2, attempt); // Exponential backoff
 
         if (response.Headers.Contains("X-Rate-Limit-Reset-After"))
-        {
             if (double.TryParse(response.Headers.GetValues("X-Rate-Limit-Reset-After").FirstOrDefault(),
                     out var resetAfter))
-            {
                 delay = Math.Max(delay, resetAfter * 1000); // Convert seconds to milliseconds
-            }
-        }
 
         Console.WriteLine($"Se ha excedido el límite de velocidad. Se volverá a intentar después de {delay} ms...");
         await Task.Delay((int)delay, cancellationToken);
@@ -142,12 +132,9 @@ public class CanvasApiClient : ICanvasApiClient
 
     private int CalculateDynamicSleep(float remainingQuota)
     {
-        if (remainingQuota <= 0)
-        {
-            return 15000; // Hard pause for no quota remaining
-        }
+        if (remainingQuota <= 0) return 15000; // Hard pause for no quota remaining
 
         // Scale the delay dynamically based on remaining quota
-        return (int)((1 - (remainingQuota / 700)) * 1000 * 10);
+        return (int)((1 - remainingQuota / 700) * 1000 * 10);
     }
 }

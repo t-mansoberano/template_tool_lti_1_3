@@ -27,12 +27,12 @@ public static class ServiceRegistration
         });
         services.AddScoped<ICanvasOAuthService, CanvasOAuthService>();
         services.AddScoped<ICanvasApiClient, CanvasApiClient>();
-        
+
         services.AddScoped<IEnrollmentsService, EnrollmentsService>();
-        
+
         // Servicios relacionados con la Federación
         services.AddScoped<IFederationService, FederationService>();
-        
+
         return services;
     }
 }

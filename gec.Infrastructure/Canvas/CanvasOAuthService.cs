@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using CSharpFunctionalExtensions;
 using gec.Application.Contracts.Infrastructure.Canvas;
 using gec.Application.Contracts.Infrastructure.Canvas.Models;
@@ -18,6 +19,15 @@ public class CanvasOAuthService : ICanvasOAuthService
         _httpClient = httpClientFactory.CreateClient("CanvasClient");
     }
 
+    private static string Scopes => string.Join(" ", "url:GET|/api/v1/courses/:id",
+        "url:GET|/api/v1/courses/:course_id/enrollments", "url:GET|/api/v1/courses/:course_id/folders",
+        "url:GET|/api/v1/folders/:id/folders", "url:GET|/api/v1/folders/:id/files",
+        "url:GET|/api/v1/courses/:course_id/assignments",
+        "url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions/:user_id",
+        "url:GET|/api/v1/announcements", "url:GET|/api/v1/users/self/favorites/courses", "url:GET|/api/v1/users/:id",
+        "url:GET|/api/v1/courses", "url:GET|/api/v1/accounts/:account_id/sub_accounts",
+        "url:GET|/api/v1/courses/:course_id/todo", "url:GET|/api/v1/users/:user_id/courses");
+
     public string BuildAuthorizationUrl()
     {
         var queryParams = new Dictionary<string, string>
@@ -32,24 +42,6 @@ public class CanvasOAuthService : ICanvasOAuthService
         var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={kvp.Value}"));
         return $"{_appSettings.Canvas.ApiBaseUrl}/login/oauth2/auth?{queryString}";
     }
-    
-    private static string Scopes => string.Join(" ", new[]
-    {
-        "url:GET|/api/v1/courses/:id",
-        "url:GET|/api/v1/courses/:course_id/enrollments",
-        "url:GET|/api/v1/courses/:course_id/folders",
-        "url:GET|/api/v1/folders/:id/folders",
-        "url:GET|/api/v1/folders/:id/files",
-        "url:GET|/api/v1/courses/:course_id/assignments",
-        "url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions/:user_id",
-        "url:GET|/api/v1/announcements",
-        "url:GET|/api/v1/users/self/favorites/courses",
-        "url:GET|/api/v1/users/:id",
-        "url:GET|/api/v1/courses",
-        "url:GET|/api/v1/accounts/:account_id/sub_accounts",
-        "url:GET|/api/v1/courses/:course_id/todo",
-        "url:GET|/api/v1/users/:user_id/courses",
-    });
 
     public async Task<Result<CanvasAuthToken>> HandleOAuthCallbackAsync(Dictionary<string, string> query)
     {
@@ -95,20 +87,14 @@ public class CanvasOAuthService : ICanvasOAuthService
 
     public async Task<Result<CanvasAuthToken>> GetTokenAsync(CanvasAuthToken canvasAuthToken)
     {
-        if (canvasAuthToken.IsValid())
-        {
-            return Result.Success(canvasAuthToken);
-        }
+        if (canvasAuthToken.IsValid()) return Result.Success(canvasAuthToken);
 
         // Si el token no es válido o no está disponible, intentar renovar
         if (!string.IsNullOrEmpty(canvasAuthToken.RefreshToken))
         {
             var newTokenResult = await RefreshAccessTokenAsync(canvasAuthToken.RefreshToken);
 
-            if (newTokenResult.IsSuccess)
-            {
-                return newTokenResult;
-            }
+            if (newTokenResult.IsSuccess) return newTokenResult;
         }
 
         return Result.Failure<CanvasAuthToken>("No se encontró un token válido y no se pudo renovar.");
@@ -126,15 +112,16 @@ public class CanvasOAuthService : ICanvasOAuthService
 
         try
         {
-            var response = await _httpClient.PostAsync($"{_appSettings.Canvas.ApiBaseUrl}/login/oauth2/token", requestData);
-            
-            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            var response =
+                await _httpClient.PostAsync($"{_appSettings.Canvas.ApiBaseUrl}/login/oauth2/token", requestData);
+
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 var retryAfter = response.Headers.RetryAfter?.Delta ?? TimeSpan.FromSeconds(60);
                 await Task.Delay(retryAfter);
                 return await RefreshAccessTokenAsync(refreshToken); // Reintento
             }
-            
+
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();

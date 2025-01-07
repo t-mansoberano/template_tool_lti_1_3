@@ -19,9 +19,7 @@ public class JwtValidationService : IJwtValidationService
     public async Task<Result<ClaimsPrincipal>> ValidateTokenAsync(string token)
     {
         if (string.IsNullOrEmpty(token))
-        {
             return Result.Failure<ClaimsPrincipal>("El token proporcionado es nulo o vacío.");
-        }
 
         try
         {
