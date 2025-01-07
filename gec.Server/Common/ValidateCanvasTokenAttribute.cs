@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace gec.Server.Common;
 
-public class ValidateCanvasTokenAttribute: ActionFilterAttribute
+public class ValidateCanvasTokenAttribute : ActionFilterAttribute
 {
     private readonly ICanvasOAuthService _canvasOAuthService;
     private readonly ISessionStorageService _sessionStorageService;
 
-    public ValidateCanvasTokenAttribute(ICanvasOAuthService canvasOAuthService, ISessionStorageService sessionStorageService)
+    public ValidateCanvasTokenAttribute(ICanvasOAuthService canvasOAuthService,
+        ISessionStorageService sessionStorageService)
     {
         _canvasOAuthService = canvasOAuthService;
         _sessionStorageService = sessionStorageService;

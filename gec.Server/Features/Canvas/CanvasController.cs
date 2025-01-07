@@ -32,8 +32,8 @@ public class CanvasController : BaseController
     {
         var query = HttpContext.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
         var tokenResponse = await _canvasOAuthService.HandleOAuthCallbackAsync(query);
-        
-        if (tokenResponse.IsFailure) 
+
+        if (tokenResponse.IsFailure)
             return Error(tokenResponse.Error);
 
         _sessionStorageService.Store("CanvasAuthToken", tokenResponse.Value);
@@ -50,9 +50,9 @@ public class CanvasController : BaseController
             return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
 
         canvasAuthToken = await _canvasOAuthService.GetTokenAsync(canvasAuthToken.Value);
-        if (canvasAuthToken.IsFailure) 
+        if (canvasAuthToken.IsFailure)
             return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
-        
+
         _sessionStorageService.Store("CanvasAuthToken", canvasAuthToken.Value);
 
         return Redirect("/");

@@ -6,13 +6,6 @@ namespace gec.Server.Common;
 
 public class AppSettingsService : IAppSettingsService
 {
-    public CanvasSettings Canvas { get; }
-    public LtiSettings Lti { get; }
-    public CorsSettings Cors { get; }
-    public SentrySettings Sentry { get; }
-    public LoggingSettings Logging { get; }
-    public SessionSettings Session { get; }
-
     public AppSettingsService(IOptions<CanvasSettings> canvasSettings, IOptions<LtiSettings> ltiSettings,
         IOptions<CorsSettings> corsSettings, IOptions<SentrySettings> sentrySettings,
         IOptions<LoggingSettings> loggingSettings, IOptions<SessionSettings> sessionSettings)
@@ -24,4 +17,11 @@ public class AppSettingsService : IAppSettingsService
         Logging = loggingSettings.Value;
         Session = sessionSettings.Value;
     }
+
+    public CanvasSettings Canvas { get; }
+    public LtiSettings Lti { get; }
+    public CorsSettings Cors { get; }
+    public SentrySettings Sentry { get; }
+    public LoggingSettings Logging { get; }
+    public SessionSettings Session { get; }
 }

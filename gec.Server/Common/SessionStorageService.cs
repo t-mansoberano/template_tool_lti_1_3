@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using CSharpFunctionalExtensions;
-using gec.Application.Contracts;
 using gec.Application.Contracts.Server;
 
 namespace gec.Server.Common;
@@ -11,22 +10,22 @@ public class SessionStorageService : ISessionStorageService
 
     public SessionStorageService(IHttpContextAccessor httpContextAccessor)
     {
-        _session = httpContextAccessor.HttpContext?.Session 
+        _session = httpContextAccessor.HttpContext?.Session
                    ?? throw new InvalidOperationException("El HttpContext o la sesión no está disponible.");
     }
 
     public Result Store<T>(string key, T value)
     {
-        if (string.IsNullOrEmpty(key)) 
-            return Result.Failure($"La clave no puede ser nula o vacía.");
-            
-        if (value == null) 
+        if (string.IsNullOrEmpty(key))
+            return Result.Failure("La clave no puede ser nula o vacía.");
+
+        if (value == null)
             return Result.Failure("El valor no puede ser nulo.");
 
         var json = JsonSerializer.Serialize(value);
-        if (json.Length > 4096) 
+        if (json.Length > 4096)
             return Result.Failure("El tamaño del objeto excede el límite permitido.");
-        
+
         _session.SetString(key, json);
 
         return Result.Success();
@@ -34,11 +33,11 @@ public class SessionStorageService : ISessionStorageService
 
     public Result<T> Retrieve<T>(string key)
     {
-        if (string.IsNullOrEmpty(key)) 
-            return Result.Failure<T>($"La clave no puede ser nula o vacía.");
+        if (string.IsNullOrEmpty(key))
+            return Result.Failure<T>("La clave no puede ser nula o vacía.");
 
         var json = _session.GetString(key);
-        if (string.IsNullOrEmpty(json)) 
+        if (string.IsNullOrEmpty(json))
             return Result.Failure<T>($"No se encontró ningún valor asociado a la clave: {key}.");
 
         try
@@ -57,8 +56,8 @@ public class SessionStorageService : ISessionStorageService
 
     public Result Remove(string key)
     {
-        if (string.IsNullOrEmpty(key)) 
-            return Result.Failure($"La clave no puede ser nula o vacía.");
+        if (string.IsNullOrEmpty(key))
+            return Result.Failure("La clave no puede ser nula o vacía.");
 
         _session.Remove(key);
 

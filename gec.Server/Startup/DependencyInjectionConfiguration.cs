@@ -7,7 +7,7 @@ public static class ServiceConfiguration
     public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
     {
         var sessionSettings = configuration.GetSection(SessionSettings.Key).Get<SessionSettings>()!;
-        
+
         services.AddDistributedMemoryCache();
         services.AddSession(options =>
         {

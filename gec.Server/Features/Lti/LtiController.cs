@@ -28,16 +28,16 @@ public class LtiController : BaseController
 
         return Ok(ltiContext.Value);
     }
-    
+
     [HttpPost]
     [Route("api/lti")]
     public IActionResult LaunchLTI([FromForm] IFormCollection form)
     {
         var formModel = new LoginInitiationResponse(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
         var redirectUrl = _ltiService.BuildAuthorizationUrl(formModel);
-        if (redirectUrl.IsFailure) 
+        if (redirectUrl.IsFailure)
             return Error(redirectUrl.Error);
-        
+
         return Redirect(redirectUrl.Value);
     }
 
@@ -46,14 +46,14 @@ public class LtiController : BaseController
     public async Task<IActionResult> HandleRedirect([FromForm] IFormCollection form)
     {
         var context = await _ltiService.HandleRedirectAsync(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
-        if (context.IsFailure) 
+        if (context.IsFailure)
             return Error(context.Error);
-        
+
         _sessionStorageService.Store("LtiContext", context.Value);
 
-        return Redirect("/api/lti/oauth/token/validate");        
+        return Redirect("/api/lti/oauth/token/validate");
     }
-    
+
     [HttpGet]
     [Route("api/.well-known/jwks.json")]
     public IActionResult GetJwks()
