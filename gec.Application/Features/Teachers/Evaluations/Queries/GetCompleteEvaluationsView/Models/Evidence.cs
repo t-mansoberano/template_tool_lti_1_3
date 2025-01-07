@@ -6,6 +6,6 @@ public class Evidence
     public string Name { get; set; } = "";
     public string Feedback { get; set; } = "";
     public int Grade { get; set; }
-    public string SpeedGraderLink { get; set; } = "";    
+    public string SpeedGraderLink { get; set; } = "";
     public string FileType { get; set; } = ""; // Example: "audio", "video", "other file".    
 }

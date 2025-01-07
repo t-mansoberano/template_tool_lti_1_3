@@ -11,8 +11,8 @@ public class Enrollment
     public long UserId { get; set; }
     public long CourseId { get; set; }
     public string Type { get; set; } = "";
-    public Grades Grades { get; set; } = new ();
-    public User User { get; set; } = new ();
+    public Grades Grades { get; set; } = new();
+    public User User { get; set; } = new();
 }
 
 public class Grades
@@ -29,4 +29,3 @@ public class User
     public long Id { get; set; }
     public string Name { get; set; } = null!;
 }
-

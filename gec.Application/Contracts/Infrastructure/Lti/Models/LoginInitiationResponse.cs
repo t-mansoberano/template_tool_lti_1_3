@@ -31,7 +31,8 @@ public class LoginInitiationResponse
 
         if (missingAttributes.Any())
         {
-            var missingAttributesMessage = $"Faltan parámetros requeridos para el OIDC Launch. Los siguientes atributos están vacíos o no tienen un valor válido: {string.Join(", ", missingAttributes)}";
+            var missingAttributesMessage =
+                $"Faltan parámetros requeridos para el OIDC Launch. Los siguientes atributos están vacíos o no tienen un valor válido: {string.Join(", ", missingAttributes)}";
             return Result.Failure<string>(missingAttributesMessage);
         }
 

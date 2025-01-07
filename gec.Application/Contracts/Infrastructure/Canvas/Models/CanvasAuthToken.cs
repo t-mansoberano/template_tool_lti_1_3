@@ -9,13 +9,10 @@ public class CanvasAuthToken
     public UserInfo User { get; set; } = null!;
     public string CanvasRegion { get; set; } = null!;
     public DateTime? ExpirationTime { get; set; }
-    
+
     public void CalculateExpirationTime()
     {
-        if (ExpiresIn > 0)
-        {
-            ExpirationTime = DateTime.UtcNow.AddSeconds(ExpiresIn);
-        }
+        if (ExpiresIn > 0) ExpirationTime = DateTime.UtcNow.AddSeconds(ExpiresIn);
     }
 
     public void SetRefreshToken(string refreshToken)
@@ -28,7 +25,7 @@ public class CanvasAuthToken
         return !string.IsNullOrEmpty(AccessToken) &&
                ExpirationTime.HasValue &&
                DateTime.UtcNow < ExpirationTime.Value;
-    }  
+    }
 }
 
 public class UserInfo

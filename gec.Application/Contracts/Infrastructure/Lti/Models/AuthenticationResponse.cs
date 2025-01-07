@@ -14,7 +14,7 @@ public class AuthenticationResponse
         ErrorDescription = form.GetValueOrDefault("error_description", "");
         LtiStorageTarget = form.GetValueOrDefault("lti_storage_target", "");
     }
-    
+
     public string Utf8 { get; set; }
     public string AuthenticityToken { get; set; }
     public string IdToken { get; set; }
@@ -26,19 +26,17 @@ public class AuthenticationResponse
     public Result<string> Validate()
     {
         var missingAttributes = new List<string>();
-        
+
         if (string.IsNullOrWhiteSpace(IdToken)) missingAttributes.Add(nameof(IdToken));
 
         if (missingAttributes.Any())
         {
-            var missingAttributesMessage = $"Faltan parámetros requeridos para el OIDC Launch. Los siguientes atributos están vacíos o no tienen un valor válido: {string.Join(", ", missingAttributes)}";
+            var missingAttributesMessage =
+                $"Faltan parámetros requeridos para el OIDC Launch. Los siguientes atributos están vacíos o no tienen un valor válido: {string.Join(", ", missingAttributes)}";
             return Result.Failure<string>(missingAttributesMessage);
         }
 
-        if (!string.IsNullOrEmpty(Error))
-        {
-            return Result.Failure<string>(ErrorDescription);
-        }
+        if (!string.IsNullOrEmpty(Error)) return Result.Failure<string>(ErrorDescription);
 
         return Result.Success(string.Empty);
     }

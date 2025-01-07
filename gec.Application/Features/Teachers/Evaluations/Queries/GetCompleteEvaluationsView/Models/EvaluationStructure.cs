@@ -9,6 +9,7 @@ public class EvaluationStructure
     public string Type { get; set; } = ""; // "Competency" or "Subcompetency"
     public string? ParentId { get; set; } // ID of the parent competency, null if it's a top-level competency
     public string? ParentName { get; set; } // Name of the parent competency, null if it's a top-level competency
+
     public IEnumerable<Descriptor> Descriptors { get; set; } =
         new List<Descriptor>(); // Options: Highlighted, Solid, Basic, etc.
 }

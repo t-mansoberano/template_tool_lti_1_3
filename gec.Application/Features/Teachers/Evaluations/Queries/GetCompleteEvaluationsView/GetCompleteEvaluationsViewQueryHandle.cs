@@ -5,16 +5,19 @@ using MediatR;
 
 namespace gec.Application.Features.Teachers.Evaluations.Queries.GetCompleteEvaluationsView;
 
-public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvaluationsViewQuery, Result<GetCompleteEvaluationsViewRespond>>
+public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvaluationsViewQuery,
+    Result<GetCompleteEvaluationsViewRespond>>
 {
-    public async Task<Result<GetCompleteEvaluationsViewRespond>> Handle(GetCompleteEvaluationsViewQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetCompleteEvaluationsViewRespond>> Handle(GetCompleteEvaluationsViewQuery request,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var validationResult = await new GetCompleteEvaluationsViewQueryValidator().ValidateAsync(request, cancellationToken);
+            var validationResult =
+                await new GetCompleteEvaluationsViewQueryValidator().ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(validationResult.ErrorMessages());
-            
+
             await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
 
             // Datos dummy del curso
@@ -45,7 +48,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 PendingEvaluations = i <= 6 ? 0 : 2,
                 Evidences = new List<Evidence>
                 {
-                    new Evidence
+                    new()
                     {
                         Id = $"EVIDENCE{i}A",
                         Name = "Evidence A",
@@ -54,7 +57,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         SpeedGraderLink = "https://speedgrader.example.com",
                         FileType = "pdf"
                     },
-                    new Evidence
+                    new()
                     {
                         Id = $"EVIDENCE{i}B",
                         Name = "Evidence B",
@@ -66,14 +69,14 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 },
                 EvaluationResults = new List<EvaluationResult>
                 {
-                    new EvaluationResult
+                    new()
                     {
                         Id = $"COMP{i}A",
                         AchievementLevel = "Solid",
                         Comments = "Solid understanding.",
                         IsEvaluated = true
                     },
-                    new EvaluationResult
+                    new()
                     {
                         Id = $"COMP{i}B",
                         AchievementLevel = "Basic",
@@ -86,7 +89,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             // Datos dummy de la estructura de evaluación
             var evaluationStructures = new List<EvaluationStructure>
             {
-                new EvaluationStructure
+                new()
                 {
                     Id = "COMP1",
                     Key = "COMP_KEY_1",
@@ -97,13 +100,13 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = null,
                     Descriptors = new List<Descriptor>
                     {
-                        new Descriptor { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new Descriptor { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new Descriptor { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new Descriptor { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new() { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
+                        new() { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
+                        new() { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
+                        new() { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
                     }
                 },
-                new EvaluationStructure
+                new()
                 {
                     Id = "COMP2",
                     Key = "COMP_KEY_2",
@@ -114,10 +117,10 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = "Competency 1",
                     Descriptors = new List<Descriptor>
                     {
-                        new Descriptor { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new Descriptor { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new Descriptor { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new Descriptor { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new() { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
+                        new() { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
+                        new() { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
+                        new() { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
                     }
                 }
             };
