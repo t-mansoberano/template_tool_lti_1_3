@@ -1,4 +1,3 @@
-using gec.Application.Contracts.Server.Configuration;
 using gec.Server.Startup;
 
 namespace gec.Server;
@@ -16,15 +15,13 @@ public class Program
         builder.Services.AddServerServices(builder.Configuration);
         builder.Services.AddLayerServices();
 
-        var appSettings = builder.Services.BuildServiceProvider().GetRequiredService<IAppSettingsService>();
-
-        builder.Services.AddCustomServices(appSettings);
+        builder.Services.AddCustomServices(builder.Configuration);
 
         // Configurar un logger
-        LoggingConfiguration.ConfigureSerilog(builder.Services, appSettings);
+        LoggingConfiguration.ConfigureSerilog(builder.Configuration);
 
         // Configurar Sentry
-        builder.WebHost.ConfigureSentry(appSettings);
+        builder.WebHost.ConfigureSentry(builder.Configuration);
 
         var app = builder.Build();
 

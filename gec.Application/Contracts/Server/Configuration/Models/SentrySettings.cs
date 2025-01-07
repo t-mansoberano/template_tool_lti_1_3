@@ -2,6 +2,8 @@
 
 public class SentrySettings
 {
+    public const string Key = "Sentry";
+
     public string Dsn { get; set; } = string.Empty;
     public bool Debug { get; set; }
     public double TracesSampleRate { get; set; }

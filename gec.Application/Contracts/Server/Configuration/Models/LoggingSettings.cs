@@ -2,5 +2,7 @@
 
 public class LoggingSettings
 {
+    public const string Key = "Logging";
+
     public string FilePath { get; set; } = string.Empty;
 }
