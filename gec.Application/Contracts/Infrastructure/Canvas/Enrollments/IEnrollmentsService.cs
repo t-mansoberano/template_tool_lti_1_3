@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models;
 
 namespace gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
 

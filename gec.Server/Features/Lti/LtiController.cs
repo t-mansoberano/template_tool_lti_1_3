@@ -1,12 +1,13 @@
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Infrastructure.Lti.Models;
-using gec.Application.Contracts.Server;
+using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gec.Server.Features.Lti;
 
 [ApiController]
+[Route("api/lti")]
 public class LtiController : BaseController
 {
     private readonly ILtiService _ltiService;
@@ -19,7 +20,6 @@ public class LtiController : BaseController
     }
 
     [HttpGet]
-    [Route("api/lti")]
     public IActionResult Get()
     {
         var ltiContext = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
@@ -30,7 +30,6 @@ public class LtiController : BaseController
     }
 
     [HttpPost]
-    [Route("api/lti")]
     public IActionResult LaunchLTI([FromForm] IFormCollection form)
     {
         var formModel = new LoginInitiationResponse(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
@@ -42,7 +41,7 @@ public class LtiController : BaseController
     }
 
     [HttpPost]
-    [Route("api/lti/redirect")]
+    [Route("redirect")]
     public async Task<IActionResult> HandleRedirect([FromForm] IFormCollection form)
     {
         var context = await _ltiService.HandleRedirectAsync(form.ToDictionary(x => x.Key, x => x.Value.ToString()));
@@ -55,7 +54,7 @@ public class LtiController : BaseController
     }
 
     [HttpGet]
-    [Route("api/.well-known/jwks.json")]
+    [Route("/api/.well-known/jwks.json")]
     public IActionResult GetJwks()
     {
         return Ok(_ltiService.GetJwks());

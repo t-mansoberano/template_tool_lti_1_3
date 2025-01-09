@@ -1,10 +1,12 @@
-﻿using gec.Application.Contracts.Infrastructure.Canvas;
+﻿using gec.Application.Contracts.Infrastructure.Canvas.Api;
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
+using gec.Application.Contracts.Infrastructure.Canvas.OAuth;
 using gec.Application.Contracts.Infrastructure.Federation;
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Server.Configuration;
-using gec.Infrastructure.Canvas;
+using gec.Infrastructure.Canvas.Api;
 using gec.Infrastructure.Canvas.Enrollments;
+using gec.Infrastructure.Canvas.OAuth;
 using gec.Infrastructure.Federation;
 using gec.Infrastructure.Lti;
 using Microsoft.Extensions.DependencyInjection;

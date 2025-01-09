@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {HeaderComponent} from './shared/components/header/header.component';
 
 interface Response {
   errorMessage: string,
@@ -13,7 +12,6 @@ interface Response {
   standalone: true,
   imports: [
     RouterOutlet,
-    HeaderComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

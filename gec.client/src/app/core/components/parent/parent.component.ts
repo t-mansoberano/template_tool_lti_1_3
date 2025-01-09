@@ -18,11 +18,11 @@ export class ParentComponent {
       if (context) {
         // Redirige basado en roles
         if (context.result.user.isInstructor) {
-          this.router.navigate(['instructor-view'], { relativeTo: this.route });
+          this.router.navigate(['instructor'], { relativeTo: this.route });
         } else if (context.result.user.isStudent) {
-          this.router.navigate(['student-view'], { relativeTo: this.route });
+          this.router.navigate(['student'], { relativeTo: this.route });
         } else if (context.result.user.isExternalCollaborator) {
-          this.router.navigate(['external-collaborator-view'], { relativeTo: this.route });
+          this.router.navigate(['external-collaborator'], { relativeTo: this.route });
         } else {
           this.router.navigate(['/error']);
         }

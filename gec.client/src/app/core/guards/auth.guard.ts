@@ -11,17 +11,17 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  if (route.routeConfig?.path === 'instructor-view' && !authService.isInstructor()) {
+  if (route.routeConfig?.path === 'instructor' && !authService.isInstructor()) {
     router.navigate(['/error']);
     return false;
   }
 
-  if (route.routeConfig?.path === 'student-view' && !authService.isStudent()) {
+  if (route.routeConfig?.path === 'student' && !authService.isStudent()) {
     router.navigate(['/error']);
     return false;
   }
 
-  if (route.routeConfig?.path === 'external-collaborator-view' && !authService.isExternalCollaborator()) {
+  if (route.routeConfig?.path === 'external-collaborator' && !authService.isExternalCollaborator()) {
     router.navigate(['/error']);
     return false;
   }

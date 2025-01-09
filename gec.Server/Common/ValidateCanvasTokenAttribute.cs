@@ -1,6 +1,6 @@
-﻿using gec.Application.Contracts.Infrastructure.Canvas;
-using gec.Application.Contracts.Infrastructure.Canvas.Models;
-using gec.Application.Contracts.Server;
+﻿using gec.Application.Contracts.Infrastructure.Canvas.OAuth;
+using gec.Application.Contracts.Infrastructure.Canvas.OAuth.Models;
+using gec.Application.Contracts.Server.Session;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

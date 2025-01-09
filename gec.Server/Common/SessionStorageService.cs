@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using CSharpFunctionalExtensions;
-using gec.Application.Contracts.Server;
+using gec.Application.Contracts.Server.Session;
 
 namespace gec.Server.Common;
 

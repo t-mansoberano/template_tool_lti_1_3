@@ -1,14 +1,12 @@
 import {Routes} from '@angular/router';
-import {StudentViewComponent} from './features/evaluation/pages/student-view/student-view.component';
 import {ltiContextResolver} from './core/resolvers/lti-context.resolver';
 import {ErrorPageComponent} from './core/components/error-page/error-page.component';
 import {authGuard} from './core/guards/auth.guard';
 import {ParentComponent} from './core/components/parent/parent.component';
 import {LoadingComponent} from './core/components/loading/loading.component';
-import {InstructorViewComponent} from './features/evaluation/pages/instructor-view/instructor-view.component';
-import {
-  ExternalCollaboratorViewComponent
-} from './features/evaluation/pages/external-collaborator-view/external-collaborator-view.component';
+import {EvaluationComponent as Intructor} from './features/instructors/evaluations/evaluation.component';
+import {EvaluationComponent as Student} from './features/students/evaluations/evaluation.component';
+import {EvaluationComponent as ExternelCollaborator} from './features/students/evaluations/evaluation.component';
 
 export const appRoutes: Routes = [
   {
@@ -22,18 +20,18 @@ export const appRoutes: Routes = [
         component: LoadingComponent
       },
       {
-        path: 'instructor-view',
-        component: InstructorViewComponent,
+        path: 'instructor',
+        component: Intructor,
         canActivate: [authGuard],
       },
       {
-        path: 'student-view',
-        component: StudentViewComponent,
+        path: 'student',
+        component: Student,
         canActivate: [authGuard],
       },
       {
-        path: 'external-collaborator-view',
-        component: ExternalCollaboratorViewComponent,
+        path: 'external-collaborator',
+        component: ExternelCollaborator,
         canActivate: [authGuard]
       }
     ],

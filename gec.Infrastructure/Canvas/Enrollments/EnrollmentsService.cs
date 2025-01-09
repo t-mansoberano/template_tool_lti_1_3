@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using gec.Application.Contracts.Infrastructure.Canvas;
+using gec.Application.Contracts.Infrastructure.Canvas.Api;
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
+using gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models;
 
 namespace gec.Infrastructure.Canvas.Enrollments;
 
