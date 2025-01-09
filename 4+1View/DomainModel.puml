@@ -1,0 +1,94 @@
+@startuml
+
+title
+  Modelo de Dominio
+  Gestor de Evaluaciones por Competencias
+end title
+
+'==========================================================================
+' 1. Jerarquía de Usuarios con Estereotipos
+'==========================================================================
+' User es abstracta, y Student e Instructor acceden vía Canvas,
+' mientras que ExternalCollaborator accede por URL pública.
+
+abstract class User #lightblue
+
+class Student <<CanvasLMS>> #lightblue
+class Instructor <<CanvasLMS>> #lightblue
+class ExternalCollaborator <<PublicURL>> #lightblue
+
+User <|.. Student
+User <|.. Instructor
+User <|.. ExternalCollaborator
+
+'==========================================================================
+' 2. Cursos
+'==========================================================================
+class Course
+
+' Relación Student-Course: muchos a muchos
+Course "0..*" *--> "0..*" Student : "contiene"
+
+' Relación Instructor-Course: un Instructor puede impartir varios
+' cursos (0..*), pero cada curso solo tiene un Instructor (1).
+Course "0..*" *--> "1" Instructor : "contiene"
+
+' Relación ExternalCollaborator-Course: muchos a muchos
+ExternalCollaborator "0..*" --> "0..*" Course : "consulta"
+
+'==========================================================================
+' 3. Evidencias
+'==========================================================================
+class Evidence
+
+' Un Student envía evidencias a un Course.
+Student "1" ..> "0..*" Evidence : "envía"
+Course "1" o--> "0..*" Evidence : "contiene"
+
+'==========================================================================
+' 4. Competencias y Descriptores
+'==========================================================================
+class EvaluationStructure {
+    - Competence/SubCompetence
+}
+
+enum DescriptorType {
+  Highlighted
+  Solid
+  Basic
+  Incipient
+}
+
+class Descriptor
+
+' Un Course contiene múltiples Competencias
+Course "1" *--> "0..*" EvaluationStructure : "contiene"
+
+' Cada Competencia puede tener varios Descriptors asociados
+EvaluationStructure "1" *--> "0..*" Descriptor : "contiene"
+
+Descriptor --> DescriptorType : "usa"
+
+'==========================================================================
+' 5. Evaluación de Competencias
+'==========================================================================
+class Evaluation
+
+' Una evaluación relaciona: Instructor, Student, Competencia y Course.
+Instructor "1" ..> "0..*" Evaluation : "realiza"
+Student "1" ..> "0..*" Evaluation : "recibe"
+EvaluationStructure "1" o--> "1" Evaluation : "contiene"
+Course "1" o--> "0..*" Evaluation : "contiene"
+
+'==========================================================================
+' 6. Relación explícita ExternalCollaborator - Student
+'==========================================================================
+' El Colaborador Externo puede ver la lista de Students inscritos en los
+' Courses que consulta. Se especifica la cardinalidad, con la nota que
+' aclara la restricción (sólo los Students de los cursos que él consulta).
+
+ExternalCollaborator "0..*" ..> "0..*" Student : "visualiza"
+
+Instructor ..> Student : "visualiza"
+
+@enduml

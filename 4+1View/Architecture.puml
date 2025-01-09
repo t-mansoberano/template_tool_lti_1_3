@@ -1,0 +1,216 @@
+﻿@startuml
+'https://plantuml.com/class-diagram
+allowmixing
+
+
+title
+  Diagrama de Arquitectura
+end title
+
+package Client {
+    class App <<routes>>
+}
+
+package Client.app.core {
+    class components
+    class guards
+    class interceptors
+    class models
+    class resolvers
+    class services
+    
+    guards *--> services
+    resolvers *--> services
+    services --> models
+    interceptors *--> services
+    
+    Client.App ......> components    
+    Client.App .....> resolvers    
+    Client.App .....> guards    
+}
+
+package Client.app.shared {
+    class components
+}
+
+package Client.app.features.instructors.evaluations {
+    class components
+    class models
+    class services
+    class evaluation <<contaniner>>
+    
+    evaluation *--> components
+    evaluation *--> models
+    evaluation *--> services
+    
+    services *---> Client.app.core.services
+    
+    evaluation o--> Client.app.shared    
+}
+
+package Client.app.features.students.evaluations {
+    class components
+    class models
+    class services
+    class evaluation <<contaniner>>
+    
+    evaluation *--> components
+    evaluation *--> models
+    evaluation *--> services
+    
+    services *--> Client.app.core.services
+    
+    evaluation o--> Client.app.shared        
+}
+
+package Client.app.features.externalcollaborators.evaluations {
+    class components
+    class models
+    class services
+    class evaluation <<contaniner>>
+    
+    evaluation *--> components
+    evaluation *--> models
+    evaluation *--> services
+    
+    services *--> Client.app.core.services
+    
+    evaluation o---> Client.app.shared        
+}
+
+package Server {
+    class ServiceRegistration <<static>>
+}
+
+package Server.Common {
+    class AppSettingsService
+    class SessionStorageService
+}
+
+package Server.Features.Canvas {
+    class CanvasController
+}
+
+package Server.Features.Lti {
+    class LtiController
+}
+
+package Server.Features.Federation {
+    class FederationAuthController
+}
+
+package Server.Features.Instructors.Evaluations {
+    class UseCaseXPresenter
+    class UseCaseXController
+    
+    Client.app.features.instructors.evaluations.services .....> UseCaseXController
+    Client.app.features.instructors.evaluations.services .....> UseCaseXPresenter
+}
+
+package Application.Contract.Infrastructure.Canvas.Api {
+    interface ICanvasApiClient
+}
+
+package Application.Contract.Infrastructure.Canvas.OAuth {
+    interface ICanvasOAuthService
+    class Models 
+}
+
+package Application.Contract.Infrastructure.Canvas.Enrollments {
+    interface IEnrollmentsService
+    class Models 
+}
+
+package Application.Contract.Infrastructure.Lti {
+    interface IJwtValidationService
+    interface ILtiService
+    class Models 
+}
+
+package Application.Contract.Infrastructure.Federation {
+    interface IFederationService
+    class Models 
+}
+
+package Application.Contract.Server.Session {
+    interface ISessionStorageService
+}
+
+package Application.Contract.Server.Configuration {
+    interface IAppSettingsService
+    class Models
+}
+
+package Application.Common {
+    class ClassX
+}
+
+package Application {
+    class ServiceRegistration <<static>>
+}
+
+package Application.Features.Instructors.Evaluations.Queries.UseCaseX {
+    class UseCaseXQuery
+    class UseCaseXQueryHandle
+    class UseCaseXQueryRespond
+    class UseCaseXQueryValidator
+}
+
+package Application.Features.Instructors.Evaluations.Commands.UseCaseX {
+    class UseCaseXCommand
+    class UseCaseXCommandHandle
+    class UseCaseXCommandRespond
+    class UseCaseXCommandValidator
+}
+
+package Application.Features.Students {
+}
+
+package Application.Features.ExternalCollaborators {
+}
+
+UseCaseXPresenter ...> UseCaseXQuery
+UseCaseXController ...> UseCaseXCommand
+
+LtiController .....> ILtiService 
+CanvasController .....> ICanvasOAuthService 
+FederationAuthController .....> IFederationService 
+
+
+AppSettingsService .....> IAppSettingsService 
+SessionStorageService .....> ISessionStorageService
+
+package Infrastructure.Canvas.Api {
+    class CanvasApiClient
+}
+
+package Infrastructure.Canvas.OAuth {
+    class CanvasOAuthService
+}
+
+package Infrastructure.Canvas.Enrollments {
+    class EnrollmentsService
+}
+
+ICanvasApiClient <... CanvasApiClient 
+ICanvasOAuthService <... CanvasOAuthService 
+IEnrollmentsService <... EnrollmentsService 
+
+package Infrastructure.Lti {
+    class LtiService
+    class JwtValidationService
+    class ClaimTypes
+    
+    LtiService --> ClaimTypes
+}
+
+ILtiService <... LtiService 
+IJwtValidationService <... JwtValidationService 
+
+package Infrastructure.Federation {
+    class FederationService
+}
+
+IFederationService <... FederationService 
+
+@enduml
