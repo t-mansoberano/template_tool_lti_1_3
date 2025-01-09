@@ -1,0 +1,42 @@
+<main>
+  <div class="professor-view">
+    <!-- Header General -->
+    <app-professor-header [title]="'Evaluación por Competencias'" [subtitle]="'Vista del Profesor'"></app-professor-header>
+
+    <!-- Tabs -->
+    <app-tabs [tabs]="tabs" [activeTab]="activeTab" (tabSelected)="onTabChange($event)"></app-tabs>
+
+    <!-- Lista de Estudiantes -->
+    <div *ngIf="activeTab === 'Evaluar por alumnos'" class="content">
+      <app-student-list [students]="evaluation?.students" (studentSelected)="onStudentSelected($event)"></app-student-list>
+
+      <div *ngIf="selectedStudent">
+        <!-- Header del Estudiante Seleccionado -->
+        <app-student-header [student]="selectedStudent"></app-student-header>
+
+        <!-- Listado de Retroalimentaciones -->
+        <div class="feedback-list">
+          <app-feedback-card *ngFor="let feedback of evaluation?.feedbacks" [feedback]="feedback"></app-feedback-card>
+        </div>
+
+        <!-- Listado de Competencias a Evaluar -->
+        <div class="competency-list">
+          <app-competency-card
+            *ngFor="let competency of evaluation?.competencies"
+            [competency]="competency"
+            (competencyEvaluated)="onCompetencyEvaluated($event)"
+          ></app-competency-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Competencias a Evaluar -->
+    <div *ngIf="activeTab === 'Evaluar por competencia/subcompetencia'" class="content">
+    </div>
+  </div>
+
+  <div>
+    <h1>Datos de la API de Canvas</h1>
+    <pre>{{ canvasData | json }}</pre>
+  </div>
+</main>
