@@ -1,16 +1,27 @@
-# Plantilla Plantilla de solución en .NET Core + Angular App, como herremienta LTI 1.3 integrada en Canvas con peticiones a Canvas API 
+# Plantilla de solución en .NET Core + Angular App, como herremienta LTI 1.3 integrada en Canvas con peticiones a Canvas API 
 
 # Informe de la Arquitectura del Sistema
 
 ## **1. Introducción**
 
-La arquitectura de este sistema está basada en los principios de **Clean Architecture**, que promueve la separación de responsabilidades y un diseño modular. Esto garantiza que los distintos componentes del sistema sean fáciles de mantener, probar y escalar. Las capas `Application`, `Infrastructure`, `Server`, `Client` están claramente delimitadas, lo que mejora la cohesión interna y reduce el acoplamiento entre módulos.
+La arquitectura de este sistema está basada en los principios de **Clean Architecture**, que promueve la separación de responsabilidades y un diseño modular. Este enfoque garantiza que los componentes sean fáciles de mantener, probar y escalar. Las capas `Application`, `Infrastructure`, `Server`, `Client` están claramente delimitadas, mejorando la cohesión interna y reduciendo el acoplamiento entre módulos.
+
+### **1.1. Antecedentes y Justificación**
+
+Una buena arquitectura debe cumplir con principios clave como:
+- **Bajo acoplamiento y alta cohesión**: Las partes del sistema interactúan de manera controlada, minimizando dependencias.
+- **Modularidad**: Facilita agregar, eliminar o modificar componentes.
+- **Testeabilidad**: Los módulos aislados son más fáciles de probar.
+- **Escalabilidad**: Soporta el crecimiento de funcionalidad y usuarios sin comprometer el rendimiento.
+- **Legibilidad y consistencia**: Estructuras predecibles facilitan la colaboración y el mantenimiento.
+
+Referentes como Grady Booch han defendido el uso de arquitecturas orientadas a objetos y principios de diseño para mantener sistemas adaptables y sostenibles. La arquitectura propuesta adopta estos principios y los refuerza con una organización consistente de cada capa.
 
 ---
 
 ## **2. Estructura de la arquitectura**
 
-### **2.1. Capas principales**
+### **2.1. Capas**
 
 1. **Capa `Application` (Lógica de negocio y casos de uso)**
     - **Responsabilidad:** Contiene la lógica central del sistema y los contratos necesarios para que otras capas interactúen sin conocer detalles de implementación.
@@ -101,25 +112,45 @@ Esto permite que cambios en una capa no impacten las demás.
 
 ---
 
-### **3.2. Extensibilidad**
+### **3.2. Estructura uniforme (inspirada en Screaming Architecture)**
+Cada capa organiza sus archivos en estructuras predecibles y consistentes, lo que permite a los desarrolladores localizar rápidamente los componentes necesarios para realizar modificaciones o depuración. Esta uniformidad no solo ahorra tiempo, sino que también reduce errores, ya que los equipos pueden anticipar dónde encontrar funcionalidades específicas. Al utilizar estructuras familiares en todas las capas, el proceso de incorporación de nuevos desarrolladores también se ve facilitado, fomentando una colaboración más eficiente.
+
+Esto mejora significativamente la productividad del equipo al permitir localizar rápidamente archivos relacionados con una tarea específica y facilita el mantenimiento al reducir errores comunes causados por la falta de uniformidad. Al emplear una estructura consistente, los desarrolladores pueden anticipar la ubicación de elementos clave, optimizando así el flujo de trabajo.
+
+---
+
+### **3.3. “Cliente tonto”**
+La capa Client se encarga exclusivamente de la obtención y presentación de datos, así como del envío de acciones al servidor (Server). En arquitecturas como MVP (Model-View-Presenter), el Client actúa como una vista simplificada o "tonta", enfocándose únicamente en la representación visual y delegando toda la lógica al Presenter o al backend. Este enfoque, combinado con Clean Architecture y Screaming Architecture, refuerza la separación de responsabilidades al abstraer la lógica de negocio en capas internas más robustas, manteniendo al cliente simple y predecible.
+
+Esta centralización de la lógica de negocio en el backend ofrece múltiples ventajas:
+- Mejora la cohesión del sistema al agrupar reglas de negocio en un único lugar.
+- Reduce duplicidades al evitar que la lógica de negocio se replique en múltiples capas.
+- Facilita la escalabilidad del sistema al permitir cambios consistentes en la lógica de negocio sin generar conflictos entre capas.
+- Simplifica el mantenimiento del cliente, haciéndolo menos propenso a errores y más sencillo de probar.
+
+Este diseño enfatiza principios clave como modularidad, bajo acoplamiento y alta cohesión, garantizando sistemas escalables, mantenibles y alineados con las necesidades del dominio del negocio.
+
+---
+
+### **3.4. Extensibilidad**
 - Las interfaces en `Application` permiten agregar nuevos servicios o reemplazar implementaciones existentes sin modificar el código de otras capas.
 - Por ejemplo, se podría cambiar la implementación de `ICanvasApiClient` sin alterar los controladores en `Server`.
 
 ---
 
-### **3.3. Testeabilidad**
+### **3.5. Testeabilidad**
 - Las dependencias están inyectadas mediante DI (Dependency Injection), lo que facilita pruebas unitarias y de integración.
 - La lógica de negocio se encuentra aislada, lo que permite crear pruebas de los casos de uso (`GetCompleteEvaluationsViewQuery`) sin necesidad de ejecutar la infraestructura completa.
 
 ---
 
-### **3.4. Desacoplamiento**
+### **3.6. Desacoplamiento**
 - Las dependencias entre capas están gestionadas a través de contratos e inyección de dependencias.
 - La lógica de negocio no depende directamente de la infraestructura, lo que minimiza el impacto de cambios en servicios externos como Canvas.
 
 ---
 
-### **3.5. Reutilización**
+### **3.7. Reutilización**
 - Los servicios como `CanvasApiClient` o `JwtValidationService` pueden ser reutilizados en múltiples partes del sistema sin duplicar código.
 - Los modelos compartidos (`Enrollment`, `StudentEvaluation`, etc.) facilitan la coherencia en los datos que manejan distintas funcionalidades.
 
