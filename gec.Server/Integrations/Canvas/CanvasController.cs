@@ -4,7 +4,7 @@ using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace gec.Server.Features.Canvas;
+namespace gec.Server.Integrations.Canvas;
 
 [ApiController]
 public class CanvasController : BaseController

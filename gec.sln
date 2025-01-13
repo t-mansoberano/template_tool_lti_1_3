@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gec.Infrastructure", "gec.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gec.Application", "gec.Application\gec.Application.csproj", "{DBF49690-B7EF-439C-9B82-155276375384}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gec.Test", "gec.Test\gec.Test.csproj", "{81E8D005-AE74-4858-9D1F-3083708A9F8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{DBF49690-B7EF-439C-9B82-155276375384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBF49690-B7EF-439C-9B82-155276375384}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBF49690-B7EF-439C-9B82-155276375384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E8D005-AE74-4858-9D1F-3083708A9F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E8D005-AE74-4858-9D1F-3083708A9F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E8D005-AE74-4858-9D1F-3083708A9F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E8D005-AE74-4858-9D1F-3083708A9F8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

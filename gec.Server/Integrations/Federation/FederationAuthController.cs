@@ -2,7 +2,7 @@
 using gec.Server.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace gec.Server.Features.Federation;
+namespace gec.Server.Integrations.Federation;
 
 [ApiController]
 public class FederationAuthController : BaseController

@@ -32,4 +32,8 @@
         <ProjectReference Include="..\gec.Infrastructure\gec.Infrastructure.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Integrations\" />
+    </ItemGroup>
+
 </Project>

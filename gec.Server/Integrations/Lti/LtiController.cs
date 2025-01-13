@@ -4,7 +4,7 @@ using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace gec.Server.Features.Lti;
+namespace gec.Server.Integrations.Lti;
 
 [ApiController]
 [Route("api/lti")]

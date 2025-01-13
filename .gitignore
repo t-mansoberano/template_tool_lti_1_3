@@ -16,3 +16,5 @@
 /gec.Application/public
 /gec.Application/bin
 /gec.sln.DotSettings.user
+/gec.Test/bin
+/gec.Test/obj
