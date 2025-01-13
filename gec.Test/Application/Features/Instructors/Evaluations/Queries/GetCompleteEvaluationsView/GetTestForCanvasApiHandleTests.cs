@@ -11,15 +11,15 @@ namespace gec.Test.Application.Features.Instructors.Evaluations.Queries.GetCompl
 [TestFixture]
 public class GetTestForCanvasApiHandleTests
 {
-    private Mock<IEnrollmentsService> _mockEnrollmentsService;
-    private GetTestForCanvasApiHandle _handler;
-
     [SetUp]
     public void SetUp()
     {
         _mockEnrollmentsService = new Mock<IEnrollmentsService>();
         _handler = new GetTestForCanvasApiHandle(_mockEnrollmentsService.Object);
     }
+
+    private Mock<IEnrollmentsService> _mockEnrollmentsService;
+    private GetTestForCanvasApiHandle _handler;
 
     [Test]
     public async Task Handle_ShouldReturnFailure_WhenValidationFails()
@@ -43,7 +43,7 @@ public class GetTestForCanvasApiHandleTests
         var query = new GetTestForCanvasApiQuery { CourseId = "123" };
         var enrollmentData = new List<gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment>
         {
-            new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment
+            new()
             {
                 Id = 1,
                 UserId = 101,
@@ -98,7 +98,9 @@ public class GetTestForCanvasApiHandleTests
 
         _mockEnrollmentsService
             .Setup(s => s.GetStudentsByCourseAsync("123"))
-            .ReturnsAsync(Result.Failure<List<gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment>>("Service error"));
+            .ReturnsAsync(
+                Result.Failure<List<gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment>>(
+                    "Service error"));
 
         var cancellationToken = CancellationToken.None;
 
@@ -117,7 +119,7 @@ public class GetTestForCanvasApiHandleTests
         var query = new GetTestForCanvasApiQuery { CourseId = "123" };
         var enrollmentData = new List<Enrollment>
         {
-            new Enrollment
+            new()
             {
                 Id = 1,
                 UserId = 101,
@@ -137,27 +139,28 @@ public class GetTestForCanvasApiHandleTests
 
         _mockEnrollmentsService
             .Setup(s => s.GetStudentsByCourseAsync("123"))
-            .ReturnsAsync(Result.Success(enrollmentData.Select(e => new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment
-            {
-                // Map properties from the source Enrollment type to the destination Enrollment type
-                Id = e.Id,
-                UserId = e.UserId,
-                CourseId = e.CourseId,
-                Type = e.Type,
-                Grades = new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Grades
+            .ReturnsAsync(Result.Success(enrollmentData.Select(e =>
+                new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Enrollment
                 {
-                    HtmlUrl = e.Grades.HtmlUrl,
-                    CurrentGrade = e.Grades.CurrentGrade,
-                    CurrentScore = e.Grades.CurrentScore,
-                    FinalGrade = e.Grades.FinalGrade,
-                    FinalScore = e.Grades.FinalScore
-                },
-                User = new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.User
-                {
-                    Id = e.User.Id,
-                    Name = e.User.Name
-                }
-            }).ToList()));
+                    // Map properties from the source Enrollment type to the destination Enrollment type
+                    Id = e.Id,
+                    UserId = e.UserId,
+                    CourseId = e.CourseId,
+                    Type = e.Type,
+                    Grades = new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.Grades
+                    {
+                        HtmlUrl = e.Grades.HtmlUrl,
+                        CurrentGrade = e.Grades.CurrentGrade,
+                        CurrentScore = e.Grades.CurrentScore,
+                        FinalGrade = e.Grades.FinalGrade,
+                        FinalScore = e.Grades.FinalScore
+                    },
+                    User = new gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models.User
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name
+                    }
+                }).ToList()));
 
         var cancellationToken = CancellationToken.None;
 

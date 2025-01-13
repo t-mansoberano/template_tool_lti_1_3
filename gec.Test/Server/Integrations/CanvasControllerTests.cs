@@ -1,170 +1,172 @@
-﻿using gec.Application.Contracts.Infrastructure.Canvas.OAuth;
+﻿using CSharpFunctionalExtensions;
+using gec.Application.Contracts.Infrastructure.Canvas.OAuth;
 using gec.Application.Contracts.Infrastructure.Canvas.OAuth.Models;
 using gec.Application.Contracts.Server.Session;
+using gec.Server.Common;
 using gec.Server.Integrations.Canvas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Moq;
 
-namespace gec.Test.Server.Integrations
+namespace gec.Test.Server.Integrations;
+
+[TestFixture]
+public class CanvasControllerTests
 {
-    [TestFixture]
-    public class CanvasControllerTests
+    [SetUp]
+    public void SetUp()
     {
-        private Mock<ICanvasOAuthService> _mockCanvasOAuthService;
-        private Mock<ISessionStorageService> _mockSessionStorageService;
-        private CanvasController _controller;
+        _mockCanvasOAuthService = new Mock<ICanvasOAuthService>();
+        _mockSessionStorageService = new Mock<ISessionStorageService>();
+        _controller = new CanvasController(_mockCanvasOAuthService.Object, _mockSessionStorageService.Object);
+    }
 
-        [SetUp]
-        public void SetUp()
+    private Mock<ICanvasOAuthService> _mockCanvasOAuthService;
+    private Mock<ISessionStorageService> _mockSessionStorageService;
+    private CanvasController _controller;
+
+    [Test]
+    public void AuthorizeUser_ShouldRedirectToAuthorizationUrl_WhenCalled()
+    {
+        // Arrange
+        var expectedUrl = "https://example.com/authorize";
+        _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(expectedUrl);
+
+        // Act
+        var result = _controller.AuthorizeUser();
+
+        // Assert
+        Assert.IsInstanceOf<RedirectResult>(result);
+        var redirectResult = result as RedirectResult;
+        Assert.AreEqual(expectedUrl, redirectResult.Url);
+        _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
+    }
+
+    [Test]
+    public async Task HandleOAuthCallback_ShouldReturnError_WhenTokenResponseFails()
+    {
+        // Arrange
+        var queryParameters = new Dictionary<string, StringValues>
         {
-            _mockCanvasOAuthService = new Mock<ICanvasOAuthService>();
-            _mockSessionStorageService = new Mock<ISessionStorageService>();
-            _controller = new CanvasController(_mockCanvasOAuthService.Object, _mockSessionStorageService.Object);
-        }
+            { "code", "exampleCode" }
+        };
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Query = new QueryCollection(queryParameters);
+        _controller.ControllerContext.HttpContext = httpContext;
 
-        [Test]
-        public void AuthorizeUser_ShouldRedirectToAuthorizationUrl_WhenCalled()
+        var failedTokenResponse =
+            Result.Failure<CanvasAuthToken>("Error retrieving token");
+        _mockCanvasOAuthService.Setup(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()))
+            .ReturnsAsync(failedTokenResponse);
+
+        // Act
+        var result = await _controller.HandleOAuthCallback();
+
+        // Assert
+        Assert.IsInstanceOf<ObjectResult>(result);
+        var errorResult = result as ObjectResult;
+        Assert.AreEqual(400, errorResult.StatusCode);
+        Assert.AreEqual("Error retrieving token", ((Envelope)errorResult.Value).ErrorMessage);
+        _mockCanvasOAuthService.Verify(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task HandleOAuthCallback_ShouldRedirectToHome_WhenTokenResponseSucceeds()
+    {
+        // Arrange
+        var queryParameters = new Dictionary<string, StringValues>
         {
-            // Arrange
-            var expectedUrl = "https://example.com/authorize";
-            _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(expectedUrl);
+            { "code", "exampleCode" }
+        };
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Query = new QueryCollection(queryParameters);
+        _controller.ControllerContext.HttpContext = httpContext;
 
-            // Act
-            var result = _controller.AuthorizeUser();
+        var tokenResponse =
+            Result.Success(new CanvasAuthToken { AccessToken = "testToken" });
+        _mockCanvasOAuthService.Setup(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()))
+            .ReturnsAsync(tokenResponse);
 
-            // Assert
-            Assert.IsInstanceOf<RedirectResult>(result);
-            var redirectResult = result as RedirectResult;
-            Assert.AreEqual(expectedUrl, redirectResult.Url);
-            _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
-        }
+        // Act
+        var result = await _controller.HandleOAuthCallback();
 
-        [Test]
-        public async Task HandleOAuthCallback_ShouldReturnError_WhenTokenResponseFails()
-        {
-            // Arrange
-            var queryParameters = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
-            {
-                { "code", "exampleCode" }
-            };
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Query = new QueryCollection(queryParameters);
-            _controller.ControllerContext.HttpContext = httpContext;
+        // Assert
+        Assert.IsInstanceOf<RedirectResult>(result);
+        var redirectResult = result as RedirectResult;
+        Assert.AreEqual("/", redirectResult.Url);
+        _mockSessionStorageService.Verify(s => s.Store("CanvasAuthToken", tokenResponse.Value), Times.Once);
+    }
 
-            var failedTokenResponse =
-                CSharpFunctionalExtensions.Result.Failure<CanvasAuthToken>("Error retrieving token");
-            _mockCanvasOAuthService.Setup(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()))
-                .ReturnsAsync(failedTokenResponse);
+    [Test]
+    public async Task ValidateOrRefreshToken_ShouldRedirectToAuthorizationUrl_WhenTokenIsNotStored()
+    {
+        // Arrange
+        _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
+            .Returns(Result.Failure<CanvasAuthToken>("Token not found"));
 
-            // Act
-            var result = await _controller.HandleOAuthCallback();
+        var authorizationUrl = "https://example.com/authorize";
+        _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(authorizationUrl);
 
-            // Assert
-            Assert.IsInstanceOf<ObjectResult>(result);
-            var errorResult = result as ObjectResult;
-            Assert.AreEqual(400, errorResult.StatusCode);
-            Assert.AreEqual("Error retrieving token", ((gec.Server.Common.Envelope)errorResult.Value).ErrorMessage);
-            _mockCanvasOAuthService.Verify(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()),
-                Times.Once);
-        }
+        // Act
+        var result = await _controller.ValidateOrRefreshToken();
 
-        [Test]
-        public async Task HandleOAuthCallback_ShouldRedirectToHome_WhenTokenResponseSucceeds()
-        {
-            // Arrange
-            var queryParameters = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
-            {
-                { "code", "exampleCode" }
-            };
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Query = new QueryCollection(queryParameters);
-            _controller.ControllerContext.HttpContext = httpContext;
+        // Assert
+        Assert.IsInstanceOf<RedirectResult>(result);
+        var redirectResult = result as RedirectResult;
+        Assert.AreEqual(authorizationUrl, redirectResult.Url);
+        _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
+        _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
+    }
 
-            var tokenResponse =
-                CSharpFunctionalExtensions.Result.Success(new CanvasAuthToken { AccessToken = "testToken" });
-            _mockCanvasOAuthService.Setup(s => s.HandleOAuthCallbackAsync(It.IsAny<Dictionary<string, string>>()))
-                .ReturnsAsync(tokenResponse);
+    [Test]
+    public async Task ValidateOrRefreshToken_ShouldRedirectToAuthorizationUrl_WhenTokenRefreshFails()
+    {
+        // Arrange
+        var existingToken = new CanvasAuthToken { AccessToken = "expiredToken" };
+        _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
+            .Returns(Result.Success(existingToken));
 
-            // Act
-            var result = await _controller.HandleOAuthCallback();
+        var failedTokenRefresh = Result.Failure<CanvasAuthToken>("Token refresh failed");
+        _mockCanvasOAuthService.Setup(s => s.GetTokenAsync(existingToken)).ReturnsAsync(failedTokenRefresh);
 
-            // Assert
-            Assert.IsInstanceOf<RedirectResult>(result);
-            var redirectResult = result as RedirectResult;
-            Assert.AreEqual("/", redirectResult.Url);
-            _mockSessionStorageService.Verify(s => s.Store("CanvasAuthToken", tokenResponse.Value), Times.Once);
-        }
+        var authorizationUrl = "https://example.com/authorize";
+        _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(authorizationUrl);
 
-        [Test]
-        public async Task ValidateOrRefreshToken_ShouldRedirectToAuthorizationUrl_WhenTokenIsNotStored()
-        {
-            // Arrange
-            _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
-                .Returns(CSharpFunctionalExtensions.Result.Failure<CanvasAuthToken>("Token not found"));
+        // Act
+        var result = await _controller.ValidateOrRefreshToken();
 
-            var authorizationUrl = "https://example.com/authorize";
-            _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(authorizationUrl);
+        // Assert
+        Assert.IsInstanceOf<RedirectResult>(result);
+        var redirectResult = result as RedirectResult;
+        Assert.AreEqual(authorizationUrl, redirectResult.Url);
+        _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
+        _mockCanvasOAuthService.Verify(s => s.GetTokenAsync(existingToken), Times.Once);
+        _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
+    }
 
-            // Act
-            var result = await _controller.ValidateOrRefreshToken();
+    [Test]
+    public async Task ValidateOrRefreshToken_ShouldRedirectToHome_WhenTokenRefreshSucceeds()
+    {
+        // Arrange
+        var existingToken = new CanvasAuthToken { AccessToken = "expiredToken" };
+        var refreshedToken = new CanvasAuthToken { AccessToken = "refreshedToken" };
+        _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
+            .Returns(Result.Success(existingToken));
 
-            // Assert
-            Assert.IsInstanceOf<RedirectResult>(result);
-            var redirectResult = result as RedirectResult;
-            Assert.AreEqual(authorizationUrl, redirectResult.Url);
-            _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
-            _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
-        }
+        _mockCanvasOAuthService.Setup(s => s.GetTokenAsync(existingToken))
+            .ReturnsAsync(Result.Success(refreshedToken));
 
-        [Test]
-        public async Task ValidateOrRefreshToken_ShouldRedirectToAuthorizationUrl_WhenTokenRefreshFails()
-        {
-            // Arrange
-            var existingToken = new CanvasAuthToken { AccessToken = "expiredToken" };
-            _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
-                .Returns(CSharpFunctionalExtensions.Result.Success(existingToken));
+        // Act
+        var result = await _controller.ValidateOrRefreshToken();
 
-            var failedTokenRefresh = CSharpFunctionalExtensions.Result.Failure<CanvasAuthToken>("Token refresh failed");
-            _mockCanvasOAuthService.Setup(s => s.GetTokenAsync(existingToken)).ReturnsAsync(failedTokenRefresh);
-
-            var authorizationUrl = "https://example.com/authorize";
-            _mockCanvasOAuthService.Setup(s => s.BuildAuthorizationUrl()).Returns(authorizationUrl);
-
-            // Act
-            var result = await _controller.ValidateOrRefreshToken();
-
-            // Assert
-            Assert.IsInstanceOf<RedirectResult>(result);
-            var redirectResult = result as RedirectResult;
-            Assert.AreEqual(authorizationUrl, redirectResult.Url);
-            _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
-            _mockCanvasOAuthService.Verify(s => s.GetTokenAsync(existingToken), Times.Once);
-            _mockCanvasOAuthService.Verify(s => s.BuildAuthorizationUrl(), Times.Once);
-        }
-
-        [Test]
-        public async Task ValidateOrRefreshToken_ShouldRedirectToHome_WhenTokenRefreshSucceeds()
-        {
-            // Arrange
-            var existingToken = new CanvasAuthToken { AccessToken = "expiredToken" };
-            var refreshedToken = new CanvasAuthToken { AccessToken = "refreshedToken" };
-            _mockSessionStorageService.Setup(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"))
-                .Returns(CSharpFunctionalExtensions.Result.Success(existingToken));
-
-            _mockCanvasOAuthService.Setup(s => s.GetTokenAsync(existingToken))
-                .ReturnsAsync(CSharpFunctionalExtensions.Result.Success(refreshedToken));
-
-            // Act
-            var result = await _controller.ValidateOrRefreshToken();
-
-            // Assert
-            Assert.IsInstanceOf<RedirectResult>(result);
-            var redirectResult = result as RedirectResult;
-            Assert.AreEqual("/", redirectResult.Url);
-            _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
-            _mockCanvasOAuthService.Verify(s => s.GetTokenAsync(existingToken), Times.Once);
-            _mockSessionStorageService.Verify(s => s.Store("CanvasAuthToken", refreshedToken), Times.Once);
-        }
+        // Assert
+        Assert.IsInstanceOf<RedirectResult>(result);
+        var redirectResult = result as RedirectResult;
+        Assert.AreEqual("/", redirectResult.Url);
+        _mockSessionStorageService.Verify(s => s.Retrieve<CanvasAuthToken>("CanvasAuthToken"), Times.Once);
+        _mockCanvasOAuthService.Verify(s => s.GetTokenAsync(existingToken), Times.Once);
+        _mockSessionStorageService.Verify(s => s.Store("CanvasAuthToken", refreshedToken), Times.Once);
     }
 }
