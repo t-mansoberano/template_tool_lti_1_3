@@ -6,13 +6,15 @@ import {ParentComponent} from './core/components/parent/parent.component';
 import {LoadingComponent} from './core/components/loading/loading.component';
 import {EvaluationComponent as Intructor} from './features/instructors/evaluations/evaluation.component';
 import {EvaluationComponent as Student} from './features/students/evaluations/evaluation.component';
-import {EvaluationComponent as ExternelCollaborator} from './features/students/evaluations/evaluation.component';
+import {
+  EvaluationComponent as ExternelCollaborator
+} from './features/external-collaborators/evaluations/evaluation.component';
 
 export const appRoutes: Routes = [
   {
     path: '',
     component: ParentComponent,
-    resolve: { context: ltiContextResolver },
+    resolve: {context: ltiContextResolver},
     children: [
       {path: '', redirectTo: '/loading-view', pathMatch: 'full'},
       {

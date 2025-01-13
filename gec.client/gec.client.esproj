@@ -8,12 +8,12 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\gec.client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\core\components\" />
-    <Folder Include="src\app\core\interceptors\" />
-    <Folder Include="src\app\core\resolvers\" />
-    <Folder Include="src\app\features\external-collaborators\evaluations\components\" />
-    <Folder Include="src\app\features\instructors\evaluations\components\" />
-    <Folder Include="src\app\features\students\evaluations\components\" />
-    <Folder Include="src\app\shared\components\" />
+    <Folder Include="src\app\core\components\"/>
+    <Folder Include="src\app\core\interceptors\"/>
+    <Folder Include="src\app\core\resolvers\"/>
+    <Folder Include="src\app\features\external-collaborators\evaluations\components\"/>
+    <Folder Include="src\app\features\instructors\evaluations\components\"/>
+    <Folder Include="src\app\features\students\evaluations\components\"/>
+    <Folder Include="src\app\shared\components\"/>
   </ItemGroup>
 </Project>

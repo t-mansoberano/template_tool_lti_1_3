@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
+import {Component, inject} from '@angular/core';
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-parent',
@@ -11,6 +11,7 @@ import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 export class ParentComponent {
   route = inject(ActivatedRoute);
   router = inject(Router);
+
   constructor() {
     // Accede al contexto resuelto
     this.route.data.subscribe((data) => {
@@ -18,11 +19,11 @@ export class ParentComponent {
       if (context) {
         // Redirige basado en roles
         if (context.result.user.isInstructor) {
-          this.router.navigate(['instructor'], { relativeTo: this.route });
+          this.router.navigate(['instructor'], {relativeTo: this.route});
         } else if (context.result.user.isStudent) {
-          this.router.navigate(['student'], { relativeTo: this.route });
+          this.router.navigate(['student'], {relativeTo: this.route});
         } else if (context.result.user.isExternalCollaborator) {
-          this.router.navigate(['external-collaborator'], { relativeTo: this.route });
+          this.router.navigate(['external-collaborator'], {relativeTo: this.route});
         } else {
           this.router.navigate(['/error']);
         }

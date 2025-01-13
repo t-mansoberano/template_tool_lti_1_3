@@ -27,13 +27,12 @@ import {Evaluation} from './models/evaluation.model';
   styleUrl: './evaluation.component.css'
 })
 export class EvaluationComponent {
-  private evaluationDataService = inject(EvaluationDataService);
   evaluation: Evaluation | null = null;
   canvasData: any = null;
-
   tabs = ['Evaluar por alumnos', 'Evaluar por competencia/subcompetencia'];
   activeTab = this.tabs[0];
   selectedStudent: any = {};
+  private evaluationDataService = inject(EvaluationDataService);
 
   ngOnInit(): void {
     this.loadEvaluation();

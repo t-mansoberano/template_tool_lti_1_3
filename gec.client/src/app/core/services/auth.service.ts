@@ -2,7 +2,6 @@ import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
-import {Context} from '../models/context.model';
 import {Resolve} from '../models/resolve.model';
 
 @Injectable({

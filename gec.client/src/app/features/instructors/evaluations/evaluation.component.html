@@ -1,14 +1,16 @@
 <main>
   <div class="professor-view">
     <!-- Header General -->
-    <app-professor-header [title]="'Evaluación por Competencias'" [subtitle]="'Vista del Profesor'"></app-professor-header>
+    <app-professor-header [subtitle]="'Vista del Profesor'"
+                          [title]="'Evaluación por Competencias'"></app-professor-header>
 
     <!-- Tabs -->
-    <app-tabs [tabs]="tabs" [activeTab]="activeTab" (tabSelected)="onTabChange($event)"></app-tabs>
+    <app-tabs (tabSelected)="onTabChange($event)" [activeTab]="activeTab" [tabs]="tabs"></app-tabs>
 
     <!-- Lista de Estudiantes -->
     <div *ngIf="activeTab === 'Evaluar por alumnos'" class="content">
-      <app-student-list [students]="evaluation?.students" (studentSelected)="onStudentSelected($event)"></app-student-list>
+      <app-student-list (studentSelected)="onStudentSelected($event)"
+                        [students]="evaluation?.students"></app-student-list>
 
       <div *ngIf="selectedStudent">
         <!-- Header del Estudiante Seleccionado -->
@@ -22,9 +24,9 @@
         <!-- Listado de Competencias a Evaluar -->
         <div class="competency-list">
           <app-competency-card
+            (competencyEvaluated)="onCompetencyEvaluated($event)"
             *ngFor="let competency of evaluation?.competencies"
             [competency]="competency"
-            (competencyEvaluated)="onCompetencyEvaluated($event)"
           ></app-competency-card>
         </div>
       </div>
