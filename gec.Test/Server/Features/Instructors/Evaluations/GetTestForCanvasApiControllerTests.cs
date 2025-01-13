@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentAssertions;
 using gec.Application.Features.Instructors.Evaluations.Queries.GetTestForCanvasApi;
 using gec.Server.Common;
 using gec.Server.Features.Instructors.Evaluations;
@@ -6,11 +7,14 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace gec.Server.Tests.Features.Instructors.Evaluations;
+namespace gec.Test.Server.Features.Instructors.Evaluations;
 
 [TestFixture]
 public class GetTestForCanvasApiControllerTests
 {
+    private Mock<IMediator> _mockMediator;
+    private GetTestForCanvasApiController _controller;
+
     [SetUp]
     public void SetUp()
     {
@@ -18,16 +22,13 @@ public class GetTestForCanvasApiControllerTests
         _controller = new GetTestForCanvasApiController(_mockMediator.Object);
     }
 
-    private Mock<IMediator> _mockMediator;
-    private GetTestForCanvasApiController _controller;
-
     [Test]
     public async Task GetStudentsByCourseAsync_ShouldReturnError_WhenMediatorFails()
     {
         // Arrange
-        var courseId = "123";
+        const string courseId = TestConstants.VALID_COURSE_ID;
         var query = new GetTestForCanvasApiQuery();
-        var errorMessage = "Course not found";
+        const string errorMessage = TestConstants.COURSE_NOT_FOUND_ERROR;
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<GetTestForCanvasApiQuery>(), default))
@@ -37,19 +38,42 @@ public class GetTestForCanvasApiControllerTests
         var result = await _controller.GetStudentsByCourseAsync(courseId, query);
 
         // Assert
-        Assert.IsInstanceOf<ObjectResult>(result);
+        result.Should().BeOfType<BadRequestObjectResult>();
         var objectResult = result as ObjectResult;
-        Assert.AreEqual(400, objectResult.StatusCode);
-        Assert.AreEqual(errorMessage, ((Envelope)objectResult.Value).ErrorMessage);
+        objectResult.StatusCode.Should().Be(400);
+        ((Envelope)objectResult.Value).ErrorMessage.Should().Be(errorMessage);
+
+        // Verify that the mediator was called once
+        _mockMediator.Verify(m => m.Send(It.IsAny<GetTestForCanvasApiQuery>(), default), Times.Once);
     }
 
     [Test]
     public async Task GetStudentsByCourseAsync_ShouldReturnOk_WhenMediatorSucceeds()
     {
         // Arrange
-        var courseId = "123";
+        const string courseId = TestConstants.VALID_COURSE_ID;
         var query = new GetTestForCanvasApiQuery();
-        var expectedResponse = new GetTestForCanvasApiRespond
+        var expectedResponse = GetSampleResponse();
+
+        _mockMediator
+            .Setup(m => m.Send(It.IsAny<GetTestForCanvasApiQuery>(), default))
+            .ReturnsAsync(Result.Success(expectedResponse));
+
+        // Act
+        var result = await _controller.GetStudentsByCourseAsync(courseId, query);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+        var okResult = result as OkObjectResult;
+        ((Envelope<GetTestForCanvasApiRespond>)okResult.Value).Result.Should().BeEquivalentTo(expectedResponse);
+
+        // Verify that the mediator was called once
+        _mockMediator.Verify(m => m.Send(It.IsAny<GetTestForCanvasApiQuery>(), default), Times.Once);
+    }
+
+    private static GetTestForCanvasApiRespond GetSampleResponse()
+    {
+        return new GetTestForCanvasApiRespond
         {
             Enrollments = new List<Enrollment>
             {
@@ -64,17 +88,11 @@ public class GetTestForCanvasApiControllerTests
                 }
             }
         };
-
-        _mockMediator
-            .Setup(m => m.Send(It.IsAny<GetTestForCanvasApiQuery>(), default))
-            .ReturnsAsync(Result.Success(expectedResponse));
-
-        // Act
-        var result = await _controller.GetStudentsByCourseAsync(courseId, query);
-
-        // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
-        var okResult = result as OkObjectResult;
-        Assert.AreSame(expectedResponse, ((Envelope<GetTestForCanvasApiRespond>)okResult.Value).Result);
     }
+}
+
+public static class TestConstants
+{
+    public const string VALID_COURSE_ID = "123";
+    public const string COURSE_NOT_FOUND_ERROR = "Course not found";
 }
