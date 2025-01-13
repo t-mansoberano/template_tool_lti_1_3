@@ -87,15 +87,15 @@ package Server.Common {
     class SessionStorageService
 }
 
-package Server.Features.Canvas {
+package Server.Integrations.Canvas {
     class CanvasController
 }
 
-package Server.Features.Lti {
+package Server.Integrations.Lti {
     class LtiController
 }
 
-package Server.Features.Federation {
+package Server.Integrations.Federation {
     class FederationAuthController
 }
 
