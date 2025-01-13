@@ -22,6 +22,8 @@ public class GetTestForCanvasApiHandle : IRequestHandler<GetTestForCanvasApiQuer
             return Result.Failure<GetTestForCanvasApiRespond>(validationResult.ErrorMessages());
 
         var result = await _enrollmentsService.GetStudentsByCourseAsync(request.CourseId);
+        if (result.IsFailure) 
+            return Result.Failure<GetTestForCanvasApiRespond>(result.Error);
 
         var resultCoverted = result.Value.Select(s => new Enrollment
         {
