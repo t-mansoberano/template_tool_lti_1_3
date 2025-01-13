@@ -32,7 +32,7 @@ export class EvaluationComponent {
   tabs = ['Evaluar por alumnos', 'Evaluar por competencia/subcompetencia'];
   activeTab = this.tabs[0];
   selectedStudent: any = {};
-  private evaluationDataService = inject(EvaluationDataService);
+  private readonly evaluationDataService = inject(EvaluationDataService);
 
   ngOnInit(): void {
     this.loadEvaluation();
