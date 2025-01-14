@@ -1,0 +1,23 @@
+@startuml
+title Flujo de Autorización y Peticiones a la API de Canvas LMS
+
+actor Usuario
+participant "Aplicación Externa" as App
+participant "Canvas LMS" as Canvas
+
+Usuario -> App: Inicia autenticación con Canvas
+App -> Canvas: Generar URL AuthorizeUser
+Usuario -> Canvas: Redirige a AuthorizeUser\n(ejemplo: /login/oauth2/auth)
+Canvas -> Usuario: Solicita autorización (pantalla de login)
+Usuario -> Canvas: Autoriza acceso
+Canvas -> App: Redirect a HandleOAuthCallback (POST)\n(envía código de autorización)
+App -> App: Procesar código de autorización
+App -> Canvas: Solicitar token de acceso\n(POST a /login/oauth2/token)
+Canvas -> App: Responder con token de acceso
+App -> App: Guardar token para futuras solicitudes
+Usuario -> App: Interactuar con la aplicación
+App -> Canvas: Peticiones a la API de Canvas\n(Autenticación con Bearer Token)
+Canvas -> App: Responder datos de la API
+App -> Usuario: Mostrar resultados personalizados
+
+@enduml

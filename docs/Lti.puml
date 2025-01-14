@@ -1,0 +1,18 @@
+@startuml
+title Flujo de integración LTI en Canvas LMS
+
+actor Usuario
+participant "Canvas LMS" as Canvas
+participant "Herramienta LTI" as Herramienta
+
+Usuario -> Canvas: Accede a la herramienta LTI
+Canvas -> Canvas: Genera URL LaunchLTI
+Canvas -> Herramienta: LaunchLTI\n(enviar token y datos del usuario)
+Herramienta -> Herramienta: Validar token y datos recibidos
+Herramienta -> Canvas: HandleRedirect (POST)
+Canvas -> Herramienta: Respuesta con datos validados
+Herramienta -> Herramienta: Procesar datos (usuario, curso, rol)
+Herramienta -> Herramienta: Generar sesión de usuario
+Usuario <- Herramienta: Mostrar interfaz personalizada
+
+@enduml
