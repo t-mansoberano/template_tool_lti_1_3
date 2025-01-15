@@ -1,0 +1,8 @@
+<div class="evidence-list">
+  <div *ngFor="let evidence of evidences">
+    <h4>{{ evidence.name }}</h4>
+    <p>Feedback: {{ evidence.feedback }}</p>
+    <p>Grade: {{ evidence.grade }}</p>
+    <a [href]="evidence.speedGraderLink" target="_blank">View in SpeedGrader</a>
+  </div>
+</div>

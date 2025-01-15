@@ -1,0 +1,8 @@
+<div class="student-detail">
+  <h2>{{ student.name }}</h2>
+  <app-student-evaluation
+    [evaluationResults]="student.evaluationResults"
+    [evaluationStructures]="evaluationStructures">
+  </app-student-evaluation>
+  <app-evidence-list [evidences]="student.evidences"></app-evidence-list>
+</div>

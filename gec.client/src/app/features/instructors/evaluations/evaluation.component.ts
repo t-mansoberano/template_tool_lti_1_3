@@ -1,83 +1,54 @@
-import {CommonModule, NgForOf, NgIf} from '@angular/common';
-import {Component, inject} from '@angular/core';
-import {TabsComponent} from './components/tabs/tabs.component';
-import {InstructorHeaderComponent} from './components/instructor-header/instructor-header.component';
-import {StudentListComponent} from './components/student-list/student-list.component';
-import {StudentHeaderComponent} from './components/student-header/student-header.component';
-import {FeedbackCardComponent} from './components/feedback-card/feedback-card.component';
-import {CompetencyCardComponent} from './components/competency-card/competency-card.component';
+import {CommonModule} from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
 import {EvaluationDataService} from './services/evaluation-data.service';
 import {Evaluation} from './models/evaluation.model';
+import {CourseSummaryComponent} from './components/course-summary/course-summary.component';
+import {EvaluationStatusComponent} from './components/evaluation-status/evaluation-status.component';
+import {StudentListComponent} from './components/student-list/student-list.component';
+import {StudentDetailComponent} from './components/student-detail/student-detail.component';
 
 @Component({
   selector: 'app-evaluation',
   standalone: true,
   imports: [
     CommonModule,
-    TabsComponent,
-    InstructorHeaderComponent,
-    StudentListComponent,
-    StudentHeaderComponent,
-    FeedbackCardComponent,
-    CompetencyCardComponent,
-    NgIf,
-    NgForOf,
+    CourseSummaryComponent,
+    EvaluationStatusComponent,
+    StudentDetailComponent,
+    StudentListComponent
   ],
   templateUrl: './evaluation.component.html',
   styleUrl: './evaluation.component.css'
 })
-export class EvaluationComponent {
+export class EvaluationComponent implements OnInit {
   evaluation: Evaluation | null = null;
-  canvasData: any = null;
-  tabs = ['Evaluar por alumnos', 'Evaluar por competencia/subcompetencia'];
-  activeTab = this.tabs[0];
-  selectedStudent: any = {};
+  loading = true; // Indicador de carga
   private readonly evaluationDataService = inject(EvaluationDataService);
 
   ngOnInit(): void {
-    this.loadEvaluation();
-    this.loadTestCanvasAPI();
+    this.loadData();
   }
 
-  loadEvaluation(): void {
-    this.evaluationDataService.getEvaluations().subscribe({
+  loadData(): void {
+    this.evaluationDataService.getTestEvaluations().subscribe({
       next: (data) => {
-        this.evaluation = data;
+        this.evaluation = data.result;
+        console.log(this.evaluation);
       },
       error: (err) => {
         console.log(err);
       },
       complete: () => {
+        this.loading = false; // Datos cargados
         console.log('complete');
       }
-    });
+    })
   }
 
-  loadTestCanvasAPI(): void {
-    this.evaluationDataService.getTestCanvasAPI().subscribe({
-      next: (data) => {
-        this.canvasData = data;
-        console.log(data);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-      complete: () => {
-        console.log('complete');
-      }
-    });
-  }
-
-  onTabChange(tab: string) {
-    this.activeTab = tab;
-  }
-
-  onStudentSelected(studentId: string) {
-    this.selectedStudent = this.evaluation?.students.find((s: { id: string; }) => s.id === studentId);
-  }
-
-  onCompetencyEvaluated(level: string) {
-    console.log(`Competency evaluated as: ${level}`);
+  onStudentSelected(studentId: string): void {
+    if (this.evaluation) {
+      this.evaluation.selectedStudent = this.evaluation.students.find(student => student.id === studentId) || null;
+    }
   }
 
 }

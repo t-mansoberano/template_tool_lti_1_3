@@ -1,0 +1,7 @@
+<div class="student-evaluation">
+  <div *ngFor="let result of evaluationResults">
+    <h3>{{ getEvaluationName(result.id) }}</h3>
+    <p>{{ result.achievementLevel }}</p>
+    <p>{{ result.comments }}</p>
+  </div>
+</div>
