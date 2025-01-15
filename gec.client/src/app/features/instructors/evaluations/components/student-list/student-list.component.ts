@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-student-list',
@@ -11,10 +11,10 @@ import {NgForOf} from '@angular/common';
   styleUrl: './student-list.component.css'
 })
 export class StudentListComponent {
-  @Input() students: { id: string; name: string; evaluated: number; total: number }[] = [];
+  @Input() students!: { id: string; name: string; status: string }[];
   @Output() studentSelected = new EventEmitter<string>();
 
-  selectStudent(studentId: string) {
+  selectStudent(studentId: string): void {
     this.studentSelected.emit(studentId);
   }
 }
