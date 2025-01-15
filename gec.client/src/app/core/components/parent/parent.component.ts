@@ -2,11 +2,10 @@ import {Component, inject} from '@angular/core';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 
 @Component({
-  selector: 'app-parent',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './parent.component.html',
-  styleUrl: './parent.component.css'
+    selector: 'app-parent',
+    imports: [RouterOutlet],
+    templateUrl: './parent.component.html',
+    styleUrl: './parent.component.css'
 })
 export class ParentComponent {
   route = inject(ActivatedRoute);

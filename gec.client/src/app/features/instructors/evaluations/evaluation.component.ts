@@ -10,21 +10,20 @@ import {EvaluationDataService} from './services/evaluation-data.service';
 import {Evaluation} from './models/evaluation.model';
 
 @Component({
-  selector: 'app-evaluation',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TabsComponent,
-    InstructorHeaderComponent,
-    StudentListComponent,
-    StudentHeaderComponent,
-    FeedbackCardComponent,
-    CompetencyCardComponent,
-    NgIf,
-    NgForOf,
-  ],
-  templateUrl: './evaluation.component.html',
-  styleUrl: './evaluation.component.css'
+    selector: 'app-evaluation',
+    imports: [
+        CommonModule,
+        TabsComponent,
+        InstructorHeaderComponent,
+        StudentListComponent,
+        StudentHeaderComponent,
+        FeedbackCardComponent,
+        CompetencyCardComponent,
+        NgIf,
+        NgForOf,
+    ],
+    templateUrl: './evaluation.component.html',
+    styleUrl: './evaluation.component.css'
 })
 export class EvaluationComponent {
   evaluation: Evaluation | null = null;

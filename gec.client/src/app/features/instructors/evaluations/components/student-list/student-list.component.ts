@@ -2,13 +2,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf} from '@angular/common';
 
 @Component({
-  selector: 'app-student-list',
-  standalone: true,
-  imports: [
-    NgForOf
-  ],
-  templateUrl: './student-list.component.html',
-  styleUrl: './student-list.component.css'
+    selector: 'app-student-list',
+    imports: [
+        NgForOf
+    ],
+    templateUrl: './student-list.component.html',
+    styleUrl: './student-list.component.css'
 })
 export class StudentListComponent {
   @Input() students: { id: string; name: string; evaluated: number; total: number }[] = [];

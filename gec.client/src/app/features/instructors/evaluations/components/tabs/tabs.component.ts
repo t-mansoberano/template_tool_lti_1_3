@@ -2,13 +2,12 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf} from '@angular/common';
 
 @Component({
-  selector: 'app-tabs',
-  standalone: true,
-  imports: [
-    NgForOf
-  ],
-  templateUrl: './tabs.component.html',
-  styleUrl: './tabs.component.css'
+    selector: 'app-tabs',
+    imports: [
+        NgForOf
+    ],
+    templateUrl: './tabs.component.html',
+    styleUrl: './tabs.component.css'
 })
 export class TabsComponent {
   @Input() tabs: string[] = [];
