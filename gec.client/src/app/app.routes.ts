@@ -5,6 +5,7 @@ import {authGuard} from './core/guards/auth.guard';
 import {ParentComponent} from './core/components/parent/parent.component';
 import {LoadingComponent} from './core/components/loading/loading.component';
 import {EvaluationComponent as Intructor} from './features/instructors/evaluations/evaluation.component';
+import {EvaluationsByCompetenciesComponent} from './features/instructors/evaluations-by-competencies/evaluations-by-competencies.component';
 import {EvaluationComponent as Student} from './features/students/evaluations/evaluation.component';
 import {
   EvaluationComponent as ExternelCollaborator
@@ -24,6 +25,11 @@ export const appRoutes: Routes = [
       {
         path: 'instructor',
         component: Intructor,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'instructor-competencies',
+        component: EvaluationsByCompetenciesComponent,
         canActivate: [authGuard],
       },
       {

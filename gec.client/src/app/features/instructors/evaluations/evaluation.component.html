@@ -4,6 +4,13 @@
 
 <div *ngIf="!loading">
   <app-course-summary [course]="evaluation?.course"></app-course-summary>
+
+  <bmb-tabs
+    [format]="'uppercase'"
+    [tabs]="[{id: 1, title: 'Evaluar por alumnos', badge: 5, isActive: true}, {id: 2, title: 'Evaluar por competencia/subcompetencia'}]"
+    (selected)="handleTabSelected($event)"
+  ></bmb-tabs>
+
   <app-evaluation-status [courseState]="evaluation?.courseState"></app-evaluation-status>
   <app-student-list
     [students]="evaluation?.students || []"
