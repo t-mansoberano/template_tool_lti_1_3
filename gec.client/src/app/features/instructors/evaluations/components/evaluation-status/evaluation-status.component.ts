@@ -1,9 +1,12 @@
 import {Component, Input} from '@angular/core';
+import {BmbBadgeComponent} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 
 @Component({
   selector: 'app-evaluation-status',
   standalone: true,
-  imports: [],
+  imports: [
+    BmbBadgeComponent
+  ],
   templateUrl: './evaluation-status.component.html',
   styleUrl: './evaluation-status.component.css'
 })
