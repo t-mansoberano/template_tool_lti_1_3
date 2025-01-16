@@ -1,0 +1,20 @@
+.course-summary {
+  display: flex;
+  align-items: center; /* Centra verticalmente los elementos dentro del contenedor */
+  padding-top: 16px;
+}
+
+.course-summary h3 {
+  display: flex;
+  align-items: center; /* Centra verticalmente el contenido dentro del h3 */
+  margin: 0; /* Remueve márgenes por defecto del h3 */
+  font-size: 16px; /* Ajusta el tamaño de fuente si es necesario */
+}
+
+.course-summary bmb-icon {
+  display: flex; /* Asegura que el ícono respete las reglas de flexbox */
+  align-items: center; /* Centra el contenido interno del ícono verticalmente */
+  justify-content: center; /* Centra el contenido interno horizontalmente (si aplica) */
+  margin-right: 12px; /* Espaciado entre el ícono y el texto */
+  height: 30px; /* Asegúrate de que coincida con el tamaño del ícono */
+}
