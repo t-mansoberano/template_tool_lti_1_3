@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
-    "@ti-tecnologico-de-monterrey-oficial/ds-ng": "^1.2.1",
+    "@ti-tecnologico-de-monterrey-oficial/ds-ng": "^1.2.7",
     "jest-editor-support": "*",
     "run-script-os": "*",
     "rxjs": "~7.8.0",
