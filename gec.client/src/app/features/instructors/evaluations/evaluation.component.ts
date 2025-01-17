@@ -28,6 +28,7 @@ export class EvaluationComponent implements OnInit {
   router = inject(Router);
   evaluation: Evaluation | null = null;
   loading = true; // Indicador de carga
+  tabs : IBmbTab[] = [{id: 1, title: 'Evaluar por alumnos', isActive: true}, {id: 2, title: 'Evaluar por competencia/subcompetencia'}]
   private readonly evaluationDataService = inject(EvaluationDataService);
 
   ngOnInit(): void {
@@ -38,6 +39,8 @@ export class EvaluationComponent implements OnInit {
     this.evaluationDataService.getTestEvaluations().subscribe({
       next: (data) => {
         this.evaluation = data.result;
+        this.tabs[0].badge = this.evaluation?.courseState?.totalStudents;
+        this.tabs[1].badge = this.evaluation?.courseState?.totalStudents;
         console.log(this.evaluation);
       },
       error: (err) => {

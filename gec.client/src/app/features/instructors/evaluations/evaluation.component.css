@@ -1,0 +1,23 @@
+/* Contenedor principal */
+.container {
+  display: flex;
+  margin-top: 16px;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+/* Sección izquierda (sidebar) */
+.sidebar {
+  flex: 1; /* Ajusta el ancho proporcionalmente */
+  min-width: 400px; /* Ancho máximo para la barra lateral */
+  background-color: transparent; /* Color de fondo */
+  border-right: 0; /* Línea divisoria */
+  padding: 0;
+  overflow-y: auto; /* Scroll si el contenido es muy largo */
+}
+
+/* Sección derecha (content) */
+.content {
+  flex: 3; /* Ajusta el ancho proporcionalmente */
+  padding: 16px;
+  overflow-y: auto; /* Scroll si el contenido es muy largo */
+}

@@ -1,0 +1,102 @@
+bmb-tabs .bmb_tabs-tab {
+  display: flex; /* Asegura que los tabs estén alineados horizontalmente */
+  flex-wrap: nowrap; /* Evita que los tabs se distribuyan en varias líneas */
+  justify-content: space-between; /* Espacio equitativo entre los tabs */
+  gap: 0; /* Elimina cualquier espacio adicional entre los tabs */
+  padding: 0; /* Elimina cualquier padding del contenedor de los tabs */
+}
+
+bmb-tabs .bmb_tabs-item {
+  flex-grow: 1; /* Hace que cada tab ocupe el mismo ancho disponible */
+  text-align: center; /* Centra el texto dentro de cada tab */
+  padding: 8px 0; /* Ajusta el espaciado interno de cada tab */
+  margin: 0; /* Elimina márgenes entre los tabs */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto desbordado */
+  text-overflow: ellipsis; /* Añade "..." si el texto es demasiado largo */
+}
+
+bmb-container .bmb_container {
+  border-style: none;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+}
+
+bmb-card-header header {
+  background-color: #d1d5e2;
+}
+
+bmb-list-group ul bmb-list-group-item .bmb-list-group-item {
+  background-color: transparent;
+}
+
+bmb-list-group {
+  width: 100%; /* Asegura que la lista ocupe todo el ancho del contenedor */
+  padding: 0; /* Elimina cualquier padding interno */
+  margin: 0; /* Elimina márgenes adicionales */
+}
+
+bmb-list-group-item  .bmb-list-group-item {
+  display: flex; /* Asegura que el contenido interno esté alineado horizontalmente si hay varios elementos */
+  justify-content: space-between; /* Ajusta el contenido interno para que ocupe el espacio */
+  align-items: center; /* Centra verticalmente el contenido interno */
+  width: 100%; /* Asegura que cada ítem ocupe el 100% del contenedor */
+  box-sizing: border-box; /* Incluye padding y bordes dentro del ancho total */
+  padding: 8px 16px; /* Añade un espaciado interno uniforme */
+  margin: 0; /* Elimina márgenes entre ítems */
+  border: 1px solid #ddd; /* Añade un borde para mayor visibilidad */
+  background-color: #fff; /* Fondo blanco */
+}
+
+/* Estilos para el contenido interno */
+.list-content {
+  display: flex;
+  justify-content: space-between; /* Alinea el texto a la izquierda y el indicador a la derecha */
+  width: 100%;
+}
+
+.list-content div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilo del indicador */
+bmb-list-group-item .indicator {
+  display: flex; /* Asegura que los elementos internos estén en una misma línea */
+  align-items: center; /* Centra verticalmente los elementos */
+  gap: 8px; /* Espaciado uniforme entre el círculo y el texto */
+  flex-direction: row;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%; /* Hace el círculo completamente redondo */
+  flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
+}
+
+.evaluation-status {
+  font-size: 14px; /* Tamaño del texto */
+  color: #555; /* Color del texto */
+  line-height: 1; /* Ajusta la altura del texto para evitar espacio adicional */
+  margin: 0; /* Elimina cualquier margen adicional */
+  display: inline-block; /* Mantiene el flujo del texto junto con el círculo */
+}
+
+/* Nuevo: Estilos para el contenedor del tab */
+.tab-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  gap: 0; /* Espaciado uniforme entre el input y la lista */
+  padding: 0; /* Espaciado interno del contenedor */
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+}
+
+bmb-input {
+  width: 90%; /* Asegura que el input ocupe todo el ancho del contenedor */
+  box-sizing: border-box; /* Incluye el padding dentro del ancho total */
+  margin: 10px;
+}
