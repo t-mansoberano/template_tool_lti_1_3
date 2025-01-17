@@ -3,6 +3,55 @@
   font-family: Arial, sans-serif;
 }
 
+/* Indicador de contenido debajo de la tarjeta */
+.evidence-list.collapsed .evidence-card {
+  position: relative;
+  margin-bottom: 16px; /* Espacio para dar sensación de que hay más */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
+  z-index: 1;
+  overflow: hidden; /* Asegura que no sobresalga contenido */
+}
+
+/* Indicador debajo de la tarjeta */
+.evidence-list.collapsed .evidence-card::after {
+  content: '';
+  display: block;
+  height: 16px; /* Ajusta según el espacio necesario */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.05));
+  position: absolute;
+  bottom: -16px; /* Alineado con el margen */
+  left: 0;
+  right: 0;
+  pointer-events: none; /* Evita que interfiera con la interacción */
+}
+
+/* Estilo para cuando la lista está colapsada */
+.evidence-list.collapsed {
+  position: relative;
+}
+
+/* Simulación de más tarjetas debajo */
+.evidence-list.collapsed::after {
+  content: '';
+  display: block;
+  height: 10px; /* Altura total del efecto */
+  background: repeating-linear-gradient(
+    to bottom,
+    #f4f5f7, /* Color de la tarjeta simulada */
+    #f4f5f7 4px, /* Altura de cada tarjeta simulada */
+    transparent 4px, /* Espacio entre tarjetas */
+    transparent 6px /* Altura total incluyendo el espacio */
+  );
+  border-radius: 0 0 8px 8px; /* Redondeo inferior */
+  margin-top: -12px; /* Conecta visualmente las tarjetas simuladas con la tarjeta visible */
+  position: relative;
+  z-index: 0; /* Evita que las líneas interfieran */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil para mayor realismo */
+  width: calc(100% - 32px); /* Alineado con el contenido de la tarjeta */
+  margin-left: 16px; /* Alineación horizontal */
+}
+
+
 .list-header-parent {
   display: flex;
   justify-content: space-between; /* Alinea el texto a la izquierda y el indicador a la derecha */
@@ -54,7 +103,7 @@
   border-radius: 8px;
   margin-bottom: 16px;
   padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: none; /* Elimina la sombra */
   background-color: #f4f5f7;
 }
 
@@ -120,3 +169,4 @@
   opacity: 0.6; /* Reduce la opacidad para denotar inactividad */
   border: 1px solid lightgray;
 }
+
