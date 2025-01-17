@@ -1,13 +1,15 @@
 <div class="evidence-list">
-  <h3 class="font-light-7">Retroalimentación</h3>
+  <div class="list-header-parent">
+    <h3 class="font-light-7">Retroalimentación</h3>
 
-  <!-- Botón para alternar entre colapsado y expandido -->
-  <div class="list-header">
-    <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
-      <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="25"></bmb-icon>
-      <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="25"></bmb-icon>
-      <span class="button-text">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
-    </button>
+    <!-- Botón para alternar entre colapsado y expandido -->
+    <div class="list-header">
+      <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
+        <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="25"></bmb-icon>
+        <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="25"></bmb-icon>
+        <span class="button-text">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
+      </button>
+    </div>
   </div>
 
   <!-- Lista de tarjetas -->
@@ -91,5 +93,14 @@
       </div>
     </div>
   </ng-template>
+
+  <!-- Botón para alternar entre colapsado y expandido -->
+  <div class="list-header" *ngIf="!isCollapsed;">
+    <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
+      <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="25"></bmb-icon>
+      <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="25"></bmb-icon>
+      <span class="button-text">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
+    </button>
+  </div>
 
 </div>

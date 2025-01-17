@@ -3,6 +3,12 @@
   font-family: Arial, sans-serif;
 }
 
+.list-header-parent {
+  display: flex;
+  justify-content: space-between; /* Alinea el texto a la izquierda y el indicador a la derecha */
+  width: 100%;
+}
+
 .list-header {
   display: flex;
   justify-content: flex-end;
