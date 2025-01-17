@@ -1,13 +1,23 @@
 ﻿using CSharpFunctionalExtensions;
 using gec.Application.Common;
+using gec.Application.Contracts.Infrastructure.Lti.Models;
+using gec.Application.Contracts.Server.Session;
 using gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models;
 using MediatR;
+using Course = gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models.Course;
 
 namespace gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView;
 
 public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvaluationsViewQuery,
     Result<GetCompleteEvaluationsViewRespond>>
 {
+    private readonly ISessionStorageService _sessionStorageService;
+
+    public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService)
+    {
+        _sessionStorageService = sessionStorageService;
+    }
+
     public async Task<Result<GetCompleteEvaluationsViewRespond>> Handle(GetCompleteEvaluationsViewQuery request,
         CancellationToken cancellationToken)
     {
@@ -20,12 +30,14 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
 
             await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
 
+            var ltiContex = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
+
             // Datos dummy del curso
             var course = new Course
             {
-                Id = "COURSE001",
-                Key = "COURSE_KEY",
-                Name = "Sample Course"
+                Id = ltiContex.Value.Course.Id,
+                Key = ltiContex.Value.Course.Label,
+                Name = ltiContex.Value.Course.Title,
             };
 
             // Datos dummy del estado del curso
@@ -34,7 +46,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 TotalStudents = 10,
                 EvaluatedStudents = 6,
                 PendingStudents = 4,
-                EvaluationStatus = "In Progress"
+                EvaluationStatus = "Faltan estudiantes por evaluar"
             };
 
             // Datos dummy de estudiantes
@@ -55,7 +67,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         Feedback = "Good job!",
                         Grade = 85,
                         SpeedGraderLink = "https://speedgrader.example.com",
-                        FileType = "pdf"
+                        FileType = "audio"
                     },
                     new()
                     {
@@ -64,7 +76,16 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         Feedback = "Needs improvement.",
                         Grade = 70,
                         SpeedGraderLink = "https://speedgrader.example.com",
-                        FileType = "docx"
+                        FileType = "video"
+                    },
+                    new()
+                    {
+                        Id = $"EVIDENCE{i}C",
+                        Name = "Evidence C",
+                        Feedback = "Needs improvement.",
+                        Grade = 60,
+                        SpeedGraderLink = "https://speedgrader.example.com",
+                        FileType = "other"
                     }
                 },
                 EvaluationResults = new List<EvaluationResult>
