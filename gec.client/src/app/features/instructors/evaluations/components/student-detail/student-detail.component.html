@@ -1,8 +1,10 @@
 <div class="student-detail">
-  <h2>{{ student.name }}</h2>
+  <h3 class="bmb_field-label">{{ student.id }}</h3>
+  <h3>{{ student.name }}</h3>
+  <bmb-divider [type]="'simple'"></bmb-divider>
+  <app-evidence-list [evidences]="student.evidences"></app-evidence-list>
   <app-student-evaluation
     [evaluationResults]="student.evaluationResults"
     [evaluationStructures]="evaluationStructures">
   </app-student-evaluation>
-  <app-evidence-list [evidences]="student.evidences"></app-evidence-list>
 </div>
