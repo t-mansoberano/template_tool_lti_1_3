@@ -1,40 +1,95 @@
 <div class="evidence-list">
   <h3 class="font-light-7">Retroalimentación</h3>
 
-  <div class="evidence-card" *ngFor="let evidence of evidences">
-    <div class="evidence-header">
-      <h4>
-        <a class="font-light-6" href="{{ evidence.speedGraderLink }}" target="_blank">
-          <bmb-icon [icon]="'open_in_new'" [size]="20" [dotNotification]="0"></bmb-icon>
-          {{ evidence.name }}
+  <!-- Botón para alternar entre colapsado y expandido -->
+  <div class="list-header">
+    <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
+      <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="25"></bmb-icon>
+      <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="25"></bmb-icon>
+      <span class="button-text">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
+    </button>
+  </div>
+
+  <!-- Lista de tarjetas -->
+  <div *ngIf="isCollapsed; else expandedList">
+    <!-- Mostrar solo la primera tarjeta -->
+    <div class="evidence-card" *ngIf="evidences.length > 0">
+      <div class="evidence-header">
+        <h4>
+          <a class="font-light-6" href="{{ evidences[0].speedGraderLink }}" target="_blank">
+            <bmb-icon [icon]="'open_in_new'" [size]="20" [dotNotification]="0"></bmb-icon>
+            {{ evidences[0].name }}
+          </a>
+        </h4>
+        <span class="grade font-light-6">| <span>Calificación: {{ evidences[0].grade }}</span></span>
+      </div>
+
+      <div class="evidence-content">
+        <p>{{ evidences[0].feedback }}</p>
+      </div>
+
+      <div class="evidence-footer">
+        <a [href]="evidences[0].fileType === 'audio'? evidences[0].fileLink : null"
+           [attr.target]="evidences[0].fileType === 'audio'? '_blank' : null"
+           [class.disabled]="evidences[0].fileType !== 'audio'"
+           class="icon">
+          <bmb-icon [icon]="'mic'" [size]="25"></bmb-icon>
         </a>
-      </h4>
-      <span class="grade font-light-6">| <span>Calificación: {{ evidence.grade }}</span></span>
-    </div>
-
-    <div class="evidence-content">
-      <p>{{ evidence.feedback }}</p>
-    </div>
-
-    <div class="evidence-footer">
-      <a [href]="evidence.fileType === 'audio'? evidence.fileLink : null"
-         [attr.target]="evidence.fileType === 'audio'? '_blank' : null"
-         [class.disabled]="evidence.fileType !== 'audio'"
-         class="icon">
-        <bmb-icon [icon]="'mic'" [size]="25"></bmb-icon>
-      </a>
-      <a [href]="evidence.fileType === 'video'? evidence.fileLink : null"
-         [attr.target]="evidence.fileType === 'video'? '_blank' : null"
-         [class.disabled]="evidence.fileType !== 'video'"
-         class="icon">
-        <bmb-icon [icon]="'video_call'" [size]="25"></bmb-icon>
-      </a>
-      <a [href]="evidence.fileType === 'other'? evidence.fileLink : null"
-         [attr.target]="evidence.fileType === 'other'? '_blank' : null"
-         [class.disabled]="evidence.fileType !== 'other'"
-         class="icon">
-        <bmb-icon [icon]="'attach_file'" [size]="25"></bmb-icon>
-      </a>
+        <a [href]="evidences[0].fileType === 'video'? evidences[0].fileLink : null"
+           [attr.target]="evidences[0].fileType === 'video'? '_blank' : null"
+           [class.disabled]="evidences[0].fileType !== 'video'"
+           class="icon">
+          <bmb-icon [icon]="'video_call'" [size]="25"></bmb-icon>
+        </a>
+        <a [href]="evidences[0].fileType === 'other'? evidences[0].fileLink : null"
+           [attr.target]="evidences[0].fileType === 'other'? '_blank' : null"
+           [class.disabled]="evidences[0].fileType !== 'other'"
+           class="icon">
+          <bmb-icon [icon]="'attach_file'" [size]="25"></bmb-icon>
+        </a>
+      </div>
     </div>
   </div>
+
+  <!-- Lista expandida -->
+  <ng-template #expandedList>
+    <!-- Mostrar solo la primera tarjeta -->
+    <div class="evidence-card" *ngFor="let evidence of evidences">
+      <div class="evidence-header">
+        <h4>
+          <a class="font-light-6" href="{{ evidence.speedGraderLink }}" target="_blank">
+            <bmb-icon [icon]="'open_in_new'" [size]="20" [dotNotification]="0"></bmb-icon>
+            {{ evidence.name }}
+          </a>
+        </h4>
+        <span class="grade font-light-6">| <span>Calificación: {{ evidence.grade }}</span></span>
+      </div>
+
+      <div class="evidence-content">
+        <p>{{ evidence.feedback }}</p>
+      </div>
+
+      <div class="evidence-footer">
+        <a [href]="evidence.fileType === 'audio'? evidence.fileLink : null"
+           [attr.target]="evidence.fileType === 'audio'? '_blank' : null"
+           [class.disabled]="evidence.fileType !== 'audio'"
+           class="icon">
+          <bmb-icon [icon]="'mic'" [size]="25"></bmb-icon>
+        </a>
+        <a [href]="evidence.fileType === 'video'? evidence.fileLink : null"
+           [attr.target]="evidence.fileType === 'video'? '_blank' : null"
+           [class.disabled]="evidence.fileType !== 'video'"
+           class="icon">
+          <bmb-icon [icon]="'video_call'" [size]="25"></bmb-icon>
+        </a>
+        <a [href]="evidence.fileType === 'other'? evidence.fileLink : null"
+           [attr.target]="evidence.fileType === 'other'? '_blank' : null"
+           [class.disabled]="evidence.fileType !== 'other'"
+           class="icon">
+          <bmb-icon [icon]="'attach_file'" [size]="25"></bmb-icon>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+
 </div>

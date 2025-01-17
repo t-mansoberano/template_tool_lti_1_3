@@ -24,4 +24,12 @@ import {
 })
 export class EvidenceListComponent {
   @Input() evidences!: { id: string; name: string; feedback: string; grade: number; speedGraderLink: string; fileLink: string; fileType: string }[];
+
+  // Estado global para colapsar o expandir la lista
+  isCollapsed: boolean = true;
+
+  // Método para alternar entre colapsado y expandido
+  toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }
