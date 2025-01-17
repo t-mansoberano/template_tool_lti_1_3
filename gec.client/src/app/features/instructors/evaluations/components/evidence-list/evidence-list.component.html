@@ -1,8 +1,40 @@
 <div class="evidence-list">
-  <div *ngFor="let evidence of evidences">
-    <h4>{{ evidence.name }}</h4>
-    <p>Feedback: {{ evidence.feedback }}</p>
-    <p>Grade: {{ evidence.grade }}</p>
-    <a [href]="evidence.speedGraderLink" target="_blank">View in SpeedGrader</a>
+  <h3 class="font-light-7">Retroalimentación</h3>
+
+  <div class="evidence-card" *ngFor="let evidence of evidences">
+    <div class="evidence-header">
+      <h4>
+        <a class="font-light-6" href="{{ evidence.speedGraderLink }}" target="_blank">
+          <bmb-icon [icon]="'open_in_new'" [size]="20" [dotNotification]="0"></bmb-icon>
+          {{ evidence.name }}
+        </a>
+      </h4>
+      <span class="grade font-light-6">| <span>Calificación: {{ evidence.grade }}</span></span>
+    </div>
+
+    <div class="evidence-content">
+      <p>{{ evidence.feedback }}</p>
+    </div>
+
+    <div class="evidence-footer">
+      <a [href]="evidence.fileType === 'audio'? evidence.fileLink : null"
+         [attr.target]="evidence.fileType === 'audio'? '_blank' : null"
+         [class.disabled]="evidence.fileType !== 'audio'"
+         class="icon">
+        <bmb-icon [icon]="'mic'" [size]="25"></bmb-icon>
+      </a>
+      <a [href]="evidence.fileType === 'video'? evidence.fileLink : null"
+         [attr.target]="evidence.fileType === 'video'? '_blank' : null"
+         [class.disabled]="evidence.fileType !== 'video'"
+         class="icon">
+        <bmb-icon [icon]="'video_call'" [size]="25"></bmb-icon>
+      </a>
+      <a [href]="evidence.fileType === 'other'? evidence.fileLink : null"
+         [attr.target]="evidence.fileType === 'other'? '_blank' : null"
+         [class.disabled]="evidence.fileType !== 'other'"
+         class="icon">
+        <bmb-icon [icon]="'attach_file'" [size]="25"></bmb-icon>
+      </a>
+    </div>
   </div>
 </div>
