@@ -5,7 +5,7 @@ import {NgForOf} from '@angular/common';
   selector: 'app-student-evaluation',
   standalone: true,
   imports: [
-    NgForOf
+    NgForOf,
   ],
   templateUrl: './student-evaluation.component.html',
   styleUrl: './student-evaluation.component.css'

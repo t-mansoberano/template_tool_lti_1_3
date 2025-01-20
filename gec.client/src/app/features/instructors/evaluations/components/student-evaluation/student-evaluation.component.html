@@ -1,7 +1,85 @@
-<div class="student-evaluation">
-  <div *ngFor="let result of evaluationResults">
-    <h3>{{ getEvaluationName(result.id) }}</h3>
-    <p>{{ result.achievementLevel }}</p>
-    <p>{{ result.comments }}</p>
-  </div>
+<div class="rubricas-evaluacion-component">
+  <!-- Encabezado -->
+  <header class="header">
+    <button class="toggle-button" aria-label="Expandir o colapsar">&#x25BC;</button>
+    <h1>CLAVE - Nombre de la competencia</h1>
+    <p class="subtitle">Diseña mecanismos de control interno y administrativo, utilizando las mejores prácticas a nivel internacional.</p>
+    <span class="badge">
+            <span class="badge-icon"></span>
+            Pendiente
+        </span>
+  </header>
+
+  <!-- Cuerpo Principal -->
+  <main class="main-content">
+    <div class="rubricas-header">
+      <h2>Rúbricas</h2>
+      <label class="checkbox-container">
+        <input type="checkbox">
+        No hay elementos suficientes para evaluar
+      </label>
+    </div>
+
+    <div class="cards-container">
+      <!-- Card Destacado -->
+      <div class="card destacado">
+        <div class="card-header">
+          <span class="icon destacado-icon"></span>
+          <h3>Destacado</h3>
+        </div>
+        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
+      </div>
+
+      <!-- Card Sólido -->
+      <div class="card solido">
+        <div class="card-header">
+          <span class="icon solido-icon"></span>
+          <h3>Sólido</h3>
+        </div>
+        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
+      </div>
+
+      <!-- Card Básico -->
+      <div class="card basico">
+        <div class="card-header">
+          <span class="icon basico-icon"></span>
+          <h3>Básico</h3>
+        </div>
+        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
+      </div>
+
+      <!-- Card Incipiente -->
+      <div class="card incipiente">
+        <div class="card-header">
+          <span class="icon incipiente-icon"></span>
+          <h3>Incipiente</h3>
+        </div>
+        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
+      </div>
+    </div>
+
+    <!-- Comentarios -->
+    <div class="comments-section">
+      <div class="comments-header">
+        <label for="comments">Comentarios <span class="required">*</span></label>
+        <span class="char-counter">0/500</span>
+      </div>
+      <textarea id="comments" placeholder="Enter long form text here"></textarea>
+    </div>
+
+    <!-- Botones -->
+    <div class="actions">
+      <button class="save-button">Guardar evaluación</button>
+      <button class="cancel-button">Cancelar</button>
+    </div>
+  </main>
 </div>
+
+
+<!--<div class="student-evaluation">-->
+<!--  <div *ngFor="let result of evaluationResults">-->
+<!--    <h3>{{ getEvaluationName(result.id) }}</h3>-->
+<!--    <p>{{ result.achievementLevel }}</p>-->
+<!--    <p>{{ result.comments }}</p>-->
+<!--  </div>-->
+<!--</div>-->
