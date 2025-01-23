@@ -31,8 +31,11 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
 
             var ltiContex = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
+            if (ltiContex.IsFailure)
+            {
+                return Result.Failure<GetCompleteEvaluationsViewRespond>(ltiContex.Error);
+            }
 
-            // Datos dummy del curso
             var course = new Course
             {
                 Id = ltiContex.Value.Course.Id,
@@ -63,8 +66,8 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     new()
                     {
                         Id = $"EVIDENCE{i}A",
-                        Name = "Evidence A",
-                        Feedback = "Good job!",
+                        Name = $"Evidence{i} A",
+                        Feedback = $"Good job {i}!",
                         Grade = 85,
                         SpeedGraderLink = "https://speedgrader.example.com",
                         FileType = "audio"
@@ -72,8 +75,8 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     new()
                     {
                         Id = $"EVIDENCE{i}B",
-                        Name = "Evidence B",
-                        Feedback = "Needs improvement.",
+                        Name = $"Evidence{i} B",
+                        Feedback = $"Needs improvement {i}.",
                         Grade = 70,
                         SpeedGraderLink = "https://speedgrader.example.com",
                         FileType = "video"
@@ -81,8 +84,8 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     new()
                     {
                         Id = $"EVIDENCE{i}C",
-                        Name = "Evidence C",
-                        Feedback = "Needs improvement.",
+                        Name = $"Evidence{i} C",
+                        Feedback = $"Needs improvement {i}.",
                         Grade = 60,
                         SpeedGraderLink = "https://speedgrader.example.com",
                         FileType = "other"
@@ -121,10 +124,10 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = null,
                     Descriptors = new List<Descriptor>
                     {
-                        new() { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new() { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new() { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new() { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new() { Id = "LEVEL1", Level = "Destacado", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL2", Level = "Sólido", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL3", Level = "Básico", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL4", Level = "Incipiente", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." }
                     }
                 },
                 new()
@@ -138,10 +141,10 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = "Competency 1",
                     Descriptors = new List<Descriptor>
                     {
-                        new() { Id = "LEVEL1", Level = "Highlighted", Description = "Excellent understanding." },
-                        new() { Id = "LEVEL2", Level = "Solid", Description = "Solid understanding." },
-                        new() { Id = "LEVEL3", Level = "Basic", Description = "Basic understanding." },
-                        new() { Id = "LEVEL4", Level = "Incipient", Description = "Needs improvement." }
+                        new() { Id = "LEVEL1", Level = "Destacado", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL2", Level = "Sólido", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL3", Level = "Básico", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
+                        new() { Id = "LEVEL4", Level = "Incipiente", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." }
                     }
                 }
             };
