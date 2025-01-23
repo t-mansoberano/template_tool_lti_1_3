@@ -1,13 +1,11 @@
 import {CommonModule} from '@angular/common';
-import {Component, inject, OnInit} from '@angular/core';
-import {EvaluationDataService} from './services/evaluation-data.service';
+import {Component, computed, inject, OnInit} from '@angular/core';
 import {CourseSummaryComponent} from './components/course-summary/course-summary.component';
 import {EvaluationStatusComponent} from './components/evaluation-status/evaluation-status.component';
 import {StudentListComponent} from './components/student-list/student-list.component';
 import {StudentDetailComponent} from './components/student-detail/student-detail.component';
 import {BmbLoaderComponent, BmbTabsComponent, IBmbTab} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ViewModel} from './models/view.model';
+import {StateService} from './services/state.service';
 
 @Component({
   selector: 'app-evaluation',
@@ -25,43 +23,35 @@ import {ViewModel} from './models/view.model';
   styleUrl: './evaluation.component.css'
 })
 export class EvaluationComponent implements OnInit {
-  route = inject(ActivatedRoute);
-  router = inject(Router);
-  viewModel: ViewModel | null = null;
-  loading = true; // Indicador de carga
-  tabs : IBmbTab[] = [{id: 1, title: 'Evaluar por alumnos', isActive: true}, {id: 2, title: 'Evaluar por competencia/subcompetencia'}]
-  private readonly evaluationDataService = inject(EvaluationDataService);
+  private readonly stateService = inject(StateService);
+
+  // Acceso a señales expuestas como solo lectura desde el servicio
+  viewModel = this.stateService.viewModel;
+  loading = this.stateService.loading;
+  error = this.stateService.error;
+
+  // Variables locales para simplificar el HTML
+  course = computed(() => this.viewModel()?.course);
+  courseState = computed(() => this.viewModel()?.courseState);
+  students = computed(() => this.viewModel()?.students);
+  selectedStudent = computed(() => this.viewModel()?.selectedStudent);
+  evaluationStructures = computed(() => this.viewModel()?.evaluationStructures || []);
+
+  tabs: IBmbTab[] = [
+    { id: 1, title: 'Evaluar por alumnos', isActive: true },
+    { id: 2, title: 'Evaluar por competencia/subcompetencia' },
+  ];
 
   ngOnInit(): void {
-    this.loadData();
-  }
-
-  loadData(): void {
-    this.evaluationDataService.getTestEvaluations().subscribe({
-      next: (viewModel) => {
-        this.viewModel = viewModel;
-        this.tabs[0].badge = this.viewModel?.courseState?.totalStudents;
-        this.tabs[1].badge = this.viewModel?.courseState?.totalStudents;
-        console.log(this.viewModel);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-      complete: () => {
-        this.loading = false; // Datos cargados
-        console.log('complete');
-      }
-    })
+    this.stateService.load();
   }
 
   onStudentSelected(studentId: string): void {
-    if (this.viewModel) {
-      this.viewModel.selectedStudent = this.viewModel.students.find(student => student.id === studentId) || null;
-    }
+      this.stateService.selectStudent(studentId);
   }
 
-  handleTabSelected($event: IBmbTab) {
-    this.router.navigate(['instructor-competencies'], {relativeTo: this.route.parent});
-    console.log($event);
+  handleTabSelected(tab: IBmbTab): void {
+    this.stateService.navigate(tab);
   }
+
 }

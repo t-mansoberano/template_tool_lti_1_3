@@ -7,7 +7,7 @@ import {catchError} from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class HttpService {
   private http = inject(HttpClient);
 
   get(url: string): Observable<RespondModel> {

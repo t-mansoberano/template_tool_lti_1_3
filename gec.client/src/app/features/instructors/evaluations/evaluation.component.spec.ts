@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EvaluationComponent } from './evaluation.component';
-import { EvaluationDataService } from './services/evaluation-data.service';
+import { ApiService } from './services/api.service';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Evaluation } from './models/evaluation.model';
 
 describe('EvaluationComponent', () => {
   let component: EvaluationComponent;
   let fixture: ComponentFixture<EvaluationComponent>;
-  let mockEvaluationDataService: jasmine.SpyObj<EvaluationDataService>;
+  let mockEvaluationDataService: jasmine.SpyObj<ApiService>;
 
   /**
    * Datos simulados para diferentes escenarios
    */
-  const mockEvaluationData: Evaluation = {
+  const mockEvaluationData: any = {
     students: [{ id: '1', name: 'Student 1' }],
     feedbacks: [{ id: 'f1', text: 'Buen trabajo' }],
     competencies: [{ id: 'c1', name: 'Competencia 1' }]
@@ -25,7 +24,7 @@ describe('EvaluationComponent', () => {
     /**
      * 1. Crear el mock del servicio con jasmine.createSpyObj
      */
-    mockEvaluationDataService = jasmine.createSpyObj<EvaluationDataService>(
+    mockEvaluationDataService = jasmine.createSpyObj<ApiService>(
       'EvaluationDataService',
       ['getEvaluations', 'getTestCanvasAPI']
     );
@@ -39,7 +38,7 @@ describe('EvaluationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EvaluationComponent], // Componente standalone
       providers: [
-        { provide: EvaluationDataService, useValue: mockEvaluationDataService }
+        { provide: ApiService, useValue: mockEvaluationDataService }
       ],
       /**
        * 3. Usar NO_ERRORS_SCHEMA para ignorar errores

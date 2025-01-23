@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {ApiService} from './api.service';
+import {HttpService} from './http.service';
 import {Resolve} from '../models/resolve.model';
 import {Context} from '../models/context.model';
 
@@ -9,7 +9,7 @@ import {Context} from '../models/context.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiService = inject(ApiService);
+  private readonly apiService = inject(HttpService);
 
   private _isInstructor = false;
   private _isStudent = false;

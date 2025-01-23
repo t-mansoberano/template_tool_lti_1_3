@@ -2,14 +2,14 @@
     [title]="'Cargando...'"
     [subtitle]="''"
     [overlay]="true"
-    [isVisible]="loading"
+    [isVisible]="loading()"
     [errorState]="false"
     [actions]="false"
 ></bmb-loader>
 
-<div *ngIf="!loading">
-  <app-course-summary [course]="viewModel!.course"></app-course-summary>
-  <app-evaluation-status [courseState]="viewModel!.courseState"></app-evaluation-status>
+<div *ngIf="!loading()">
+  <app-course-summary [course]="course()!"></app-course-summary>
+  <app-evaluation-status [courseState]="courseState()!"></app-evaluation-status>
 
   <section class="bmb_template-header">
     <bmb-tabs
@@ -21,16 +21,16 @@
   <div class="bmb_template-aside-first">
     <aside class="bmb_template-aside-first-aside">
       <app-student-list
-        [students]="viewModel!.students"
-        [courseState]="viewModel!.courseState"
+        [students]="students()!"
+        [courseState]="courseState()!"
         (studentSelected)="onStudentSelected($event)">
       </app-student-list>
     </aside>
     <main class="bmb_template-aside-first-main">
       <app-student-detail
-        *ngIf="viewModel?.selectedStudent"
-        [student]="viewModel?.selectedStudent"
-        [evaluationStructures]="viewModel?.evaluationStructures || []">
+        *ngIf="viewModel()?.selectedStudent"
+        [student]="viewModel()?.selectedStudent"
+        [evaluationStructures]="viewModel()?.evaluationStructures || []">
       </app-student-detail>
     </main>
   </div>
