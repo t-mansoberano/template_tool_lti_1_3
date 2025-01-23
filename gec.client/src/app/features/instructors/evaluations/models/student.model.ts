@@ -1,7 +1,13 @@
-import {Evaluation} from './evaluation.model';
+import {EvidenceModel} from './evidence.model';
+import {EvaluationResultModel} from './evaluation-result.model';
 
-export interface Student {
+export interface StudentModel {
   id: string;
   name: string;
-  evaluations: Evaluation[];
+  status: string; // Ejemplo: "Evaluated", "Pending", etc.
+  totalEvaluations: number;
+  completedEvaluations: number;
+  pendingEvaluations: number;
+  evidences: EvidenceModel[];
+  evaluationResults: EvaluationResultModel[];
 }

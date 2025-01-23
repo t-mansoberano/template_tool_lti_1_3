@@ -1,33 +1,32 @@
-<div *ngIf="loading" class="loading">
+<div *ngIf="loading">
   <p>Loading...</p>
 </div>
 
 <div *ngIf="!loading">
-  <app-course-summary [course]="evaluation?.course"></app-course-summary>
-  <app-evaluation-status [courseState]="evaluation?.courseState"></app-evaluation-status>
+  <app-course-summary [course]="viewModel!.course"></app-course-summary>
+  <app-evaluation-status [courseState]="viewModel!.courseState"></app-evaluation-status>
 
-  <bmb-tabs
-    [format]="'uppercase'"
-    [tabs]="tabs"
-    (selected)="handleTabSelected($event)"
-  ></bmb-tabs>
-
-  <div class="container">
-    <div class="sidebar">
-      <!-- Contenido de la sección pequeña (izquierda) -->
-        <app-student-list
-          [students]="evaluation?.students || []"
-          [courseState]="evaluation?.courseState"
-          (studentSelected)="onStudentSelected($event)">
-        </app-student-list>
-    </div>
-    <div class="content">
-      <!-- Contenido de la sección grande (derecha) -->
-        <app-student-detail
-          *ngIf="evaluation?.selectedStudent"
-          [student]="evaluation?.selectedStudent"
-          [evaluationStructures]="evaluation?.evaluationStructures || []">
-        </app-student-detail>
-    </div>
+  <section class="bmb_template-header">
+    <bmb-tabs
+      [format]="'uppercase'"
+      [tabs]="tabs"
+      (selected)="handleTabSelected($event)"
+    ></bmb-tabs>
+  </section>
+  <div class="bmb_template-aside-first">
+    <aside class="bmb_template-aside-first-aside">
+      <app-student-list
+        [students]="viewModel!.students"
+        [courseState]="viewModel!.courseState"
+        (studentSelected)="onStudentSelected($event)">
+      </app-student-list>
+    </aside>
+    <main class="bmb_template-aside-first-main">
+      <app-student-detail
+        *ngIf="viewModel?.selectedStudent"
+        [student]="viewModel?.selectedStudent"
+        [evaluationStructures]="viewModel?.evaluationStructures || []">
+      </app-student-detail>
+    </main>
   </div>
 </div>

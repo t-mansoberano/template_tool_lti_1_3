@@ -1,10 +1,11 @@
 import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {
+  BmbButtonDirective,
   BmbCardComponent,
-  BmbCardContentComponent,
+  BmbCardContentComponent, BmbCardFooterComponent,
   BmbCardHeaderComponent,
-  BmbIconComponent
+  BmbIconComponent, BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 
 @Component({
@@ -17,7 +18,11 @@ import {
     BmbCardHeaderComponent,
     BmbIconComponent,
     NgClass,
-    NgIf
+    NgIf,
+    BmbCardFooterComponent,
+    NgStyle,
+    BmbButtonDirective,
+    BmbTextLinkComponent
   ],
   templateUrl: './evidence-list.component.html',
   styleUrl: './evidence-list.component.css'

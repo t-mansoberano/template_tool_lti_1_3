@@ -70,7 +70,7 @@ describe('EvaluationComponent', () => {
    */
   it('should load evaluation data on initialization', () => {
     expect(mockEvaluationDataService.getEvaluations).toHaveBeenCalled();
-    expect(component.evaluation).toEqual(mockEvaluationData);
+    expect(component.viewModel).toEqual(mockEvaluationData);
   });
 
   it('should load canvas data on initialization', () => {
@@ -91,7 +91,7 @@ describe('EvaluationComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
 
-    expect(component.evaluation).toEqual({
+    expect(component.viewModel).toEqual({
       students: [],
       feedbacks: [],
       competencies: []
@@ -116,7 +116,7 @@ describe('EvaluationComponent', () => {
     // Verificamos que se haya llamado a console.log con el error
     expect(console.log).toHaveBeenCalledWith(new Error('Service Error'));
     // Se asume que, ante el error, evaluation se mantiene en null
-    expect(component.evaluation).toBeNull();
+    expect(component.viewModel).toBeNull();
   });
 
   /**

@@ -5,27 +5,26 @@
   <bmb-card-content padding="none">
 
     <bmb-tabs [tabs]="tabsData" (selected)="handleTabSelected($event)">
-      <bmb-container *ngIf="activeTabId === 1">
-        <div class="tab-content">
+      <bmb-container *ngIf="activeTabId === 1" [appearance]="'primary-home'">
           <bmb-input
             [placeholder]="'Filtrar por nombre o matrícula'">
           </bmb-input>
-          <bmb-list-group [borderRadius]="'none'" [margin]="'none'">
+          <bmb-list-group [borderRadius]="'none'" [margin]="'m'">
             <bmb-list-group-item *ngFor="let student of students" id="{{student.id}}" (click)="selectStudent(student.id)">
-              <div class="list-content">
+              <div>
                 <div>
                   <h3>{{ student.id }}</h3>
                   <span>{{ student.name }}</span>
                 </div>
-                <div class="indicator">
-                  <span *ngIf="student.status=='Evaluated'" class="circle" [style.backgroundColor]="'green'"></span>
-                  <span *ngIf="student.status!=='Evaluated'" class="circle" [style.backgroundColor]="'purple'"></span>
-                  <span class="evaluation-status">{{ student.pendingEvaluations }}/{{ student.totalEvaluations }}</span>
+                <div>
+                  <bmb-legend
+                    [label]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
+                    [indicatorAppearance]="'info'"
+                  ></bmb-legend>
                 </div>
               </div>
             </bmb-list-group-item>
           </bmb-list-group>
-        </div>
       </bmb-container>
     </bmb-tabs>
 

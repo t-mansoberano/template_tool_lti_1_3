@@ -18,11 +18,11 @@ export class ParentComponent {
       const context = data['context'];
       if (context) {
         // Redirige basado en roles
-        if (context.result.user.isInstructor) {
+        if (context.user.isInstructor) {
           this.router.navigate(['instructor'], {relativeTo: this.route});
-        } else if (context.result.user.isStudent) {
+        } else if (context.user.isStudent) {
           this.router.navigate(['student'], {relativeTo: this.route});
-        } else if (context.result.user.isExternalCollaborator) {
+        } else if (context.user.isExternalCollaborator) {
           this.router.navigate(['external-collaborator'], {relativeTo: this.route});
         } else {
           this.router.navigate(['/error']);

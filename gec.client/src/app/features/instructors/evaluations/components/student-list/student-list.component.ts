@@ -6,9 +6,11 @@ import {
   BmbCardFooterComponent,
   BmbCardHeaderComponent,
   IBmbTab,
-  BmbTabsComponent, BmbContainerComponent, BmbInputComponent
+  BmbTabsComponent, BmbContainerComponent, BmbInputComponent, BmbLegendComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import { BmbListGroupComponent, BmbListGroupItemComponent } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {StudentModel} from '../../models/student.model';
+import {CourseStateModel} from '../../models/course-state.model';
 
 @Component({
   selector: 'app-student-list',
@@ -24,16 +26,16 @@ import { BmbListGroupComponent, BmbListGroupItemComponent } from '@ti-tecnologic
     NgIf,
     BmbListGroupComponent,
     BmbListGroupItemComponent,
-    BmbInputComponent
+    BmbInputComponent,
+    BmbLegendComponent
   ],
   templateUrl: './student-list.component.html',
-  styleUrl: './student-list.component.css',
-  encapsulation: ViewEncapsulation.None, // Desactiva la encapsulación de estilos
+  styleUrl: './student-list.component.css'
 })
 export class StudentListComponent {
-  @Input() students!: { id: string; name: string; status: string; completedEvaluations: number; pendingEvaluations: number; totalEvaluations: number }[];
+  @Input() students!: StudentModel[];
   @Output() studentSelected = new EventEmitter<string>();
-  @Input() courseState!: { totalStudents: number; evaluatedStudents: number; pendingStudents: number; evaluationStatus: string };
+  @Input() courseState!: CourseStateModel;
   tabsData: IBmbTab[] = [
     { id: 1, title: 'Todos', isActive: true },
     { id: 2, title: 'Evaluados' },
@@ -48,4 +50,6 @@ export class StudentListComponent {
   handleTabSelected($event: IBmbTab) {
     this.activeTabId = $event.id;
   }
+
+  protected readonly String = String;
 }

@@ -1,8 +1,9 @@
 import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {Resolve} from '../models/resolve.model';
+import {Context} from '../models/context.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +18,15 @@ export class AuthService {
   private _isExternalCollaborator = false;
   private _courseId = "";
 
-  getLtiContext(): Observable<Resolve> {
-    return this.apiService.get<Resolve>('/api/lti').pipe(
-      tap((context: Resolve) => {
-        this._courseId = context.result.course.id;
-        this._isInstructor = context.result.user.isInstructor;
-        this._isStudent = context.result.user.isStudent;
-        this._isExternalCollaborator = context.result.user.isExternalCollaborator;
-        this._isWithoutRole = context.result.user.isWithoutRole;
+  getLtiContext(): Observable<Context> {
+    return this.apiService.get('/api/lti').pipe(
+      map((respondModel) => respondModel.result as Context),
+      tap((context) => {
+        this._courseId = context.course.id;
+        this._isInstructor = context.user.isInstructor;
+        this._isStudent = context.user.isStudent;
+        this._isExternalCollaborator = context.user.isExternalCollaborator;
+        this._isWithoutRole = context.user.isWithoutRole;
         this._isError = false;
       }),
       catchError((err) => {
@@ -34,14 +36,15 @@ export class AuthService {
     );
   }
 
-  getFederationContext(): Observable<Resolve> {
-    return this.apiService.get<Resolve>('/api/federation').pipe(
-      tap((context: Resolve) => {
+  getFederationContext(): Observable<Context> {
+    return this.apiService.get('/api/federation').pipe(
+      map((respondModel) => respondModel.result as Context),
+      tap((context) => {
         this._courseId = "";
-        this._isInstructor = context.result.user.isInstructor;
-        this._isStudent = context.result.user.isStudent;
-        this._isExternalCollaborator = context.result.user.isExternalCollaborator;
-        this._isWithoutRole = context.result.user.isWithoutRole;
+        this._isInstructor = context.user.isInstructor;
+        this._isStudent = context.user.isStudent;
+        this._isExternalCollaborator = context.user.isExternalCollaborator;
+        this._isWithoutRole = context.user.isWithoutRole;
         this._isError = false;
       }),
       catchError((err) => {

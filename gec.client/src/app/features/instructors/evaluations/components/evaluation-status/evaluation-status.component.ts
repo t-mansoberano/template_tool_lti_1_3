@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {BmbBadgeComponent} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {CourseStateModel} from '../../models/course-state.model';
 
 @Component({
   selector: 'app-evaluation-status',
@@ -11,5 +12,5 @@ import {BmbBadgeComponent} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
   styleUrl: './evaluation-status.component.css'
 })
 export class EvaluationStatusComponent {
-  @Input() courseState!: { totalStudents: number; evaluatedStudents: number; pendingStudents: number; evaluationStatus: string };
+  @Input() courseState!: CourseStateModel;
 }

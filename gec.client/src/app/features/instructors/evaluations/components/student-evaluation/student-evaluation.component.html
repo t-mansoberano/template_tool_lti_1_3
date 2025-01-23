@@ -1,85 +1,87 @@
-<div class="rubricas-evaluacion-component">
-  <!-- Encabezado -->
-  <header class="header">
-    <button class="toggle-button" aria-label="Expandir o colapsar">&#x25BC;</button>
-    <h1>CLAVE - Nombre de la competencia</h1>
-    <p class="subtitle">Diseña mecanismos de control interno y administrativo, utilizando las mejores prácticas a nivel internacional.</p>
-    <span class="badge">
-            <span class="badge-icon"></span>
-            Pendiente
-        </span>
-  </header>
-
-  <!-- Cuerpo Principal -->
-  <main class="main-content">
-    <div class="rubricas-header">
-      <h2>Rúbricas</h2>
-      <label class="checkbox-container">
-        <input type="checkbox">
-        No hay elementos suficientes para evaluar
-      </label>
-    </div>
-
-    <div class="cards-container">
-      <!-- Card Destacado -->
-      <div class="card destacado">
-        <div class="card-header">
-          <span class="icon destacado-icon"></span>
-          <h3>Destacado</h3>
-        </div>
-        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
-      </div>
-
-      <!-- Card Sólido -->
-      <div class="card solido">
-        <div class="card-header">
-          <span class="icon solido-icon"></span>
-          <h3>Sólido</h3>
-        </div>
-        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
-      </div>
-
-      <!-- Card Básico -->
-      <div class="card basico">
-        <div class="card-header">
-          <span class="icon basico-icon"></span>
-          <h3>Básico</h3>
-        </div>
-        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
-      </div>
-
-      <!-- Card Incipiente -->
-      <div class="card incipiente">
-        <div class="card-header">
-          <span class="icon incipiente-icon"></span>
-          <h3>Incipiente</h3>
-        </div>
-        <p>Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación.</p>
-      </div>
-    </div>
-
-    <!-- Comentarios -->
-    <div class="comments-section">
-      <div class="comments-header">
-        <label for="comments">Comentarios <span class="required">*</span></label>
-        <span class="char-counter">0/500</span>
-      </div>
-      <textarea id="comments" placeholder="Enter long form text here"></textarea>
-    </div>
-
-    <!-- Botones -->
-    <div class="actions">
-      <button class="save-button">Guardar evaluación</button>
-      <button class="cancel-button">Cancelar</button>
-    </div>
-  </main>
-</div>
-
-
-<!--<div class="student-evaluation">-->
-<!--  <div *ngFor="let result of evaluationResults">-->
-<!--    <h3>{{ getEvaluationName(result.id) }}</h3>-->
-<!--    <p>{{ result.achievementLevel }}</p>-->
-<!--    <p>{{ result.comments }}</p>-->
-<!--  </div>-->
-<!--</div>-->
+<bmb-accordion
+  *ngFor="let evaluationStructure of evaluationStructures"
+  [icon]="'keyboard_arrow_down'"
+  [borderRadius]="'m'"
+  [margin]="'m'"
+  [paddingHeader]="'m'"
+  [paddingContent]="'m'"
+  [hideToggle]="false"
+  [active]="false"
+  [expanded]="true"
+  [disabled]="false"
+>
+  <ng-template #bmbAccordionHeader>
+    {{ evaluationStructure.id }} - {{ evaluationStructure.name }}
+    <bmb-badge
+      [appearance]="'warning'"
+      [text]="'Pendiente'"
+      [container]="true"
+    ></bmb-badge>
+  </ng-template>
+  <ng-template #bmbAccordionContent>
+    <bmb-checkbox
+      [id]="'checkbox1'"
+      [checked]="false"
+      [disabled]="false"
+      [indeterminate]="false"
+      [required]="false"
+      [value]="''"
+      [name]="''"
+      [label]="'No hay elementos suficientes para evaluar'"
+      [labelPosition]="'after'"
+      [ariaDescribedby]="''"
+      [ariaLabel]="''"
+      [ariaLabelledby]="''"
+    ></bmb-checkbox>
+    <bmb-card
+      *ngFor="let descriptor of evaluationStructure.descriptors"
+      [borderRadius]="'none'"
+      [margin]="'s'"
+      [type]="'normal'">
+      <bmb-card-header padding="s">
+        <bmb-icon [icon]="'menu'" [size]="20" [dotNotification]="0"></bmb-icon>
+        {{ descriptor.level }}
+      </bmb-card-header>
+      <bmb-card-content padding="none">
+      {{ descriptor.description }}
+      </bmb-card-content>
+    </bmb-card>
+    <bmb-input
+      [placeholder]="'Introduce tus comentarios aquí'"
+      [disabled]="false"
+      [isRequired]="false"
+      [value]="''"
+      [name]="''"
+      [maxlength]="500"
+      [showMaxTextLength]="true"
+      [label]="'Comentarios'"
+      [labelPosition]="'after'"
+    ></bmb-input>
+    <button
+      bmbButton
+      appearance="secondary-filled"
+      icon="cancel"
+      size="small"
+      position="left"
+      [case]="false"
+      [isToggleActive]="false"
+      [enableButtonToggle]="false"
+      [isRounded]="true"
+    >
+      Cancelar
+    </button>
+    <button
+      bmbButton
+      appearance="primary"
+      icon="save"
+      size="small"
+      position="left"
+      [case]="false"
+      [isToggleActive]="false"
+      [enableButtonToggle]="false"
+      [isRounded]="true"
+    >
+      Guardar evaluación
+    </button>
+  </ng-template>
+</bmb-accordion>
