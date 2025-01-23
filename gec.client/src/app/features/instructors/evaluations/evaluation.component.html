@@ -7,6 +7,10 @@
     [actions]="false"
 ></bmb-loader>
 
+<div *ngIf="error();">
+  <p class="error-message">{{ error() }}</p>
+</div>
+
 <div *ngIf="!loading()">
   <app-course-summary [course]="course()!"></app-course-summary>
   <app-evaluation-status [courseState]="courseState()!"></app-evaluation-status>

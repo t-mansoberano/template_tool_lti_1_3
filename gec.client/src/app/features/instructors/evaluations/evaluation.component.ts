@@ -31,16 +31,13 @@ export class EvaluationComponent implements OnInit {
   error = this.stateService.error;
 
   // Variables locales para simplificar el HTML
-  course = computed(() => this.viewModel()?.course);
-  courseState = computed(() => this.viewModel()?.courseState);
-  students = computed(() => this.viewModel()?.students);
-  selectedStudent = computed(() => this.viewModel()?.selectedStudent);
+  course = computed(() => this.viewModel()?.course || null);
+  courseState = computed(() => this.viewModel()?.courseState || null);
+  students = computed(() => this.viewModel()?.students || null);
+  selectedStudent = computed(() => this.viewModel()?.selectedStudent || null);
   evaluationStructures = computed(() => this.viewModel()?.evaluationStructures || []);
 
-  tabs: IBmbTab[] = [
-    { id: 1, title: 'Evaluar por alumnos', isActive: true },
-    { id: 2, title: 'Evaluar por competencia/subcompetencia' },
-  ];
+  tabs = this.stateService.tabs;
 
   ngOnInit(): void {
     this.stateService.load();
