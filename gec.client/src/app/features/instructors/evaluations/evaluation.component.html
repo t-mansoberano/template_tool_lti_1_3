@@ -1,6 +1,11 @@
-<div *ngIf="loading">
-  <p>Loading...</p>
-</div>
+<bmb-loader
+    [title]="'Cargando...'"
+    [subtitle]="''"
+    [overlay]="true"
+    [isVisible]="loading"
+    [errorState]="false"
+    [actions]="false"
+></bmb-loader>
 
 <div *ngIf="!loading">
   <app-course-summary [course]="viewModel!.course"></app-course-summary>

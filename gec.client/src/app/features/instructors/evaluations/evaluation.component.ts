@@ -5,7 +5,7 @@ import {CourseSummaryComponent} from './components/course-summary/course-summary
 import {EvaluationStatusComponent} from './components/evaluation-status/evaluation-status.component';
 import {StudentListComponent} from './components/student-list/student-list.component';
 import {StudentDetailComponent} from './components/student-detail/student-detail.component';
-import { BmbTabsComponent, IBmbTab } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {BmbLoaderComponent, BmbTabsComponent, IBmbTab} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ViewModel} from './models/view.model';
 
@@ -19,6 +19,7 @@ import {ViewModel} from './models/view.model';
     StudentDetailComponent,
     StudentListComponent,
     BmbTabsComponent,
+    BmbLoaderComponent,
   ],
   templateUrl: './evaluation.component.html',
   styleUrl: './evaluation.component.css'
