@@ -7,6 +7,7 @@
     <bmb-tabs [tabs]="tabsData" (selected)="handleTabSelected($event)">
       <bmb-container *ngIf="activeTabId === 1" [appearance]="'primary-home'">
           <bmb-input
+            class="bmb_margin-s"
             [placeholder]="'Filtrar por nombre o matrícula'">
           </bmb-input>
           <bmb-list-group [borderRadius]="'none'" [margin]="'m'">

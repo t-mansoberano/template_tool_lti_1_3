@@ -1,12 +1,12 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
-import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {Component, Input} from '@angular/core';
+import {NgForOf, NgIf} from '@angular/common';
 import {
   BmbButtonDirective,
   BmbCardComponent,
   BmbCardContentComponent, BmbCardFooterComponent,
-  BmbCardHeaderComponent,
-  BmbIconComponent, BmbTextLinkComponent
+  BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {EvidenceModel} from '../../models/evidence.model';
 
 @Component({
   selector: 'app-evidence-list',
@@ -15,20 +15,16 @@ import {
     NgForOf,
     BmbCardComponent,
     BmbCardContentComponent,
-    BmbCardHeaderComponent,
-    BmbIconComponent,
-    NgClass,
-    NgIf,
     BmbCardFooterComponent,
-    NgStyle,
     BmbButtonDirective,
-    BmbTextLinkComponent
+    BmbTextLinkComponent,
+    NgIf
   ],
   templateUrl: './evidence-list.component.html',
   styleUrl: './evidence-list.component.css'
 })
 export class EvidenceListComponent {
-  @Input() evidences!: { id: string; name: string; feedback: string; grade: number; speedGraderLink: string; fileLink: string; fileType: string }[];
+  @Input() evidences!: EvidenceModel[];
 
   // Estado global para colapsar o expandir la lista
   isCollapsed: boolean = true;

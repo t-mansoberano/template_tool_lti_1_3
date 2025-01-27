@@ -5,35 +5,36 @@
   [borderRadius]="'none'"
   [margin]="'s'"
   [type]="'normal'">
-  <bmb-card-header padding="s">
-    <bmb-text-link
-      [textLink]="evidence.name"
-      [textLinkStyle]="'icon'"
-      [target]="'_blank'"
-      [icon]="'open_in_new'"
-      [iconPosition]="'left'"
-      [link]="'https://www.youtube.com'"
-      [disabled]="false"
-    ></bmb-text-link>
-    <span>| <span>Calificación: {{ evidence.grade }}</span></span>
-  </bmb-card-header>
   <bmb-card-content padding="none">
-    <p [ngStyle]="{padding: '1rem'}">
+    <h3  class="bmb_card-header bmb_padding-s">
+      <bmb-text-link
+        [textLink]="evidence.name"
+        [textLinkStyle]="'icon'"
+        [target]="'_blank'"
+        [icon]="'open_in_new'"
+        [iconPosition]="'left'"
+        [link]="'https://www.youtube.com'"
+        [disabled]="false"
+      ></bmb-text-link>
+      <span>| Calificación: {{ evidence.grade }}</span>
+    </h3>
+    <p class="bmb_margin-m">
       {{ evidence.feedback }}
     </p>
   </bmb-card-content>
-  <bmb-card-footer padding="xl">
+  <bmb-card-footer padding="xs">
     <button
       bmbButton
-      appearance="secondary-filled"
+      [appearance]="evidence.fileType === 'audio' ? 'primary' : 'secondary-filled'"
       icon="mic"
       size="small"
       position="left"
+      [isToggleActive]="true"
     >
     </button>
     <button
       bmbButton
-      appearance="secondary-filled"
+      [appearance]="evidence.fileType === 'video' ? 'primary' : 'secondary-filled'"
       icon="video_call"
       size="small"
       position="left"
@@ -41,7 +42,7 @@
     </button>
     <button
       bmbButton
-      appearance="secondary-filled"
+      [appearance]="evidence.fileType === 'other' ? 'primary' : 'secondary-filled'"
       icon="attach_file"
       size="small"
       position="left"

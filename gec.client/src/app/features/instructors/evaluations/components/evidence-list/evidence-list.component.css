@@ -1,0 +1,14 @@
+.bmb_card-header {
+  display: flex; /* Activa flexbox */
+  justify-content: space-between; /* Separa los elementos en extremos opuestos */
+  align-items: center; /* Alinea los elementos verticalmente */
+}
+
+.bmb_card-header .bmb_text-link {
+  flex: 1; /* Permite que el enlace ocupe todo el espacio disponible a la izquierda */
+}
+
+.bmb_card-header span {
+  flex-shrink: 0; /* Evita que la calificación sea comprimida */
+  margin-left: 16px; /* Añade un margen entre el enlace y la calificación */
+}

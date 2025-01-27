@@ -1,10 +1,14 @@
 import {CommonModule} from '@angular/common';
 import {Component, computed, inject, OnInit} from '@angular/core';
 import {CourseSummaryComponent} from './components/course-summary/course-summary.component';
-import {EvaluationStatusComponent} from './components/evaluation-status/evaluation-status.component';
 import {StudentListComponent} from './components/student-list/student-list.component';
 import {StudentDetailComponent} from './components/student-detail/student-detail.component';
-import {BmbLoaderComponent, BmbTabsComponent, IBmbTab} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {
+  BmbBadgeComponent,
+  BmbLoaderComponent,
+  BmbTabsComponent,
+  IBmbTab
+} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {StateService} from './services/state.service';
 
 @Component({
@@ -13,11 +17,11 @@ import {StateService} from './services/state.service';
   imports: [
     CommonModule,
     CourseSummaryComponent,
-    EvaluationStatusComponent,
     StudentDetailComponent,
     StudentListComponent,
     BmbTabsComponent,
     BmbLoaderComponent,
+    BmbBadgeComponent,
   ],
   templateUrl: './evaluation.component.html',
   styleUrl: './evaluation.component.css'
