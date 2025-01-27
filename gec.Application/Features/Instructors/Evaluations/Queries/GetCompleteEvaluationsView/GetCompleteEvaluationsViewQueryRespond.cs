@@ -1,4 +1,4 @@
-﻿using gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models;
+﻿using gec.Application.Features.Instructors.Evaluations.Dto;
 
 namespace gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView;
 

@@ -1,10 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
 using gec.Application.Common;
+using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
+using gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models;
 using gec.Application.Contracts.Infrastructure.Lti.Models;
 using gec.Application.Contracts.Server.Session;
-using gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models;
+using gec.Application.Features.Instructors.Evaluations.Dto;
 using MediatR;
-using Course = gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models.Course;
+using Course = gec.Application.Features.Instructors.Evaluations.Dto.Course;
 
 namespace gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView;
 
@@ -12,10 +14,14 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
     Result<GetCompleteEvaluationsViewRespond>>
 {
     private readonly ISessionStorageService _sessionStorageService;
+    private readonly IEnrollmentsService _enrollmentsService;
+    private readonly IMapper<Enrollment, StudentEvaluation> _canvasEnrolledStudentMapper;
 
-    public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService)
+    public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService, IEnrollmentsService enrollmentsService, IMapper<Enrollment, StudentEvaluation> canvasEnrolledStudentMapper)
     {
         _sessionStorageService = sessionStorageService;
+        _enrollmentsService = enrollmentsService;
+        _canvasEnrolledStudentMapper = canvasEnrolledStudentMapper;
     }
 
     public async Task<Result<GetCompleteEvaluationsViewRespond>> Handle(GetCompleteEvaluationsViewQuery request,
@@ -28,14 +34,16 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             if (!validationResult.IsValid)
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(validationResult.ErrorMessages());
 
-            await Task.Delay(100, cancellationToken); // Simula una llamada asíncrona.
-
             var ltiContex = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
             if (ltiContex.IsFailure)
-            {
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(ltiContex.Error);
-            }
 
+            var studentsFromApi = await _enrollmentsService.GetStudentsByCourseAsync(request.CourseId);
+            if (studentsFromApi.IsFailure)
+                return Result.Failure<GetCompleteEvaluationsViewRespond>(studentsFromApi.Error);
+            
+            var studentEvaluations = _canvasEnrolledStudentMapper.Map(studentsFromApi.Value);
+            
             var course = new Course
             {
                 Id = ltiContex.Value.Course.Id,
@@ -53,14 +61,14 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             };
 
             // Datos dummy de estudiantes
-            var students = Enumerable.Range(1, 10).Select(i => new StudentEvaluation
+            var students = studentEvaluations.Select(i => new StudentEvaluation
             {
-                Id = $"STUDENT{i}",
-                Name = $"Student {i}",
-                Status = i <= 6 ? "Evaluated" : "Pending",
+                Id = i.Id,
+                Name = i.Name,
+                Status = "Pending",
                 TotalEvaluations = 5,
-                CompletedEvaluations = i <= 6 ? 5 : 3,
-                PendingEvaluations = i <= 6 ? 0 : 2,
+                CompletedEvaluations = 3,
+                PendingEvaluations = 2,
                 Evidences = new List<Evidence>
                 {
                     new()
@@ -105,7 +113,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                         Id = $"COMP{i}B",
                         AchievementLevel = "Basic",
                         Comments = "Needs improvement.",
-                        IsEvaluated = i <= 6
+                        IsEvaluated = false
                     }
                 }
             }).ToList();
@@ -165,4 +173,5 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             return Result.Failure<GetCompleteEvaluationsViewRespond>($"Error occurred: {ex.Message}");
         }
     }
+
 }

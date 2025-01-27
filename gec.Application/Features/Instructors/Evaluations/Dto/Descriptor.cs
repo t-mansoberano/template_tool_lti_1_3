@@ -1,4 +1,4 @@
-﻿namespace gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView.Models;
+﻿namespace gec.Application.Features.Instructors.Evaluations.Dto;
 
 public class Descriptor
 {

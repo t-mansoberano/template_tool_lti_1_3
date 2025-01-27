@@ -15,7 +15,6 @@
     <ItemGroup>
         <Folder Include="Features\ExternalCollaborators\"/>
         <Folder Include="Features\Students\"/>
-        <Folder Include="Features\Instructors\Evaluations\"/>
     </ItemGroup>
 
 </Project>

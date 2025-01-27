@@ -20,13 +20,21 @@ public class CanvasOAuthService : ICanvasOAuthService
     }
 
     private static string Scopes => string.Join(" ", "url:GET|/api/v1/courses/:id",
-        "url:GET|/api/v1/courses/:course_id/enrollments", "url:GET|/api/v1/courses/:course_id/folders",
-        "url:GET|/api/v1/folders/:id/folders", "url:GET|/api/v1/folders/:id/files",
+        "url:GET|/api/v1/courses/:course_id/enrollments", 
+        "url:GET|/api/v1/courses/:course_id/students/submissions",
+        "url:GET|/api/v1/courses/:course_id/folders",
+        "url:GET|/api/v1/folders/:id/folders", 
+        "url:GET|/api/v1/folders/:id/files",
         "url:GET|/api/v1/courses/:course_id/assignments",
+        "url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions",
         "url:GET|/api/v1/courses/:course_id/assignments/:assignment_id/submissions/:user_id",
-        "url:GET|/api/v1/announcements", "url:GET|/api/v1/users/self/favorites/courses", "url:GET|/api/v1/users/:id",
-        "url:GET|/api/v1/courses", "url:GET|/api/v1/accounts/:account_id/sub_accounts",
-        "url:GET|/api/v1/courses/:course_id/todo", "url:GET|/api/v1/users/:user_id/courses");
+        "url:GET|/api/v1/announcements", 
+        "url:GET|/api/v1/users/self/favorites/courses", 
+        "url:GET|/api/v1/users/:id",
+        "url:GET|/api/v1/courses", 
+        "url:GET|/api/v1/accounts/:account_id/sub_accounts",
+        "url:GET|/api/v1/courses/:course_id/todo", 
+        "url:GET|/api/v1/users/:user_id/courses");
 
     public string BuildAuthorizationUrl()
     {
