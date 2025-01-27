@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {
-  BmbAccordionComponent, BmbBadgeComponent, BmbButtonDirective,
+  BmbAccordionComponent, BmbBadgeComponent, BmbButtonDirective, BmbButtonGroupDirective,
   BmbCardComponent,
   BmbCardContentComponent, BmbCardFooterComponent,
   BmbCardHeaderComponent, BmbCheckboxComponent, BmbHitoCardComponent, BmbIconComponent, BmbInputComponent
@@ -24,6 +24,7 @@ import {EvaluationStructureModel} from '../../models/evaluation-structure.model'
     BmbInputComponent,
     BmbIconComponent,
     BmbButtonDirective,
+    BmbButtonGroupDirective,
   ],
   templateUrl: './student-evaluation.component.html',
   styleUrl: './student-evaluation.component.css'
