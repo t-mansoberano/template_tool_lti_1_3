@@ -64,6 +64,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             var students = studentEvaluations.Select(i => new StudentEvaluation
             {
                 Id = i.Id,
+                LoginId = i.LoginId,
                 Name = i.Name,
                 Status = "Pending",
                 TotalEvaluations = 5,

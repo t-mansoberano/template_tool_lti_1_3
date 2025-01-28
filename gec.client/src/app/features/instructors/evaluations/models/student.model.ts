@@ -3,6 +3,7 @@ import {EvaluationResultModel} from './evaluation-result.model';
 
 export interface StudentModel {
   id: string;
+  loginId: string;
   name: string;
   status: string; // Ejemplo: "Evaluated", "Pending", etc.
   totalEvaluations: number;

@@ -11,6 +11,7 @@ public class CanvasEnrolledStudentMapper : IMapper<Enrollment, StudentEvaluation
         return new StudentEvaluation()
         {
             Id = input.UserId.ToString(),
+            LoginId = input.User.LoginId,
             Name = input.User.Name,
         };
     }
