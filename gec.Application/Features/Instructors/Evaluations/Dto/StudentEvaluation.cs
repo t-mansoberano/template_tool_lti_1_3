@@ -3,6 +3,7 @@
 public class StudentEvaluation
 {
     public string Id { get; set; } = "";
+    public string LoginId { get; set; } = "";
     public string Name { get; set; } = "";
     public string Status { get; set; } = ""; // Evaluated or Pending
     public int TotalEvaluations { get; set; } // Total evaluations (e.g., 10)
