@@ -1,2 +1,2 @@
-# gestor-evaluaciones-competencias
-Aplicación LTI para evaluaciones por competencia desde Canvas.
+# Gestor de Evaluaciones por Competencias
+Aplicación LTI para evaluaciones por competencias desde Canvas.
