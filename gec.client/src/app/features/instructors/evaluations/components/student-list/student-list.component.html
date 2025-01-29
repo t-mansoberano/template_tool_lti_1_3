@@ -12,16 +12,17 @@
           </bmb-input>
           <bmb-list-group [borderRadius]="'none'" [margin]="'m'">
             <bmb-list-group-item *ngFor="let student of students" id="{{student.id}}" (click)="selectStudent(student.id)">
-              <div>
-                <div>
+              <div class="student-container">
+                <div class="student-info">
                   <h3>{{ student.loginId }}</h3>
                   <span>{{ student.name }}</span>
                 </div>
-                <div>
-                  <bmb-legend
-                    [label]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
-                    [indicatorAppearance]="'info'"
-                  ></bmb-legend>
+                <div class="student-badge">
+                  <bmb-badge
+                    [appearance]="'info'"
+                    [text]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
+                    [container]="false">
+                  </bmb-badge>
                 </div>
               </div>
             </bmb-list-group-item>

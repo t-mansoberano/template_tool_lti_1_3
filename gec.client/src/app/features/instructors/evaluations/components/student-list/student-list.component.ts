@@ -1,12 +1,11 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {NgForOf, NgIf, NgStyle} from "@angular/common";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {NgForOf, NgIf} from "@angular/common";
 import {
   BmbCardComponent,
   BmbCardContentComponent,
-  BmbCardFooterComponent,
   BmbCardHeaderComponent,
   IBmbTab,
-  BmbTabsComponent, BmbContainerComponent, BmbInputComponent, BmbLegendComponent
+  BmbTabsComponent, BmbContainerComponent, BmbInputComponent, BmbLegendComponent, BmbBadgeComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import { BmbListGroupComponent, BmbListGroupItemComponent } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {StudentModel} from '../../models/student.model';
@@ -21,13 +20,12 @@ import {CourseStateModel} from '../../models/course-state.model';
     BmbTabsComponent,
     BmbCardHeaderComponent,
     BmbCardContentComponent,
-    NgStyle,
     BmbContainerComponent,
     NgIf,
     BmbListGroupComponent,
     BmbListGroupItemComponent,
     BmbInputComponent,
-    BmbLegendComponent
+    BmbBadgeComponent
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.css'
