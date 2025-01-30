@@ -45,7 +45,7 @@ jobs:
 
       - name: Move Angular build to Backend wwwroot
         run: |
-          rm -rf gec.Server/wwwroot/*
+          mkdir -p gec.Server/wwwroot
           cp -r gec.client/dist/gec.client/* gec.Server/wwwroot/
 
       # 🔹 Compilar y Publicar .NET con el frontend integrado
