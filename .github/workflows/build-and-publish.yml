@@ -1,0 +1,58 @@
+﻿name: Build and Publish Unified
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 🔹 Configuración de .NET Core 8
+      - name: Setup .NET Core 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore .NET dependencies
+        run: dotnet restore gec.Server/gec.Server.csproj
+
+      # 🔹 Configuración de Node.js y Angular 18
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Install Frontend dependencies
+        run: npm install
+        working-directory: gec.client
+
+      # 🔹 Compilar Angular y copiar a wwwroot
+      - name: Build Angular App
+        run: ng build --configuration=production
+        working-directory: gec.client
+
+      - name: Move Angular build to Backend wwwroot
+        run: |
+          rm -rf gec.Server/wwwroot/*
+          cp -r gec.client/dist/gec.client/* gec.Server/wwwroot/
+
+      # 🔹 Compilar y Publicar .NET con el frontend integrado
+      - name: Build and Publish Backend
+        run: dotnet publish gec.Server/gec.Server.csproj --configuration Release --output ./publish
+
+      - name: Upload Final Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-application
+          path: ./publish
