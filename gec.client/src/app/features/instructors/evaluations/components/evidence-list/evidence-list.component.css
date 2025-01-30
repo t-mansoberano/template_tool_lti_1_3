@@ -1,3 +1,16 @@
+.list-header-parent {
+  display: flex;
+  justify-content: space-between; /* Alinea el texto a la izquierda y el indicador a la derecha */
+  width: 100%;
+}
+
+.list-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+
 .bmb_card-header {
   display: flex; /* Activa flexbox */
   flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si es necesario */

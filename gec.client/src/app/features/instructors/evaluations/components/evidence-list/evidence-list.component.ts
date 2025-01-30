@@ -3,7 +3,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {
   BmbButtonDirective,
   BmbCardComponent,
-  BmbCardContentComponent, BmbCardFooterComponent,
+  BmbCardContentComponent, BmbCardFooterComponent, BmbIconComponent,
   BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvidenceModel} from '../../models/evidence.model';
@@ -18,7 +18,8 @@ import {EvidenceModel} from '../../models/evidence.model';
     BmbCardFooterComponent,
     BmbButtonDirective,
     BmbTextLinkComponent,
-    NgIf
+    NgIf,
+    BmbIconComponent
   ],
   templateUrl: './evidence-list.component.html',
   styleUrl: './evidence-list.component.css'
