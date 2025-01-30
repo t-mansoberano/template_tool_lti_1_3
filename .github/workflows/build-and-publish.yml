@@ -1,4 +1,4 @@
-﻿name: Build and Publish Unified
+﻿name: Build and Deploy App
 
 on:
   push:
@@ -8,15 +8,33 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  build-and-publish:
+  build-and-deploy-app:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 🔹 Configuración de .NET Core 8
+      # 🔹 Cache Dependencies
+      - name: Cache .NET Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Cache Node.js Modules
+        uses: actions/cache@v3
+        with:
+          path: gec.client/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('gec.client/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 🔹 Setup .NET Core 8
       - name: Setup .NET Core 8
         uses: actions/setup-dotnet@v3
         with:
@@ -25,35 +43,42 @@ jobs:
       - name: Restore .NET dependencies
         run: dotnet restore gec.Server/gec.Server.csproj
 
-      # 🔹 Configuración de Node.js y Angular 18
+      # 🔹 Setup Node.js 18
       - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
-
       - name: Install Frontend dependencies
-        run: npm install
+        run: npm ci
         working-directory: gec.client
 
-      # 🔹 Compilar Angular y copiar a wwwroot
+      # 🔹 Build Angular App
       - name: Build Angular App
-        run: ng build --configuration=production
+        run: npx ng build --configuration=production
         working-directory: gec.client
 
-      - name: Move Angular build to Backend wwwroot
+      # 🔹 Copy Angular Build to .NET wwwroot
+      - name: Copy Angular Build to .NET wwwroot
         run: |
           mkdir -p gec.Server/wwwroot
           cp -r gec.client/dist/gec.client/* gec.Server/wwwroot/
 
-      # 🔹 Compilar y Publicar .NET con el frontend integrado
+      # 🔹 Build and Publish Backend
       - name: Build and Publish Backend
         run: dotnet publish gec.Server/gec.Server.csproj --configuration Release --output ./publish
 
-      - name: Upload Final Build Artifact
+      # 🔹 Package Application
+      - name: Package Application
+        run: |
+          mkdir -p ./publish
+          cp -r gec.Server/wwwroot ./publish/wwwroot
+          cp -r gec.Server/bin ./publish/bin
+          cp -r gec.Server/appsettings.json ./publish/appsettings.json
+
+      # 🔹 Upload Packaged App
+      - name: Upload Packaged App
         uses: actions/upload-artifact@v4
         with:
-          name: full-application
+          name: packaged-app
           path: ./publish
