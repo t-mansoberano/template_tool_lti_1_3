@@ -73,7 +73,7 @@ jobs:
         run: |
           mkdir -p ./publish
           cp -r gec.Server/wwwroot ./publish/wwwroot
-          cp -r gec.Server/bin ./publish/bin
+#          cp -r gec.Server/bin ./publish/bin
           cp -r gec.Server/appsettings.json ./publish/appsettings.json
 
       # 🔹 Upload Packaged App
