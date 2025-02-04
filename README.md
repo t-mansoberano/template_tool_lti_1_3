@@ -1,4 +1,7 @@
-# Plantilla de solución en .NET Core + Angular App
+# Gestor de Evaluaciones por Competencias
+Aplicación LTI para evaluaciones por competencias desde Canvas.
+
+# Arquitectura de la solución
 
 ## Índice
 1. [Introducción](docs/introduccion.md)
