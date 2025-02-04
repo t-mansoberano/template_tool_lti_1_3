@@ -1,0 +1,110 @@
+<h4 class="bmb_margin-s">
+  Competencias:
+  <section bmbButtonGroup class="bmb_border-radius-s" [appearance]="'secondary-filled'" [size]="'small'">
+    <button>Todos</button>
+    <button>Evaluados</button>
+    <button>Pendientes por evaluar</button>
+  </section>
+</h4>
+
+<bmb-accordion
+  *ngFor="let evaluationStructure of evaluationStructures"
+  [icon]="'keyboard_arrow_down'"
+  [borderRadius]="'m'"
+  [margin]="'s'"
+  [paddingHeader]="'m'"
+  [paddingContent]="'m'"
+  [hideToggle]="false"
+  [active]="false"
+  [expanded]="true"
+  [disabled]="false"
+>
+  <ng-template #bmbAccordionHeader class="bmb_card-header">
+    <h3>
+      <bmb-badge
+        [appearance]="'warning'"
+        [text]="'Pendiente'"
+        [container]="true"
+      ></bmb-badge>
+      {{ evaluationStructure.id }} - {{ evaluationStructure.name }}
+    </h3>
+  </ng-template>
+  <ng-template #bmbAccordionContent>
+    <div class="display-flex-space-between">
+      <h3>Rúbricas</h3>
+      <bmb-checkbox
+        [id]="'checkbox1'"
+        [checked]="false"
+        [disabled]="false"
+        [indeterminate]="false"
+        [required]="false"
+        [value]="''"
+        [name]="''"
+        [label]="'No hay elementos suficientes para evaluar'"
+        [labelPosition]="'after'"
+        [ariaDescribedby]="''"
+        [ariaLabel]="''"
+        [ariaLabelledby]="''"
+      ></bmb-checkbox>
+    </div>
+    <div class="card-container">
+      <bmb-card
+        class="bmb-card"
+        *ngFor="let descriptor of evaluationStructure.descriptors"
+        [borderRadius]="'none'"
+        [margin]="'s'"
+        [type]="'normal'">
+        <bmb-card-header padding="s">
+          <h3>
+            <bmb-icon [icon]="'menu'" [size]="20" [dotNotification]="0"></bmb-icon>
+            <span>{{ descriptor.level }}</span>
+          </h3>
+        </bmb-card-header>
+        <bmb-card-content>
+          {{ descriptor.description }}
+        </bmb-card-content>
+      </bmb-card>
+    </div>
+    <div class="footer-container">
+      <bmb-input
+        [placeholder]="'Introduce tus comentarios aquí'"
+        [disabled]="false"
+        [isRequired]="true"
+        [value]="''"
+        [name]="''"
+        [maxlength]="500"
+        [showMaxTextLength]="true"
+        [label]="'Comentarios'"
+        [labelPosition]="'after'"
+      ></bmb-input>
+      <div class="button-row">
+        <button
+          bmbButton
+          appearance="secondary-filled"
+          icon="cancel"
+          size="small"
+          position="left"
+          [case]="false"
+          [isToggleActive]="false"
+          [enableButtonToggle]="false"
+          [isRounded]="true"
+        >
+          Cancelar
+        </button>
+        <button
+          bmbButton
+          appearance="primary"
+          icon="save"
+          size="small"
+          position="left"
+          [case]="false"
+          [isToggleActive]="false"
+          [enableButtonToggle]="false"
+          [isRounded]="true"
+        >
+          Guardar evaluación
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</bmb-accordion>

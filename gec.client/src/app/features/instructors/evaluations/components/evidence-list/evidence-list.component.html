@@ -1,0 +1,134 @@
+<div class="list-header-parent">
+  <h3 class="font-light-7">Retroalimentación</h3>
+
+  <div class="list-header">
+    <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
+      <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
+      <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+      <span class="font-semibold-3">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isCollapsed; else expandedList">
+  <!-- Mostrar solo la primera tarjeta -->
+  <div class="evidence-card" *ngIf="evidences.length > 0">
+  </div>
+  <bmb-card
+    *ngIf="evidences.length > 0"
+    [borderRadius]="'none'"
+    [margin]="'s'"
+    [type]="'normal'">
+    <bmb-card-content padding="none">
+      <h3 class="bmb_card-header bmb_padding-s">
+        <bmb-text-link
+          [textLink]="evidences[0].name"
+          [textLinkStyle]="'icon'"
+          [target]="'_blank'"
+          [icon]="'open_in_new'"
+          [iconPosition]="'left'"
+          [link]="'https://www.youtube.com'"
+          [disabled]="false"
+        ></bmb-text-link>
+        <span>Calificación: {{ evidences[0].grade }}</span>
+      </h3>
+      <p class="bmb_margin-m">
+        {{ evidences[0].feedback }}
+      </p>
+    </bmb-card-content>
+    <bmb-card-footer padding="xs">
+      <button
+        bmbButton
+        [appearance]="evidences[0].fileType === 'audio' ? 'primary' : 'secondary-filled'"
+        icon="mic"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+      <button
+        bmbButton
+        [appearance]="evidences[0].fileType === 'video' ? 'primary' : 'secondary-filled'"
+        icon="video_call"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+      <button
+        bmbButton
+        [appearance]="evidences[0].fileType === 'other' ? 'primary' : 'secondary-filled'"
+        icon="attach_file"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+    </bmb-card-footer>
+  </bmb-card>
+</div>
+
+<ng-template #expandedList>
+  <bmb-card
+    *ngFor="let evidence of evidences"
+    [borderRadius]="'none'"
+    [margin]="'s'"
+    [type]="'normal'">
+    <bmb-card-content padding="none">
+      <h3 class="bmb_card-header bmb_padding-s">
+        <bmb-text-link
+          [textLink]="evidence.name"
+          [textLinkStyle]="'icon'"
+          [target]="'_blank'"
+          [icon]="'open_in_new'"
+          [iconPosition]="'left'"
+          [link]="'https://www.youtube.com'"
+          [disabled]="false"
+        ></bmb-text-link>
+        <span>Calificación: {{ evidence.grade }}</span>
+      </h3>
+      <p class="bmb_margin-m">
+        {{ evidence.feedback }}
+      </p>
+    </bmb-card-content>
+    <bmb-card-footer padding="xs">
+      <button
+        bmbButton
+        [appearance]="evidence.fileType === 'audio' ? 'primary' : 'secondary-filled'"
+        icon="mic"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+      <button
+        bmbButton
+        [appearance]="evidence.fileType === 'video' ? 'primary' : 'secondary-filled'"
+        icon="video_call"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+      <button
+        bmbButton
+        [appearance]="evidence.fileType === 'other' ? 'primary' : 'secondary-filled'"
+        icon="attach_file"
+        size="small"
+        position="left"
+        class="bmb_margin-s"
+      >
+      </button>
+    </bmb-card-footer>
+  </bmb-card>
+  <div class="list-header-parent">
+    <h3></h3>
+    <div class="list-header">
+      <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
+        <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
+        <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+        <span class="font-semibold-3">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
+      </button>
+    </div>
+  </div>
+</ng-template>

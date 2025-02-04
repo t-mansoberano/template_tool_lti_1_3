@@ -1,0 +1,45 @@
+<bmb-loader
+    [title]="'Cargando...'"
+    [subtitle]="''"
+    [overlay]="true"
+    [isVisible]="loading()"
+    [errorState]="false"
+    [actions]="false"
+></bmb-loader>
+
+<div *ngIf="error();">
+  <p class="error-message">{{ error() }}</p>
+</div>
+
+<div *ngIf="!loading()">
+  <app-course-summary [course]="course()!"></app-course-summary>
+<!--  <app-evaluation-status [courseState]="courseState()!"></app-evaluation-status>-->
+  <bmb-badge
+    [appearance]="'warning'"
+    [text]="courseState()!.evaluationStatus"
+    [container]="true"
+  ></bmb-badge>
+
+  <bmb-tabs
+    [format]="'uppercase'"
+    [tabs]="tabs"
+    (selected)="handleTabSelected($event)"
+  ></bmb-tabs>
+
+  <div class="bmb_template-aside-first">
+    <aside class="bmb_template-aside-first-aside without-margin-aside-left">
+      <app-student-list
+        [students]="students()!"
+        [courseState]="courseState()!"
+        (studentSelected)="onStudentSelected($event)">
+      </app-student-list>
+    </aside>
+    <main class="bmb_template-aside-first-main">
+      <app-student-detail
+        *ngIf="viewModel()?.selectedStudent"
+        [student]="viewModel()?.selectedStudent"
+        [evaluationStructures]="viewModel()?.evaluationStructures || []">
+      </app-student-detail>
+    </main>
+  </div>
+</div>

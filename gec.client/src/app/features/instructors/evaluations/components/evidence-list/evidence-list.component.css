@@ -1,0 +1,52 @@
+.list-header-parent {
+  display: flex;
+  justify-content: space-between; /* Alinea el texto a la izquierda y el indicador a la derecha */
+  width: 100%;
+}
+
+.list-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+
+.bmb_card-header {
+  display: flex; /* Activa flexbox */
+  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si es necesario */
+  justify-content: space-between; /* Separa los elementos */
+  align-items: center; /* Alinea verticalmente los elementos */
+}
+
+.bmb_card-header .bmb_text-link {
+  flex: 1; /* Elimina restricciones de tamaño y permite dinamismo */
+  min-width: 0; /* Previene que crezca más allá del tamaño disponible */
+  text-overflow: ellipsis; /* Agrega los "..." si el texto es muy largo */
+  overflow: hidden; /* Oculta el contenido desbordado */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.bmb_card-header span {
+  flex-shrink: 0; /* Impide que el span se comprima */
+  margin-left: 16px; /* Espaciado entre el link de texto y el span */
+  word-wrap: break-word; /* Permite que el texto largo en pantallas pequeñas se envuelva */
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+  .bmb_card-header {
+    flex-direction: column; /* Pone elementos en línea vertical */
+    align-items: flex-start; /* Alinea a la izquierda en lugar de centrado */
+  }
+
+  .bmb_card-header .bmb_text-link {
+    margin-bottom: 8px; /* Añade espacio entre el enlace y el span */
+    width: 100%; /* Asegura que el link ocupe todo el ancho disponible */
+  }
+
+  .bmb_card-header span {
+    margin-left: 0; /* Elimina margen en pantallas pequeñas */
+    text-align: left; /* Asegura alineado a la izquierda */
+    width: 100%; /* Ocupa todo el ancho */
+  }
+}

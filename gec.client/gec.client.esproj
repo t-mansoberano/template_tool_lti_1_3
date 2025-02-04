@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.1184077">
+  <PropertyGroup>
+    <StartupCommand>npm start</StartupCommand>
+    <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
+    <!-- Allows the build (or compile) script located on package.json to run on Build -->
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- Folder where production build objects will be placed -->
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\gec.client\browser\</BuildOutputFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\core\components\"/>
+    <Folder Include="src\app\core\interceptors\"/>
+    <Folder Include="src\app\core\resolvers\"/>
+    <Folder Include="src\app\features\external-collaborators\evaluations\components\"/>
+    <Folder Include="src\app\features\instructors\evaluations\components\"/>
+    <Folder Include="src\app\features\students\evaluations\components\"/>
+    <Folder Include="src\app\shared\components\"/>
+  </ItemGroup>
+</Project>

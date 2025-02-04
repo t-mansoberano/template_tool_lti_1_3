@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.idea
+/.vs/gec
+/gec.Server/bin
+/gec.Server/obj
+/gec.Server/appsettings.Secrets.json
+/gec.client/.vscode
+/gec.client/obj
+/gec.client/public
+/gec.Infrastructure/bin
+/gec.Infrastructure/obj
+/gec.Application/obj
+/gec.Application/public
+/gec.Application/bin
+/gec.sln.DotSettings.user
+/gec.Test/bin
+/gec.Test/obj
