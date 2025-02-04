@@ -3,11 +3,10 @@
 on:
   push:
     branches:
-      - main
-      - init-gec
+      - t-mansoberano
   pull_request:
     branches:
-      - main
+      - develop
   workflow_dispatch:
 
 jobs:
