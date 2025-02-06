@@ -14,7 +14,7 @@ export class ApiService {
     return this.httpService.get(canvasApiUrl);
   }
 
-  getStudentCourseEvaluations(courseId: string, studentId: string): Observable<ViewStudentEvidencesModel> {
+  getStudentCourseEvaluations(courseId: string, studentId: number): Observable<ViewStudentEvidencesModel> {
     const canvasApiUrl = `/api/teachers/courses/${courseId}/students/${studentId}/evaluations`;
     return this.httpService.get(canvasApiUrl).pipe(
       map(response => response.result as ViewStudentEvidencesModel)

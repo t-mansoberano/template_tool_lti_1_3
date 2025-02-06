@@ -1,5 +1,5 @@
 export interface StudentModel {
-  id: string;
+  id: number;
   loginId: string;
   name: string;
   status: string; // Ejemplo: "Completed", "Pending", etc.

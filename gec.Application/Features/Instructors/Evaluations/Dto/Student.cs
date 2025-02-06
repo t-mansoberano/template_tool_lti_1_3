@@ -2,7 +2,7 @@
 
 public class Student
 {
-    public string Id { get; set; } = string.Empty;
+    public long Id { get; set; }
     public string LoginId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty; // Evaluated or Pending

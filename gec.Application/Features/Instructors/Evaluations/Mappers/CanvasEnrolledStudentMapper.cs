@@ -10,7 +10,7 @@ public class CanvasEnrolledStudentMapper : IMapper<Enrollment, Student>
     {
         return new Student()
         {
-            Id = input.UserId.ToString(),
+            Id = input.UserId,
             LoginId = input.User.LoginId,
             Name = input.User.Name,
         };
