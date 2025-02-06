@@ -10,3 +10,7 @@ export interface ViewModel {
   evaluationStructures: EvaluationStructureModel[];
   selectedStudent: StudentModel | null;
 }
+
+export interface ViewStudentModel {
+  selectedStudent: StudentModel;
+}

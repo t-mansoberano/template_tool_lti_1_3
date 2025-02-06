@@ -8,4 +8,5 @@ public class Evidence
     public int Grade { get; set; }
     public string SpeedGraderLink { get; set; } = "";
     public string FileType { get; set; } = ""; // Example: "audio", "video", "other file".    
+    public string PreviewUrl { get; set; } = string.Empty;
 }

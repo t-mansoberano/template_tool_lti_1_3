@@ -54,9 +54,19 @@ export class StateService {
   }
 
   selectStudent(studentId: string): void {
-    const selectedStudent = this._viewModel()?.students.find((student) => student.id === studentId) || null;
-    const currentViewModel = this._viewModel();
-    this._viewModel.set({...currentViewModel, selectedStudent} as ViewModel);
+    this._loading.set(true);
+    this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), studentId).subscribe({
+      next: (response) => {
+        const currentViewModel = this._viewModel();
+        this._viewModel.set({...currentViewModel, selectedStudent: response.selectedStudent} as ViewModel);
+      },
+      error: (err) => {
+        this.setError('Error al cargar los datos del alumno.');
+      },
+      complete: () => {
+        this._loading.set(false);
+      },
+    });
   }
 
   setError(message: string): void {

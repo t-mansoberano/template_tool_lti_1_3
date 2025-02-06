@@ -34,7 +34,8 @@ public class CanvasOAuthService : ICanvasOAuthService
         "url:GET|/api/v1/courses", 
         "url:GET|/api/v1/accounts/:account_id/sub_accounts",
         "url:GET|/api/v1/courses/:course_id/todo", 
-        "url:GET|/api/v1/users/:user_id/courses");
+        "url:GET|/api/v1/users/:user_id/courses",
+        "url:GET|/api/v1/courses/:course_id/users/:id");
 
     public string BuildAuthorizationUrl()
     {

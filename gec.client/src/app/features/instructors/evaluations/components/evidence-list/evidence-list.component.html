@@ -37,33 +37,39 @@
       </p>
     </bmb-card-content>
     <bmb-card-footer padding="xs">
-      <button
+      <a
         bmbButton
         [appearance]="evidences[0].fileType === 'audio' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences[0].fileType === 'audio' ? evidences[0].previewUrl : null"
+        [attr.target]="evidences[0].fileType === 'audio' ? '_blank' : null"
         icon="mic"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
-      <button
+      </a>
+      <a
         bmbButton
         [appearance]="evidences[0].fileType === 'video' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences[0].fileType === 'video' ? evidences[0].previewUrl : null"
+        [attr.target]="evidences[0].fileType === 'video' ? '_blank' : null"
         icon="video_call"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
-      <button
+      </a>
+      <a
         bmbButton
         [appearance]="evidences[0].fileType === 'other' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences[0].fileType === 'other' ? evidences[0].previewUrl : null"
+        [attr.target]="evidences[0].fileType === 'other' ? '_blank' : null"
         icon="attach_file"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
+      </a>
     </bmb-card-footer>
   </bmb-card>
 </div>
@@ -82,7 +88,7 @@
           [target]="'_blank'"
           [icon]="'open_in_new'"
           [iconPosition]="'left'"
-          [link]="'https://www.youtube.com'"
+          [link]="evidence.speedGraderLink"
           [disabled]="false"
         ></bmb-text-link>
         <span>Calificación: {{ evidence.grade }}</span>
@@ -92,33 +98,39 @@
       </p>
     </bmb-card-content>
     <bmb-card-footer padding="xs">
-      <button
+      <a
         bmbButton
         [appearance]="evidence.fileType === 'audio' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidence.fileType === 'audio' ? evidence.previewUrl : null"
+        [attr.target]="evidence.fileType === 'audio' ? '_blank' : null"
         icon="mic"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
-      <button
+      </a>
+      <a
         bmbButton
         [appearance]="evidence.fileType === 'video' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidence.fileType === 'video' ? evidence.previewUrl : null"
+        [attr.target]="evidence.fileType === 'video' ? '_blank' : null"
         icon="video_call"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
-      <button
+      </a>
+      <a
         bmbButton
         [appearance]="evidence.fileType === 'other' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidence.fileType === 'other' ? evidence.previewUrl : null"
+        [attr.target]="evidence.fileType === 'other' ? '_blank' : null"
         icon="attach_file"
         size="small"
         position="left"
         class="bmb_margin-s"
       >
-      </button>
+      </a>
     </bmb-card-footer>
   </bmb-card>
   <div class="list-header-parent">

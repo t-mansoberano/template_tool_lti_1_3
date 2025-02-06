@@ -2,9 +2,11 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using gec.Application.Contracts.Infrastructure.Canvas.Api;
 using gec.Application.Contracts.Infrastructure.Canvas.OAuth.Models;
+using gec.Application.Contracts.Server.Configuration;
 using gec.Application.Contracts.Server.Session;
 using gec.Infrastructure.Common;
 
@@ -15,11 +17,57 @@ public class CanvasApiClient : ICanvasApiClient
     private const int MaxRetries = 3; // Maximum retries for rate-limited requests
     private readonly HttpClient _httpClient;
     private readonly ISessionStorageService _sessionStorageService;
+    private readonly IAppSettingsService _appSettings;
 
-    public CanvasApiClient(IHttpClientFactory httpClientFactory, ISessionStorageService sessionStorageService)
+    public CanvasApiClient(IHttpClientFactory httpClientFactory, ISessionStorageService sessionStorageService, IAppSettingsService appSettings)
     {
         _httpClient = httpClientFactory.CreateClient("CanvasClient");
         _sessionStorageService = sessionStorageService;
+        _appSettings = appSettings;
+    }
+
+    public async Task<Result<List<T>>> GetPaginatedAsync<T>(string endpoint, CancellationToken cancellationToken = default)
+    {
+        // Agregar `per_page` dinámicamente si no está en la URL
+        endpoint = EnsurePerPageInUrl(endpoint, _appSettings.Canvas.PerPage);
+
+        List<T> allResults = new List<T>();
+        string? nextUrl = endpoint;
+
+        while (!string.IsNullOrEmpty(nextUrl))
+        {
+            var result = await GetAsync<List<T>>(nextUrl, cancellationToken);
+
+            if (result.IsFailure)
+                return Result.Failure<List<T>>(result.Error);
+
+            if (result.Value != null)
+                allResults.AddRange(result.Value);
+
+            // Obtener la URL de la siguiente página desde las cabeceras
+            nextUrl = await GetNextPageUrlAsync(nextUrl, cancellationToken);
+        }
+
+        return Result.Success(allResults);
+    }
+
+    private async Task<string?> GetNextPageUrlAsync(string currentUrl, CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Head, currentUrl); // Solo pedimos cabeceras
+        var response = await _httpClient.SendAsync(request, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        if (response.Headers.TryGetValues("Link", out var linkHeaders))
+        {
+            string linkHeader = string.Join(",", linkHeaders);
+            var match = Regex.Match(linkHeader, @"<([^>]+)>;\s*rel=""next""");
+            if (match.Success)
+                return match.Groups[1].Value;
+        }
+
+        return null; // No hay más páginas
     }
 
     public async Task<Result<T>> GetAsync<T>(string endpoint, CancellationToken cancellationToken = default)
@@ -107,6 +155,22 @@ public class CanvasApiClient : ICanvasApiClient
             return Result.Failure<T>("No se pudo deserializar el resultado.");
 
         return Result.Success(result);
+    }
+
+    private string EnsurePerPageInUrl(string url, int perPageValue)
+    {
+        // Si la URL ya contiene `per_page=`, no hacemos nada
+        if (url.Contains("per_page="))
+            return url;
+        
+        // Crear una URI absoluta temporal si la URL es relativa
+        Uri uri = Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri)
+            ? absoluteUri
+            : new Uri(new Uri(_appSettings.Canvas.ApiBaseUrl), url); // Se usa una URL base temporal
+
+        // Determinar si agregamos `?per_page` o `&per_page`
+        char separator = uri.Query.Length > 0 ? '&' : '?';
+        return $"{url}{separator}per_page={perPageValue}";
     }
 
     private async Task HandleRateLimitAsync(HttpResponseMessage response, int attempt,

@@ -2,6 +2,7 @@
 
 public interface IMapper<TInput, TOutput>
 {
-    TOutput Map(TInput input);
-    IEnumerable<TOutput> Map(IEnumerable<TInput> inputs);
+    TOutput Map(TInput input); // Mapea un solo elemento
+    IEnumerable<TOutput> Map(IEnumerable<TInput> inputs); // Mapea una lista a una lista
+    TOutput MapListToSingle(IEnumerable<TInput> inputs); // Mapea una lista a un único elemento
 }

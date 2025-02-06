@@ -17,7 +17,9 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
     private readonly IEnrollmentsService _enrollmentsService;
     private readonly IMapper<Enrollment, StudentEvaluation> _canvasEnrolledStudentMapper;
 
-    public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService, IEnrollmentsService enrollmentsService, IMapper<Enrollment, StudentEvaluation> canvasEnrolledStudentMapper)
+    public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService,
+        IMapper<Enrollment, StudentEvaluation> canvasEnrolledStudentMapper,
+        IEnrollmentsService enrollmentsService)
     {
         _sessionStorageService = sessionStorageService;
         _enrollmentsService = enrollmentsService;
@@ -41,9 +43,9 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             var studentsFromApi = await _enrollmentsService.GetStudentsByCourseAsync(request.CourseId);
             if (studentsFromApi.IsFailure)
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(studentsFromApi.Error);
-            
+
             var studentEvaluations = _canvasEnrolledStudentMapper.Map(studentsFromApi.Value);
-            
+
             var course = new Course
             {
                 Id = ltiContex.Value.Course.Id,
@@ -133,10 +135,30 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = null,
                     Descriptors = new List<Descriptor>
                     {
-                        new() { Id = "LEVEL1", Level = "Destacado", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL2", Level = "Sólido", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL3", Level = "Básico", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL4", Level = "Incipiente", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." }
+                        new()
+                        {
+                            Id = "LEVEL1", Level = "Destacado",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL2", Level = "Sólido",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL3", Level = "Básico",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL4", Level = "Incipiente",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        }
                     }
                 },
                 new()
@@ -150,10 +172,30 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                     ParentName = "Competency 1",
                     Descriptors = new List<Descriptor>
                     {
-                        new() { Id = "LEVEL1", Level = "Destacado", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL2", Level = "Sólido", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL3", Level = "Básico", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." },
-                        new() { Id = "LEVEL4", Level = "Incipiente", Description = "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación." }
+                        new()
+                        {
+                            Id = "LEVEL1", Level = "Destacado",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL2", Level = "Sólido",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL3", Level = "Básico",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        },
+                        new()
+                        {
+                            Id = "LEVEL4", Level = "Incipiente",
+                            Description =
+                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
+                        }
                     }
                 }
             };
@@ -174,5 +216,4 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             return Result.Failure<GetCompleteEvaluationsViewRespond>($"Error occurred: {ex.Message}");
         }
     }
-
 }

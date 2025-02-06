@@ -5,4 +5,5 @@ export interface EvidenceModel {
   grade: number;
   speedGraderLink: string;
   fileType: string;
+  previewUrl: string;
 }

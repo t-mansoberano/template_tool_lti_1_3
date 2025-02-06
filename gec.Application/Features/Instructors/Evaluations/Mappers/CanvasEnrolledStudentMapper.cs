@@ -20,4 +20,9 @@ public class CanvasEnrolledStudentMapper : IMapper<Enrollment, StudentEvaluation
     {
         return inputs.Select(Map);
     }
+
+    public StudentEvaluation MapListToSingle(IEnumerable<Enrollment> inputs)
+    {
+        return Map(inputs.First());
+    }
 }
