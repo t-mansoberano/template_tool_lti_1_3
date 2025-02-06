@@ -6,7 +6,6 @@ import {
   BmbCardContentComponent, BmbCardFooterComponent, BmbIconComponent,
   BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
-import {EvidenceModel} from '../../models/evidence.model';
 import {StudentEvidencesModel} from '../../models/student-evidences.model';
 
 @Component({

@@ -1,16 +1,21 @@
 <div class="list-header-parent">
   <h3 class="font-light-7">Retroalimentación</h3>
 
-  <div class="list-header">
+  <div class="list-header"
+       *ngIf="evidences.evidences.length > 0">
     <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
-      <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
-      <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+      <span [hidden]="!isCollapsed">
+        <bmb-icon [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
+      </span>
+      <span [hidden]="isCollapsed">
+        <bmb-icon [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+      </span>
       <span class="font-semibold-3">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
     </button>
   </div>
 </div>
 
-<div *ngIf="isCollapsed; else expandedList">
+<div [hidden]="!isCollapsed">
   <!-- Mostrar solo la primera tarjeta -->
   <div class="evidence-card" *ngIf="evidences.evidences.length > 0">
   </div>
@@ -74,7 +79,7 @@
   </bmb-card>
 </div>
 
-<ng-template #expandedList>
+<div [hidden]="isCollapsed">
   <bmb-card
     *ngFor="let evidence of evidences.evidences"
     [borderRadius]="'none'"
@@ -137,10 +142,14 @@
     <h3></h3>
     <div class="list-header">
       <button (click)="toggleCollapse()" class="toggle-button font-medium-7">
-        <bmb-icon *ngIf="isCollapsed" [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
-        <bmb-icon *ngIf="!isCollapsed" [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+        <span [hidden]="!isCollapsed">
+          <bmb-icon [icon]="'keyboard_arrow_down'" [size]="15"></bmb-icon>
+        </span>
+          <span [hidden]="isCollapsed">
+          <bmb-icon [icon]="'keyboard_arrow_up'" [size]="15"></bmb-icon>
+        </span>
         <span class="font-semibold-3">{{ isCollapsed ? 'Expandir todas' : 'Colapsar' }}</span>
       </button>
     </div>
   </div>
-</ng-template>
+</div>

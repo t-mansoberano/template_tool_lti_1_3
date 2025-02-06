@@ -5,6 +5,7 @@ import {AuthService} from '../../../../core/services/auth.service';
 import {IBmbTab} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {ActivatedRoute, Router} from '@angular/router';
 import {StudentModel} from '../models/student.model';
+import {Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class StateService {
 
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
+  private evaluationSubscription: Subscription | null = null;
+  private studentSubscription: Subscription | null = null;
 
   private _viewModel = signal<ViewModel | null>(null);
   private _loading = signal(true);
@@ -38,30 +41,40 @@ export class StateService {
   ];
 
   load(): void {
+    if (this.evaluationSubscription) {
+      this.evaluationSubscription.unsubscribe(); // ❌ Cancela la petición anterior si hay una en proceso
+    }
+
     const courseId = this.authService.getCourseId();
     this._loading.set(true);
-    this.apiService.getEvaluations(courseId).subscribe({
+    this.evaluationSubscription = this.apiService.getEvaluations(courseId).subscribe({
       next: (response) => {
         this._viewModel.set(response);
         this.clearError();
       },
       error: (err) => {
+        console.error('Error en load():', err);
         this.setError('Error al cargar las evaluaciones.');
       },
       complete: () => {
         this._loading.set(false);
-      },
+      }
     });
   }
 
   selectStudent(student: StudentModel): void {
+    if (this.studentSubscription) {
+      this.studentSubscription.unsubscribe(); // ❌ Cancela la petición anterior si hay una en proceso
+    }
+
     this._loading.set(true);
-    this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), student.id).subscribe({
+    this.studentSubscription = this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), student.id).subscribe({
       next: (response) => {
         const currentViewModel = this._viewModel();
         this._viewModel.set({...currentViewModel, selectedStudent: student, studentEvidences: response.studentEvidences} as ViewModel);
       },
       error: (err) => {
+        console.error('Error en selectStudent():', err);
         this.setError('Error al cargar los datos del alumno.');
       },
       complete: () => {
