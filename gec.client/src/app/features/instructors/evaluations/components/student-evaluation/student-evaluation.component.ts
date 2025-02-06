@@ -7,6 +7,7 @@ import {
   BmbCardHeaderComponent, BmbCheckboxComponent, BmbHitoCardComponent, BmbIconComponent, BmbInputComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
+import {StudentEvaluationResultsModel} from '../../models/student-evaluation-results.model';
 
 @Component({
   selector: 'app-student-evaluation',
@@ -30,7 +31,7 @@ import {EvaluationStructureModel} from '../../models/evaluation-structure.model'
   styleUrl: './student-evaluation.component.css'
 })
 export class StudentEvaluationComponent {
-  @Input() evaluationResults!: { id: string; achievementLevel: string; comments: string }[];
+  @Input() evaluationResults!: StudentEvaluationResultsModel;
   @Input() evaluationStructures!: EvaluationStructureModel[];
 
   getEvaluationName(evaluationId: string): string {

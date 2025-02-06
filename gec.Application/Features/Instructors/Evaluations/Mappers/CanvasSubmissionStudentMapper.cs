@@ -5,7 +5,7 @@ using gec.Application.Features.Instructors.Evaluations.Dto;
 
 namespace gec.Application.Features.Instructors.Evaluations.Mappers;
 
-public class CanvasSubmissionStudentMapper : IMapper<Submission, StudentEvaluation>
+public class CanvasSubmissionStudentMapper : IMapper<Submission, StudentEvidences>
 {
     private readonly IAppSettingsService _appSettingsService;
 
@@ -15,70 +15,37 @@ public class CanvasSubmissionStudentMapper : IMapper<Submission, StudentEvaluati
     }
 
     // ✅ Mapea un solo Submission a StudentEvaluation
-    public StudentEvaluation Map(Submission input)
+    public StudentEvidences Map(Submission input)
     {
-        return new StudentEvaluation
+        return new StudentEvidences
         {
-            Id = input.UserId.ToString(),
-            LoginId = input.User.LoginId,
-            Name = input.User.Name,
-            Status = string.IsNullOrEmpty(input.Grade) && string.IsNullOrEmpty(input.EnteredGrade)
-                ? "Pending"
-                : "Evaluated",
-            TotalEvaluations = 1,
-            CompletedEvaluations =
-                string.IsNullOrEmpty(input.Grade) && string.IsNullOrEmpty(input.EnteredGrade) ? 0 : 1,
-            PendingEvaluations = string.IsNullOrEmpty(input.Grade) && string.IsNullOrEmpty(input.EnteredGrade) ? 1 : 0,
+            StudentId = input.UserId.ToString(),
             Evidences = new List<Evidence> { MapEvidence(input, input.UserId) },
-            EvaluationResults = new List<EvaluationResult> { MapEvaluationResult(input) }
         };
     }
 
     // ✅ Mapea una lista de Submission a una lista de StudentEvaluation (1:1)
-    public IEnumerable<StudentEvaluation> Map(IEnumerable<Submission> inputs)
+    public IEnumerable<StudentEvidences> Map(IEnumerable<Submission> inputs)
     {
         return inputs.Select(Map);
     }
 
     // ✅ Mapea una lista de Submission a un único StudentEvaluation consolidado
-    public StudentEvaluation MapListToSingle(IEnumerable<Submission> inputs)
+    public StudentEvidences MapListToSingle(IEnumerable<Submission> inputs)
     {
-        if (inputs == null || !inputs.Any())
-            return new StudentEvaluation();
-
         // Filtrar solo los assignments que comiencen con "Evidencia."
         var filteredSubmissions = inputs.Where(s => s.Assignment.Name.StartsWith("Evidencia.", StringComparison.OrdinalIgnoreCase)).ToList();
 
+        if (!filteredSubmissions.Any())
+            return new StudentEvidences();
+        
         var firstSubmission = filteredSubmissions.First();
         var user = firstSubmission.User;
 
-        return new StudentEvaluation
+        return new StudentEvidences
         {
-            Id = user.Id.ToString(),
-            LoginId = user.LoginId,
-            Name = user.Name,
-            Status = "Pending",
-            TotalEvaluations = 5,
-            CompletedEvaluations = 3,
-            PendingEvaluations = 2,
+            StudentId = user.Id.ToString(),
             Evidences = filteredSubmissions.Select(s => MapEvidence(s, user.Id)).ToList(),
-            EvaluationResults = new List<EvaluationResult>
-            {
-                new()
-                {
-                    Id = $"COMP_A",
-                    AchievementLevel = "Solid",
-                    Comments = "Solid understanding.",
-                    IsEvaluated = true
-                },
-                new()
-                {
-                    Id = $"COMP_B",
-                    AchievementLevel = "Basic",
-                    Comments = "Needs improvement.",
-                    IsEvaluated = false
-                }
-            }
         };
     }
 
@@ -101,18 +68,6 @@ public class CanvasSubmissionStudentMapper : IMapper<Submission, StudentEvaluati
             SpeedGraderLink = $"{_appSettingsService.Canvas.ApiBaseUrl}/courses/{submission.Assignment.CourseId}/gradebook/speed_grader?assignment_id={submission.AssignmentId}",
             FileType = GetFileType(submission.SubmissionType),
             PreviewUrl = submission.PreviewUrl
-        };
-    }
-
-    // ✅ Mapea un Submission en EvaluationResult
-    private EvaluationResult MapEvaluationResult(Submission submission)
-    {
-        return new EvaluationResult
-        {
-            Id = submission.AssignmentId.ToString(),
-            AchievementLevel = submission.Grade ?? submission.EnteredGrade ?? "N/A",
-            Comments = submission.SubmissionComments.Any() ? submission.SubmissionComments.First().Comment : "",
-            IsEvaluated = !string.IsNullOrEmpty(submission.Grade) || !string.IsNullOrEmpty(submission.EnteredGrade)
         };
     }
 

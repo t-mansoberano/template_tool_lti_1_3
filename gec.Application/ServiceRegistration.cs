@@ -13,8 +13,8 @@ public static class ServiceRegistration
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
         
-        services.AddScoped<IMapper<Enrollment, StudentEvaluation>, CanvasEnrolledStudentMapper>();
-        services.AddScoped<IMapper<Submission, StudentEvaluation>, CanvasSubmissionStudentMapper>();
+        services.AddScoped<IMapper<Enrollment, Student>, CanvasEnrolledStudentMapper>();
+        services.AddScoped<IMapper<Submission, StudentEvidences>, CanvasSubmissionStudentMapper>();
 
         return services;
     }

@@ -4,6 +4,7 @@ import {ApiService} from './api.service';
 import {AuthService} from '../../../../core/services/auth.service';
 import {IBmbTab} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {ActivatedRoute, Router} from '@angular/router';
+import {StudentModel} from '../models/student.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,12 +54,12 @@ export class StateService {
     });
   }
 
-  selectStudent(studentId: string): void {
+  selectStudent(student: StudentModel): void {
     this._loading.set(true);
-    this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), studentId).subscribe({
+    this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), student.id).subscribe({
       next: (response) => {
         const currentViewModel = this._viewModel();
-        this._viewModel.set({...currentViewModel, selectedStudent: response.selectedStudent} as ViewModel);
+        this._viewModel.set({...currentViewModel, selectedStudent: student, studentEvidences: response.studentEvidences} as ViewModel);
       },
       error: (err) => {
         this.setError('Error al cargar los datos del alumno.');

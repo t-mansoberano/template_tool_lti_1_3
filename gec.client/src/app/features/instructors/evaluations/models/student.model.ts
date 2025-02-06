@@ -1,6 +1,3 @@
-import {EvidenceModel} from './evidence.model';
-import {EvaluationResultModel} from './evaluation-result.model';
-
 export interface StudentModel {
   id: string;
   loginId: string;
@@ -9,6 +6,4 @@ export interface StudentModel {
   totalEvaluations: number;
   completedEvaluations: number;
   pendingEvaluations: number;
-  evidences: EvidenceModel[];
-  evaluationResults: EvaluationResultModel[];
 }

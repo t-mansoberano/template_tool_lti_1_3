@@ -7,6 +7,7 @@ import {
   BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvidenceModel} from '../../models/evidence.model';
+import {StudentEvidencesModel} from '../../models/student-evidences.model';
 
 @Component({
   selector: 'app-evidence-list',
@@ -25,7 +26,7 @@ import {EvidenceModel} from '../../models/evidence.model';
   styleUrl: './evidence-list.component.css'
 })
 export class EvidenceListComponent {
-  @Input() evidences!: EvidenceModel[];
+  @Input() evidences!: StudentEvidencesModel;
 
   // Estado global para colapsar o expandir la lista
   isCollapsed: boolean = true;

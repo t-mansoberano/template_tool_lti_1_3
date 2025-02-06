@@ -13,7 +13,6 @@
 
 <div *ngIf="!loading()">
   <app-course-summary [course]="course()!"></app-course-summary>
-<!--  <app-evaluation-status [courseState]="courseState()!"></app-evaluation-status>-->
   <bmb-badge
     [appearance]="'warning'"
     [text]="courseState()!.evaluationStatus"
@@ -36,9 +35,11 @@
     </aside>
     <main class="bmb_template-aside-first-main">
       <app-student-detail
-        *ngIf="viewModel()?.selectedStudent"
-        [student]="viewModel()?.selectedStudent"
-        [evaluationStructures]="viewModel()?.evaluationStructures || []">
+        *ngIf="selectedStudent()"
+        [student]="selectedStudent()!"
+        [studentEvidences]="studentEvidences()!"
+        [studentEvaluationResults]="studentEvaluationResults()!"
+        [evaluationStructures]="evaluationStructures()">
       </app-student-detail>
     </main>
   </div>

@@ -12,17 +12,17 @@
 
 <div *ngIf="isCollapsed; else expandedList">
   <!-- Mostrar solo la primera tarjeta -->
-  <div class="evidence-card" *ngIf="evidences.length > 0">
+  <div class="evidence-card" *ngIf="evidences.evidences.length > 0">
   </div>
   <bmb-card
-    *ngIf="evidences.length > 0"
+    *ngIf="evidences.evidences.length > 0"
     [borderRadius]="'none'"
     [margin]="'s'"
     [type]="'normal'">
     <bmb-card-content padding="none">
       <h3 class="bmb_card-header bmb_padding-s">
         <bmb-text-link
-          [textLink]="evidences[0].name"
+          [textLink]="evidences.evidences[0].name"
           [textLinkStyle]="'icon'"
           [target]="'_blank'"
           [icon]="'open_in_new'"
@@ -30,18 +30,18 @@
           [link]="'https://www.youtube.com'"
           [disabled]="false"
         ></bmb-text-link>
-        <span>Calificación: {{ evidences[0].grade }}</span>
+        <span>Calificación: {{ evidences.evidences[0].grade }}</span>
       </h3>
       <p class="bmb_margin-m">
-        {{ evidences[0].feedback }}
+        {{ evidences.evidences[0].feedback }}
       </p>
     </bmb-card-content>
     <bmb-card-footer padding="xs">
       <a
         bmbButton
-        [appearance]="evidences[0].fileType === 'audio' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidences[0].fileType === 'audio' ? evidences[0].previewUrl : null"
-        [attr.target]="evidences[0].fileType === 'audio' ? '_blank' : null"
+        [appearance]="evidences.evidences[0].fileType === 'audio' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences.evidences[0].fileType === 'audio' ? evidences.evidences[0].previewUrl : null"
+        [attr.target]="evidences.evidences[0].fileType === 'audio' ? '_blank' : null"
         icon="mic"
         size="small"
         position="left"
@@ -50,9 +50,9 @@
       </a>
       <a
         bmbButton
-        [appearance]="evidences[0].fileType === 'video' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidences[0].fileType === 'video' ? evidences[0].previewUrl : null"
-        [attr.target]="evidences[0].fileType === 'video' ? '_blank' : null"
+        [appearance]="evidences.evidences[0].fileType === 'video' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences.evidences[0].fileType === 'video' ? evidences.evidences[0].previewUrl : null"
+        [attr.target]="evidences.evidences[0].fileType === 'video' ? '_blank' : null"
         icon="video_call"
         size="small"
         position="left"
@@ -61,9 +61,9 @@
       </a>
       <a
         bmbButton
-        [appearance]="evidences[0].fileType === 'other' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidences[0].fileType === 'other' ? evidences[0].previewUrl : null"
-        [attr.target]="evidences[0].fileType === 'other' ? '_blank' : null"
+        [appearance]="evidences.evidences[0].fileType === 'other' ? 'primary' : 'secondary-filled'"
+        [attr.href]="evidences.evidences[0].fileType === 'other' ? evidences.evidences[0].previewUrl : null"
+        [attr.target]="evidences.evidences[0].fileType === 'other' ? '_blank' : null"
         icon="attach_file"
         size="small"
         position="left"
@@ -76,7 +76,7 @@
 
 <ng-template #expandedList>
   <bmb-card
-    *ngFor="let evidence of evidences"
+    *ngFor="let evidence of evidences.evidences"
     [borderRadius]="'none'"
     [margin]="'s'"
     [type]="'normal'">

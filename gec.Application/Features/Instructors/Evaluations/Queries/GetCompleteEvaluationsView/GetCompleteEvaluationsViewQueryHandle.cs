@@ -15,10 +15,10 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
 {
     private readonly ISessionStorageService _sessionStorageService;
     private readonly IEnrollmentsService _enrollmentsService;
-    private readonly IMapper<Enrollment, StudentEvaluation> _canvasEnrolledStudentMapper;
+    private readonly IMapper<Enrollment, Student> _canvasEnrolledStudentMapper;
 
     public GetCompleteEvaluationsViewHandle(ISessionStorageService sessionStorageService,
-        IMapper<Enrollment, StudentEvaluation> canvasEnrolledStudentMapper,
+        IMapper<Enrollment, Student> canvasEnrolledStudentMapper,
         IEnrollmentsService enrollmentsService)
     {
         _sessionStorageService = sessionStorageService;
@@ -62,64 +62,18 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 EvaluationStatus = "Faltan estudiantes por evaluar"
             };
 
-            // Datos dummy de estudiantes
-            var students = studentEvaluations.Select(i => new StudentEvaluation
+            // Datos dummy de las evaluaciones de los estudiantes
+            var random = new Random();
+            var students = studentEvaluations.Select(i => new Student
             {
                 Id = i.Id,
                 LoginId = i.LoginId,
                 Name = i.Name,
-                Status = "Pending",
+                Status = random.Next(2) == 0 ? "Pending" : "Evaluated",
                 TotalEvaluations = 5,
                 CompletedEvaluations = 3,
                 PendingEvaluations = 2,
-                Evidences = new List<Evidence>
-                {
-                    new()
-                    {
-                        Id = $"EVIDENCE{i}A",
-                        Name = $"Evidence{i} A",
-                        Feedback = $"Good job {i}!",
-                        Grade = 85,
-                        SpeedGraderLink = "https://speedgrader.example.com",
-                        FileType = "audio"
-                    },
-                    new()
-                    {
-                        Id = $"EVIDENCE{i}B",
-                        Name = $"Evidence{i} B",
-                        Feedback = $"Needs improvement {i}.",
-                        Grade = 70,
-                        SpeedGraderLink = "https://speedgrader.example.com",
-                        FileType = "video"
-                    },
-                    new()
-                    {
-                        Id = $"EVIDENCE{i}C",
-                        Name = $"Evidence{i} C",
-                        Feedback = $"Needs improvement {i}.",
-                        Grade = 60,
-                        SpeedGraderLink = "https://speedgrader.example.com",
-                        FileType = "other"
-                    }
-                },
-                EvaluationResults = new List<EvaluationResult>
-                {
-                    new()
-                    {
-                        Id = $"COMP{i}A",
-                        AchievementLevel = "Solid",
-                        Comments = "Solid understanding.",
-                        IsEvaluated = true
-                    },
-                    new()
-                    {
-                        Id = $"COMP{i}B",
-                        AchievementLevel = "Basic",
-                        Comments = "Needs improvement.",
-                        IsEvaluated = false
-                    }
-                }
-            }).ToList();
+            });
 
             // Datos dummy de la estructura de evaluación
             var evaluationStructures = new List<EvaluationStructure>
@@ -205,8 +159,8 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             {
                 Course = course,
                 CourseState = courseState,
+                EvaluationStructures = evaluationStructures,
                 Students = students,
-                EvaluationStructures = evaluationStructures
             };
 
             return Result.Success(response);

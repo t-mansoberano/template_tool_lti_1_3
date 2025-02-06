@@ -32,7 +32,7 @@ import {CourseStateModel} from '../../models/course-state.model';
 })
 export class StudentListComponent {
   @Input() students!: StudentModel[];
-  @Output() studentSelected = new EventEmitter<string>();
+  @Output() studentSelected = new EventEmitter<StudentModel>();
   @Input() courseState!: CourseStateModel;
   tabsData: IBmbTab[] = [
     { id: 1, title: 'Todos', isActive: true },
@@ -41,8 +41,8 @@ export class StudentListComponent {
   ];
   activeTabId: number = 1;
 
-  selectStudent(studentId: string): void {
-    this.studentSelected.emit(studentId);
+  selectStudent(student: StudentModel): void {
+    this.studentSelected.emit(student);
   }
 
   handleTabSelected($event: IBmbTab) {

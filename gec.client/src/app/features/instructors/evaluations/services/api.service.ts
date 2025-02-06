@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
 import {HttpService} from '../../../../core/services/http.service';
-import {ViewModel, ViewStudentModel} from '../models/view.model';
+import {ViewModel, ViewStudentEvidencesModel} from '../models/view.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,10 @@ export class ApiService {
     return this.httpService.get(canvasApiUrl);
   }
 
-  getStudentCourseEvaluations(courseId: string, studentId: string): Observable<ViewStudentModel> {
+  getStudentCourseEvaluations(courseId: string, studentId: string): Observable<ViewStudentEvidencesModel> {
     const canvasApiUrl = `/api/teachers/courses/${courseId}/students/${studentId}/evaluations`;
     return this.httpService.get(canvasApiUrl).pipe(
-      map(response => response.result as ViewStudentModel)
+      map(response => response.result as ViewStudentEvidencesModel)
     );
   }
 

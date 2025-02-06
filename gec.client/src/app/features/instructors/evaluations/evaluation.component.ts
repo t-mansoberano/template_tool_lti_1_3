@@ -10,6 +10,7 @@ import {
   IBmbTab
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {StateService} from './services/state.service';
+import {StudentModel} from './models/student.model';
 
 @Component({
   selector: 'app-evaluation',
@@ -39,6 +40,8 @@ export class EvaluationComponent implements OnInit {
   courseState = computed(() => this.viewModel()?.courseState || null);
   students = computed(() => this.viewModel()?.students || null);
   selectedStudent = computed(() => this.viewModel()?.selectedStudent || null);
+  studentEvidences = computed(() => this.viewModel()?.studentEvidences || null);
+  studentEvaluationResults = computed(() => this.viewModel()?.studentEvaluationResults || null);
   evaluationStructures = computed(() => this.viewModel()?.evaluationStructures || []);
 
   tabs = this.stateService.tabs;
@@ -47,8 +50,8 @@ export class EvaluationComponent implements OnInit {
     this.stateService.load();
   }
 
-  onStudentSelected(studentId: string): void {
-      this.stateService.selectStudent(studentId);
+  onStudentSelected(student: StudentModel): void {
+      this.stateService.selectStudent(student);
   }
 
   handleTabSelected(tab: IBmbTab): void {

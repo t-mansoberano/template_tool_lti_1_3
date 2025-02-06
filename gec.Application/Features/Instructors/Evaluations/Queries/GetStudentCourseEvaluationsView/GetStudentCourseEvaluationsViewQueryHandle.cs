@@ -11,16 +11,14 @@ namespace gec.Application.Features.Instructors.Evaluations.Queries.GetStudentCou
 public class GetStudentCourseEvaluationsViewQueryHandle : IRequestHandler<GetStudentCourseEvaluationsViewQuery,
     Result<GetStudentCourseEvaluationsViewRespond>>
 {
-    private readonly ISessionStorageService _sessionStorageService;
-    private readonly IMapper<Submission, StudentEvaluation> _canvasSubmissionEvidenceMapper;
+    private readonly IMapper<Submission, StudentEvidences> _canvasSubmissionStudentEvidenceMapper;
     private readonly ISubmissionsService _submissionsService;
 
     public GetStudentCourseEvaluationsViewQueryHandle(ISessionStorageService sessionStorageService,
-        IMapper<Submission, StudentEvaluation> canvasSubmissionEvidenceMapper,
+        IMapper<Submission, StudentEvidences> canvasSubmissionStudentEvidenceMapper,
         ISubmissionsService submissionsService)
     {
-        _sessionStorageService = sessionStorageService;
-        _canvasSubmissionEvidenceMapper = canvasSubmissionEvidenceMapper;
+        _canvasSubmissionStudentEvidenceMapper = canvasSubmissionStudentEvidenceMapper;
         _submissionsService = submissionsService;
     }
 
@@ -33,13 +31,12 @@ public class GetStudentCourseEvaluationsViewQueryHandle : IRequestHandler<GetStu
         if (evaluationsFromApi.IsFailure)
             return Result.Failure<GetStudentCourseEvaluationsViewRespond>(evaluationsFromApi.Error);
 
-        var studentEvaluation = _canvasSubmissionEvidenceMapper.MapListToSingle(evaluationsFromApi.Value);
+        var studentsEvidences = _canvasSubmissionStudentEvidenceMapper.MapListToSingle(evaluationsFromApi.Value);
 
         var response = new GetStudentCourseEvaluationsViewRespond
         {
-            SelectedStudent = studentEvaluation
+            StudentEvidences = studentsEvidences
         };
-
 
         return response;
     }

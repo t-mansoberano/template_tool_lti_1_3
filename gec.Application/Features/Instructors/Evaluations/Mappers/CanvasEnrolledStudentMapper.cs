@@ -4,11 +4,11 @@ using gec.Application.Features.Instructors.Evaluations.Dto;
 
 namespace gec.Application.Features.Instructors.Evaluations.Mappers;
 
-public class CanvasEnrolledStudentMapper : IMapper<Enrollment, StudentEvaluation>
+public class CanvasEnrolledStudentMapper : IMapper<Enrollment, Student>
 {
-    public StudentEvaluation Map(Enrollment input)
+    public Student Map(Enrollment input)
     {
-        return new StudentEvaluation()
+        return new Student()
         {
             Id = input.UserId.ToString(),
             LoginId = input.User.LoginId,
@@ -16,12 +16,12 @@ public class CanvasEnrolledStudentMapper : IMapper<Enrollment, StudentEvaluation
         };
     }
 
-    public IEnumerable<StudentEvaluation> Map(IEnumerable<Enrollment> inputs)
+    public IEnumerable<Student> Map(IEnumerable<Enrollment> inputs)
     {
         return inputs.Select(Map);
     }
 
-    public StudentEvaluation MapListToSingle(IEnumerable<Enrollment> inputs)
+    public Student MapListToSingle(IEnumerable<Enrollment> inputs)
     {
         return Map(inputs.First());
     }

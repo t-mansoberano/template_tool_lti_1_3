@@ -4,5 +4,5 @@ namespace gec.Application.Features.Instructors.Evaluations.Queries.GetStudentCou
 
 public class GetStudentCourseEvaluationsViewRespond
 {
-    public StudentEvaluation SelectedStudent { get; set; } = new ();
+    public StudentEvidences StudentEvidences { get; set; } = new ();
 }
