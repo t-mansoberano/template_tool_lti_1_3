@@ -5,28 +5,33 @@
   <bmb-card-content padding="none">
 
     <bmb-tabs [tabs]="tabsData" (selected)="handleTabSelected($event)">
-      <bmb-container *ngIf="activeTabId === 1" [appearance]="'primary-home'">
+      <bmb-container [appearance]="'primary-home'">
+        <form [formGroup]="filterForm">
           <bmb-input
             class="bmb_margin-s"
-            [placeholder]="'Filtrar por nombre o matrícula'">
+            [placeholder]="'Filtrar por nombre o matrícula'"
+            [control]="filterForm.controls['search']"
+          >
           </bmb-input>
-          <bmb-list-group [borderRadius]="'none'" [margin]="'m'">
-            <bmb-list-group-item *ngFor="let student of students" id="{{student.id}}" (click)="selectStudent(student)">
-              <div class="student-container">
-                <div class="student-info">
-                  <h3>{{ student.loginId }}</h3>
-                  <span>{{ student.name }}</span>
-                </div>
-                <div class="student-badge">
-                  <bmb-badge
-                    [appearance]="'info'"
-                    [text]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
-                    [container]="false">
-                  </bmb-badge>
-                </div>
+        </form>
+        <bmb-list-group [borderRadius]="'none'" [margin]="'m'">
+          <bmb-list-group-item *ngFor="let student of filteredStudents" id="{{student.id}}"
+                               (click)="selectStudent(student)">
+            <div class="student-container">
+              <div class="student-info">
+                <h3>{{ student.loginId }}</h3>
+                <span>{{ student.name }}</span>
               </div>
-            </bmb-list-group-item>
-          </bmb-list-group>
+              <div class="student-badge">
+                <bmb-badge
+                  [appearance]="'info'"
+                  [text]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
+                  [container]="false">
+                </bmb-badge>
+              </div>
+            </div>
+          </bmb-list-group-item>
+        </bmb-list-group>
       </bmb-container>
     </bmb-tabs>
 
