@@ -1,16 +1,21 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {Component, Input, Output, EventEmitter, signal, computed, OnInit} from '@angular/core';
+import {ReactiveFormsModule, FormGroup, FormControl} from '@angular/forms';
+import {NgForOf} from '@angular/common';
 import {
   BmbCardComponent,
-  BmbCardContentComponent,
+  BmbTabsComponent,
   BmbCardHeaderComponent,
+  BmbCardContentComponent,
+  BmbContainerComponent,
+  BmbListGroupComponent,
+  BmbListGroupItemComponent,
+  BmbInputComponent,
+  BmbBadgeComponent,
   IBmbTab,
-  BmbTabsComponent, BmbContainerComponent, BmbInputComponent, BmbLegendComponent, BmbBadgeComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
-import {BmbListGroupComponent, BmbListGroupItemComponent} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+
 import {StudentModel} from '../../models/student.model';
 import {CourseStateModel} from '../../models/course-state.model';
-import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-student-list',
@@ -32,68 +37,112 @@ import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
   styleUrl: './student-list.component.css'
 })
 export class StudentListComponent implements OnInit {
-  @Input() students!: StudentModel[];
-  @Output() studentSelected = new EventEmitter<StudentModel>();
+  /**
+   * 1) Convertimos `students` en un setter de @Input para asignar a un Signal interno.
+   *    De esta forma, cada vez que se reciba un nuevo array de estudiantes, actualizamos el Signal.
+   */
+  private _students = signal<StudentModel[]>([]);
+  @Input() set students(value: StudentModel[]) {
+    this._students.set(value ?? []);
+  }
+
+  /**
+   * 2) También podemos hacer lo mismo con `courseState` si deseamos,
+   *    pero aquí lo mantenemos como un Input normal.
+   */
   @Input() courseState!: CourseStateModel;
+
+  // Emite el estudiante seleccionado
+  @Output() studentSelected = new EventEmitter<StudentModel>();
+
   tabsData: IBmbTab[] = [
     {id: 1, title: 'Todos', isActive: true},
     {id: 2, title: 'Evaluados'},
     {id: 3, title: 'Por evaluar'},
   ];
-  activeTabId: number = 1;
-  filterText: string = '';
+  // 3) Definimos un signal para la pestaña activa
+  activeTabId = signal<number>(1);
+
+  // 4) Definimos un signal para el texto de búsqueda
+  searchSignal = signal<string>('');
+
+  // 5) Formulario reactivo (opcional, lo combinamos con el signal)
   filterForm = new FormGroup({
-    search: new FormControl<string>('')
+    // Tipar con <string> si usas Angular >=14
+    search: new FormControl<string>('', {nonNullable: true})
   });
 
-  ngOnInit(): void {
-    this.filterForm.get('search')?.valueChanges
-      .subscribe(value => {
-        this.filterText = value?.toLowerCase() || '';
-        this.updateFilteredStudents();
-      });
+  /**
+   * 6) Creamos un "computed" que dependa de:
+   *    - la lista de estudiantes (this._students())
+   *    - la pestaña activa (this.activeTabId())
+   *    - el texto de búsqueda (this.searchSignal())
+   */
+  filteredStudents = computed<StudentModel[]>(() => {
+    const students = this._students();
+    const tabId = this.activeTabId();
+    const search = this.searchSignal().toLowerCase().trim();
 
-    // Primer cálculo
-    this.updateFilteredStudents();
+    // Filtra según la pestaña
+    const tabFiltered = this.getTabFiltered(students, tabId);
+
+    // Aplica el filtro de búsqueda
+    return this.getSearchFiltered(tabFiltered, search);
+  });
+
+  /**
+   * 7) Efecto para “sincronizar” el valor del FormControl con el Signal
+   *    Cada vez que cambie el control de búsqueda, actualizamos searchSignal, para
+   *     “reaccionar” al valor del form en cada cambio.)
+   */
+  ngOnInit(): void {
+    // Ojo: Los form controls no son "Signals" nativos, así que seguimos usando subscribe()
+    this.filterForm.get('search')?.valueChanges.subscribe(value => {
+      this.searchSignal.set(value.toLowerCase().trim());
+    });
   }
 
   trackByStudentId(index: number, student: StudentModel): number | string {
     return student.id;
   }
 
-  filteredStudents: StudentModel[] = [];
-
-  selectStudent(student: StudentModel): void {
-    this.studentSelected.emit(student);
-  }
-
-  handleTabSelected($event: IBmbTab) {
-    this.activeTabId = $event.id;
-    this.updateFilteredStudents();
-  }
-
-  private updateFilteredStudents(): void {
-    const tabFilteredStudents = this.getTabFiltered(this.students);
-    this.filteredStudents = this.getSearchFiltered(tabFilteredStudents, this.filterText);
-  }
-
-  private getTabFiltered(students: StudentModel[]): StudentModel[] {
-    switch (this.activeTabId) {
-      case 2: // 'Evaluados' = status = 'Evaluated'
+  /**
+   * Filtra estudiantes según la pestaña activa
+   */
+  private getTabFiltered(students: StudentModel[], activeTabId: number): StudentModel[] {
+    switch (activeTabId) {
+      case 2: // 'Evaluados'
         return students.filter(s => s.status === 'Completed');
-      case 3: // 'Por evaluar' = status = 'Pending'
+      case 3: // 'Por evaluar'
         return students.filter(s => s.status === 'Pending');
       default: // 'Todos'
         return students;
     }
   }
 
+  /**
+   * Aplica el filtro de búsqueda
+   */
   private getSearchFiltered(students: StudentModel[], searchTerm: string): StudentModel[] {
     if (!searchTerm) return students;
-    const term = searchTerm.toLowerCase();
     return students.filter(
-      s => s.loginId.toLowerCase().includes(term) || s.name.toLowerCase().includes(term)
+      s => s.loginId.toLowerCase().includes(searchTerm) ||
+        s.name.toLowerCase().includes(searchTerm)
     );
+  }
+
+  /**
+   * Se llama desde el template al hacer clic en un alumno
+   */
+  selectStudent(student: StudentModel): void {
+    this.studentSelected.emit(student);
+  }
+
+  /**
+   * Se llama cuando seleccionas una pestaña en <bmb-tabs>
+   */
+  handleTabSelected(tab: IBmbTab) {
+    this.activeTabId.set(tab.id);
   }
 
   protected readonly String = String;

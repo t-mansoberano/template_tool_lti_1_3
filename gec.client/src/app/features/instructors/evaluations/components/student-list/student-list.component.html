@@ -16,7 +16,7 @@
         </form>
         <bmb-list-group [borderRadius]="'none'" [margin]="'m'">
           <bmb-list-group-item
-            *ngFor="let student of filteredStudents" id="{{student.id}}; trackBy: trackByStudentId"
+            *ngFor="let student of filteredStudents()" id="{{student.id}}; trackBy: trackByStudentId"
             (click)="selectStudent(student)">
             <div class="student-container">
               <div class="student-info">
