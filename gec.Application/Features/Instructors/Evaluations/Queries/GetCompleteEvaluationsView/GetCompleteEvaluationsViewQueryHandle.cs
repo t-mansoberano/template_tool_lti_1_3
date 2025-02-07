@@ -53,27 +53,39 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
                 Name = ltiContex.Value.Course.Title,
             };
 
-            // Datos dummy del estado del curso
-            var courseState = new CourseState
-            {
-                TotalStudents = 10,
-                EvaluatedStudents = 6,
-                PendingStudents = 4,
-                EvaluationStatus = "Faltan estudiantes por evaluar"
-            };
-
             // Datos dummy de las evaluaciones de los estudiantes
             var random = new Random();
-            var students = studentEvaluations.Select(i => new Student
+            var students = studentEvaluations.Select(i =>
             {
-                Id = i.Id,
-                LoginId = i.LoginId,
-                Name = i.Name,
-                Status = random.Next(2) == 0 ? "Pending" : "Evaluated",
-                TotalEvaluations = 5,
-                CompletedEvaluations = 3,
-                PendingEvaluations = 2,
+                var status = random.Next(2) == 0 ? "Pending" : "Completed";
+                return new Student
+                {
+                    Id = i.Id,
+                    LoginId = i.LoginId,
+                    Name = i.Name,
+                    Status = status,
+                    TotalEvaluations = 5,
+                    CompletedEvaluations = status == "Completed" ? 5 : 3,
+                    PendingEvaluations = status == "Completed" ? 0 : 2
+                };
             });
+
+            // Datos dummy del estado del curso
+            var studentsList = students.ToList();
+            
+            var totalStudents = studentsList.Count;
+            var evaluatedStudents = studentsList.Count(i => i.Status == "Completed");
+            var pendingStudents = studentsList.Count(i => i.Status == "Pending");
+            
+            var courseState = new CourseState
+            {
+                TotalStudents = totalStudents,
+                EvaluatedStudents = evaluatedStudents,
+                PendingStudents = pendingStudents,
+                EvaluationStatus = totalStudents == evaluatedStudents
+                    ? "Todos los estudiantes evaluados"
+                    : "Faltan estudiantes por evaluar"
+            };
 
             // Datos dummy de la estructura de evaluación
             var evaluationStructures = new List<EvaluationStructure>

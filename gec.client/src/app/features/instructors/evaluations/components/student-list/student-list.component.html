@@ -24,8 +24,8 @@
               </div>
               <div class="student-badge">
                 <bmb-badge
-                  [appearance]="'info'"
-                  [text]="String(student.pendingEvaluations) + '/' + String(student.totalEvaluations)"
+                  [appearance]="student.status === 'Completed' ? 'success' : 'info'"
+                  [text]="String(student.completedEvaluations) + '/' + String(student.totalEvaluations)"
                   [container]="false">
                 </bmb-badge>
               </div>

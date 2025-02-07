@@ -60,10 +60,10 @@ export class StudentListComponent implements OnInit {
 
     switch (this.activeTabId) {
       case 2: // Evaluados: evaluaciones pendientes igual a 0
-        tabFilteredStudents = this.students.filter(student => student.status === 'Pending');
+        tabFilteredStudents = this.students.filter(student => student.status === 'Completed');
         break;
       case 3: // Por evaluar: evaluaciones pendientes mayor que 0
-        tabFilteredStudents = this.students.filter(student => student.status == 'Evaluated');
+        tabFilteredStudents = this.students.filter(student => student.status == 'Pending');
         break;
       default: // Todos
         tabFilteredStudents = this.students;
