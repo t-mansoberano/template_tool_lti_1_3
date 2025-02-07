@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf} from "@angular/common";
 import {
   BmbCardComponent,
   BmbCardContentComponent,
@@ -43,44 +43,25 @@ export class StudentListComponent implements OnInit {
   activeTabId: number = 1;
   filterText: string = '';
   filterForm = new FormGroup({
-    search: new FormControl('')
+    search: new FormControl<string>('')
   });
 
   ngOnInit(): void {
-    this.filterForm.get('search')?.valueChanges.subscribe(value => {
-      console.log('Filtro actualizado:', value);
-      this.filterText = value?.toLowerCase() || '';
-    });
+    this.filterForm.get('search')?.valueChanges
+      .subscribe(value => {
+        this.filterText = value?.toLowerCase() || '';
+        this.updateFilteredStudents();
+      });
+
+    // Primer cálculo
+    this.updateFilteredStudents();
   }
 
-  // Getter para aplicar ambos filtros: por pestaña y por búsqueda
-  get filteredStudents(): StudentModel[] {
-    // Filtrar primero según la pestaña seleccionada
-    let tabFilteredStudents: StudentModel[];
-
-    switch (this.activeTabId) {
-      case 2: // Evaluados: evaluaciones pendientes igual a 0
-        tabFilteredStudents = this.students.filter(student => student.status === 'Completed');
-        break;
-      case 3: // Por evaluar: evaluaciones pendientes mayor que 0
-        tabFilteredStudents = this.students.filter(student => student.status == 'Pending');
-        break;
-      default: // Todos
-        tabFilteredStudents = this.students;
-        break;
-    }
-
-    // Aplicar el filtro de búsqueda (loginId y name)
-    const searchTerm = this.filterText.toLowerCase();
-    if (!searchTerm) {
-      return tabFilteredStudents;
-    }
-
-    return tabFilteredStudents.filter(student =>
-      student.loginId.toLowerCase().includes(searchTerm) ||
-      student.name.toLowerCase().includes(searchTerm)
-    );
+  trackByStudentId(index: number, student: StudentModel): number | string {
+    return student.id;
   }
+
+  filteredStudents: StudentModel[] = [];
 
   selectStudent(student: StudentModel): void {
     this.studentSelected.emit(student);
@@ -88,6 +69,31 @@ export class StudentListComponent implements OnInit {
 
   handleTabSelected($event: IBmbTab) {
     this.activeTabId = $event.id;
+    this.updateFilteredStudents();
+  }
+
+  private updateFilteredStudents(): void {
+    const tabFilteredStudents = this.getTabFiltered(this.students);
+    this.filteredStudents = this.getSearchFiltered(tabFilteredStudents, this.filterText);
+  }
+
+  private getTabFiltered(students: StudentModel[]): StudentModel[] {
+    switch (this.activeTabId) {
+      case 2: // 'Evaluados' = status = 'Evaluated'
+        return students.filter(s => s.status === 'Completed');
+      case 3: // 'Por evaluar' = status = 'Pending'
+        return students.filter(s => s.status === 'Pending');
+      default: // 'Todos'
+        return students;
+    }
+  }
+
+  private getSearchFiltered(students: StudentModel[], searchTerm: string): StudentModel[] {
+    if (!searchTerm) return students;
+    const term = searchTerm.toLowerCase();
+    return students.filter(
+      s => s.loginId.toLowerCase().includes(term) || s.name.toLowerCase().includes(term)
+    );
   }
 
   protected readonly String = String;
