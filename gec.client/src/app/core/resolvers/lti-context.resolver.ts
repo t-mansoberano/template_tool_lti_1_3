@@ -5,5 +5,5 @@ import {Context} from '../models/context.model';
 
 export const ltiContextResolver: ResolveFn<Context> = (route, state) => {
   const ltiService = inject(AuthService);
-  return ltiService.getLtiContext();
+  return ltiService.getContext();
 };

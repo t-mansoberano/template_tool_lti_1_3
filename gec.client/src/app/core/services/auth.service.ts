@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {map, Observable} from 'rxjs';
+import {map, Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {HttpService} from './http.service';
 import {Resolve} from '../models/resolve.model';
@@ -18,7 +18,25 @@ export class AuthService {
   private _isExternalCollaborator = false;
   private _courseId = "";
 
-  getLtiContext(): Observable<Context> {
+  getContext(): Observable<Context> {
+    // Detectar si la URL contiene parámetros LTI para decidir el flujo
+    const isLtiLaunch = this.isEmbeddedInCanvas();
+
+    if (isLtiLaunch) {
+      console.log('Detectado acceso desde Canvas (LTI), cargando contexto LTI...');
+      return this.getLtiContext();
+    } else {
+      console.log('Acceso normal, cargando contexto federado...');
+      return this.getFederationContext();
+    }
+  }
+
+  private isEmbeddedInCanvas(): boolean {
+    // Verifica si la aplicación está embebida dentro de Canvas LMS
+    return window.location.ancestorOrigins?.[0]?.includes('instructure.com') || false;
+  }
+
+  private getLtiContext(): Observable<Context> {
     return this.apiService.get('/api/lti').pipe(
       map((respondModel) => respondModel.result as Context),
       tap((context) => {
@@ -30,17 +48,18 @@ export class AuthService {
         this._isError = false;
       }),
       catchError((err) => {
-        console.error('Error en LTI, intentando Federación...', err);
-        return this.getFederationContext();
+        console.error('Error en LTI, abortando...', err);
+        this._isError = true;
+        return throwError(() => new Error('No se pudo autenticar via LTI'));
       }),
     );
   }
 
-  getFederationContext(): Observable<Context> {
+  private getFederationContext(): Observable<Context> {
     return this.apiService.get('/api/federation').pipe(
       map((respondModel) => respondModel.result as Context),
       tap((context) => {
-        this._courseId = "";
+        this._courseId = '';
         this._isInstructor = context.user.isInstructor;
         this._isStudent = context.user.isStudent;
         this._isExternalCollaborator = context.user.isExternalCollaborator;
@@ -48,12 +67,9 @@ export class AuthService {
         this._isError = false;
       }),
       catchError((err) => {
-        this._isInstructor = false;
-        this._isStudent = false;
-        this._isExternalCollaborator = false;
-        this._isWithoutRole = false;
+        console.error('Error en Federación', err);
         this._isError = true;
-        throw err;
+        return throwError(() => new Error('No se pudo autenticar via Federación'));
       }),
     );
   }
