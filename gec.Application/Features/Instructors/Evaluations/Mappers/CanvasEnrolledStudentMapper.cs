@@ -25,4 +25,9 @@ public class CanvasEnrolledStudentMapper : IMapper<Enrollment, Student>
     {
         return Map(inputs.First());
     }
+
+    public Student MapWithDependencies(IEnumerable<Enrollment> inputs, object dependencies)
+    {
+        throw new NotImplementedException();
+    }
 }

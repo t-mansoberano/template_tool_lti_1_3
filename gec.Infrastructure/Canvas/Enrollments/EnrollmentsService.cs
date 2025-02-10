@@ -20,4 +20,11 @@ public class EnrollmentsService : IEnrollmentsService
         var enrollments = await _canvasApiClient.GetPaginatedAsync<Enrollment>(endpoint);
         return enrollments;
     }
+
+    public async Task<Result<List<Enrollment>>> GetInstructorsByCourseAsync(string courseId)
+    {
+        var endpoint = $"/api/v1/courses/{courseId}/enrollments?type[]=TeacherEnrollment";
+        var enrollments = await _canvasApiClient.GetPaginatedAsync<Enrollment>(endpoint);
+        return enrollments;
+    }
 }
