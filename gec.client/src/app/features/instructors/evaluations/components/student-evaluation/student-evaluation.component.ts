@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {
   BmbAccordionComponent, BmbBadgeComponent, BmbButtonDirective, BmbButtonGroupDirective,
   BmbCardComponent,
@@ -8,6 +8,7 @@ import {
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
 import {StudentEvaluationResultsModel} from '../../models/student-evaluation-results.model';
+import {EvaluationResultModel} from '../../models/evaluation-result.model';
 
 @Component({
   selector: 'app-student-evaluation',
@@ -26,6 +27,7 @@ import {StudentEvaluationResultsModel} from '../../models/student-evaluation-res
     BmbIconComponent,
     BmbButtonDirective,
     BmbButtonGroupDirective,
+    NgIf,
   ],
   templateUrl: './student-evaluation.component.html',
   styleUrl: './student-evaluation.component.css'
@@ -38,4 +40,9 @@ export class StudentEvaluationComponent {
     const evaluation = this.evaluationStructures.find(e => e.id === evaluationId);
     return evaluation ? evaluation.name : 'Unknown';
   }
+
+  getEvaluationResult(evaluationId: string) : EvaluationResultModel {
+    return this.evaluationResults.evaluationResults.find(result => result.id === evaluationId) || {} as EvaluationResultModel;
+  }
+
 }

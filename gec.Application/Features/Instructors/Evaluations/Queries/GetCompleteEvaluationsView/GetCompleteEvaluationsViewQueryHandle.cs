@@ -88,84 +88,42 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             };
 
             // Datos dummy de la estructura de evaluación
-            var evaluationStructures = new List<EvaluationStructure>
-            {
-                new()
-                {
-                    Id = "COMP1",
-                    Key = "COMP_KEY_1",
-                    Name = "Competency 1",
-                    Description = "Description of Competency 1",
-                    Type = "Competency",
-                    ParentId = null,
-                    ParentName = null,
-                    Descriptors = new List<Descriptor>
-                    {
-                        new()
-                        {
-                            Id = "LEVEL1", Level = "Destacado",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL2", Level = "Sólido",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL3", Level = "Básico",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL4", Level = "Incipiente",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        }
-                    }
-                },
-                new()
-                {
-                    Id = "COMP2",
-                    Key = "COMP_KEY_2",
-                    Name = "Competency 2",
-                    Description = "Description of Competency 2",
-                    Type = "Subcompetency",
-                    ParentId = "COMP1",
-                    ParentName = "Competency 1",
-                    Descriptors = new List<Descriptor>
-                    {
-                        new()
-                        {
-                            Id = "LEVEL1", Level = "Destacado",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL2", Level = "Sólido",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL3", Level = "Básico",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        },
-                        new()
-                        {
-                            Id = "LEVEL4", Level = "Incipiente",
-                            Description =
-                                "Posee una comprensión profunda sobre técnicas de investigación cuantitativa y cualitativa, que le permite recopilar y analizar sistemáticamente información. Establece las dimensiones y variables sustanciales del problema, que considera para diseñar instrumentos confiables y válidos. Realiza consistentemente análisis sistémicos y multidisciplinarios durante la investigación."
-                        }
-                    }
-                }
-            };
+            var structures = new List<EvaluationStructure>();
+            // Lista de niveles que queremos asignar a los descriptores
+            var levels = new List<string> { "Destacado", "Sólido", "Básico", "Incipiente" };
 
+            for (int i = 0; i < 20; i++)
+            {
+                // Para cada EvaluationStructure, creamos la lista de 4 Descriptor, uno por cada nivel.
+                var descriptors = new List<Descriptor>();
+                foreach (var level in levels)
+                {
+                    descriptors.Add(new Descriptor
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Level = level,
+                        Description = $"Descripción para el nivel {level}"
+                    });
+                }
+
+                // Creamos la EvaluationStructure asignando la lista completa de descriptores
+                var evaluationStructure = new EvaluationStructure
+                {
+                    Id = (i + 1).ToString(),
+                    Key = $"Key-{i + 1}",
+                    Name = $"Competencia {i + 1}",
+                    Description = $"Descripción de la competencia {i + 1}",
+                    Type = "Competency", // Ajusta el valor según corresponda
+                    ParentId = null,     // O asigna un valor si aplica
+                    ParentName = null,   // O asigna un valor si aplica
+                    Descriptors = descriptors
+                };
+
+                structures.Add(evaluationStructure);
+            }
+
+            var evaluationStructures = structures;
+            
             // Construir la respuesta
             var response = new GetCompleteEvaluationsViewRespond
             {

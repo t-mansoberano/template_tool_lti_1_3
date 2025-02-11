@@ -17,4 +17,5 @@ export interface ViewModel {
 
 export interface ViewStudentEvidencesModel {
   studentEvidences: StudentEvidencesModel;
+  studentEvaluationResults: StudentEvaluationResultsModel
 }

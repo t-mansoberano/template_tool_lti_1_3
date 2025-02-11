@@ -3,6 +3,8 @@ using gec.Application.Common;
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
 using gec.Application.Contracts.Infrastructure.Canvas.Submissions;
 using gec.Application.Contracts.Infrastructure.Canvas.Submissions.Models;
+using gec.Application.Contracts.Infrastructure.Database.GetStudentEvaluations;
+using gec.Application.Contracts.Infrastructure.Database.GetStudentEvaluations.Models;
 using gec.Application.Contracts.Server.Session;
 using gec.Application.Features.Instructors.Evaluations.Dto;
 using MediatR;
@@ -13,15 +15,21 @@ public class GetStudentCourseEvaluationsViewQueryHandle : IRequestHandler<GetStu
     Result<GetStudentCourseEvaluationsViewRespond>>
 {
     private readonly IMapper<Submission, StudentEvidences> _canvasSubmissionStudentEvidenceMapper;
+    private readonly IMapper<StudentEvaluationResult, StudentEvaluationResults> _studentEvaluationResultMapper;
     private readonly ISubmissionsService _submissionsService;
     private readonly IEnrollmentsService _enrollmentsService;
+    private readonly IGetStudentEvaluationsRepository _getStudentEvaluationsRepository;
 
     public GetStudentCourseEvaluationsViewQueryHandle(ISessionStorageService sessionStorageService,
         IMapper<Submission, StudentEvidences> canvasSubmissionStudentEvidenceMapper,
+        IMapper<StudentEvaluationResult, StudentEvaluationResults> studentEvaluationResultMapper,
         ISubmissionsService submissionsService,
-        IEnrollmentsService enrollmentsService)
+        IEnrollmentsService enrollmentsService,
+        IGetStudentEvaluationsRepository getStudentEvaluationsRepository)
     {
+        _getStudentEvaluationsRepository = getStudentEvaluationsRepository;
         _canvasSubmissionStudentEvidenceMapper = canvasSubmissionStudentEvidenceMapper;
+        _studentEvaluationResultMapper = studentEvaluationResultMapper;
         _submissionsService = submissionsService;
         _enrollmentsService = enrollmentsService;
     }
@@ -44,9 +52,16 @@ public class GetStudentCourseEvaluationsViewQueryHandle : IRequestHandler<GetStu
         var studentsEvidences =
             _canvasSubmissionStudentEvidenceMapper.MapWithDependencies(submissionsResult.Value, instructorIds);
 
+        var studentEvaluationResults = await _getStudentEvaluationsRepository.Get(request.CourseId, request.UserId);
+        if (studentEvaluationResults.IsFailure)
+            return Result.Failure<GetStudentCourseEvaluationsViewRespond>(studentEvaluationResults.Error);
+        
+        var studentEvaluationResultsEnumerable = _studentEvaluationResultMapper.MapListToSingle(studentEvaluationResults.Value);
+        
         var response = new GetStudentCourseEvaluationsViewRespond
         {
-            StudentEvidences = studentsEvidences
+            StudentEvidences = studentsEvidences,
+            StudentEvaluationResults = studentEvaluationResultsEnumerable
         };
 
         return response;

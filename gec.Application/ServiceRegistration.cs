@@ -1,6 +1,7 @@
 ﻿using gec.Application.Common;
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments.Models;
 using gec.Application.Contracts.Infrastructure.Canvas.Submissions.Models;
+using gec.Application.Contracts.Infrastructure.Database.GetStudentEvaluations.Models;
 using gec.Application.Features.Instructors.Evaluations.Dto;
 using gec.Application.Features.Instructors.Evaluations.Mappers;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,8 @@ public static class ServiceRegistration
         
         services.AddScoped<IMapper<Enrollment, Student>, CanvasEnrolledStudentMapper>();
         services.AddScoped<IMapper<Submission, StudentEvidences>, CanvasSubmissionStudentMapper>();
-
+        services.AddScoped<IMapper<StudentEvaluationResult, StudentEvaluationResults>, StudentEvaluationResultsMapper>();
+         
         return services;
     }
 }

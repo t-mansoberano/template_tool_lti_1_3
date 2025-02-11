@@ -2,6 +2,7 @@
 using gec.Application.Contracts.Infrastructure.Canvas.Enrollments;
 using gec.Application.Contracts.Infrastructure.Canvas.OAuth;
 using gec.Application.Contracts.Infrastructure.Canvas.Submissions;
+using gec.Application.Contracts.Infrastructure.Database.GetStudentEvaluations;
 using gec.Application.Contracts.Infrastructure.Federation;
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Server.Configuration;
@@ -9,6 +10,7 @@ using gec.Infrastructure.Canvas.Api;
 using gec.Infrastructure.Canvas.Enrollments;
 using gec.Infrastructure.Canvas.OAuth;
 using gec.Infrastructure.Canvas.Submissions;
+using gec.Infrastructure.Database.GetStudentEvaluations;
 using gec.Infrastructure.Federation;
 using gec.Infrastructure.Lti;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +36,7 @@ public static class ServiceRegistration
 
         services.AddScoped<IEnrollmentsService, EnrollmentsService>();
         services.AddScoped<ISubmissionsService, SubmissionsService>();
+        services.AddScoped<IGetStudentEvaluationsRepository, GetStudentEvaluationsRepository>();
 
         // Servicios relacionados con la Federación
         services.AddScoped<IFederationService, FederationService>();

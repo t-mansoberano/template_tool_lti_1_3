@@ -71,7 +71,7 @@ export class StateService {
     this.studentSubscription = this.apiService.getStudentCourseEvaluations(this.authService.getCourseId(), student.id).subscribe({
       next: (response) => {
         const currentViewModel = this._viewModel();
-        this._viewModel.set({...currentViewModel, selectedStudent: student, studentEvidences: response.studentEvidences} as ViewModel);
+        this._viewModel.set({...currentViewModel, selectedStudent: student, studentEvidences: response.studentEvidences, studentEvaluationResults: response.studentEvaluationResults} as ViewModel);
       },
       error: (err) => {
         console.error('Error en selectStudent():', err);
