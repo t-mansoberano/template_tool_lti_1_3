@@ -1,14 +1,15 @@
 <h4 class="bmb_margin-s">
   Competencias:
   <section bmbButtonGroup class="bmb_border-radius-s" [appearance]="'secondary-filled'" [size]="'small'">
-    <button>Todos</button>
-    <button>Evaluados</button>
-    <button>Pendientes por evaluar</button>
+    <button (click)="filterEvaluations('all')" [class.active]="currentFilter === 'all'">Todos</button>
+    <button (click)="filterEvaluations('evaluated')" [class.active]="currentFilter === 'evaluated'">Evaluados</button>
+    <button (click)="filterEvaluations('pending')" [class.active]="currentFilter === 'pending'">Pendientes por evaluar
+    </button>
   </section>
 </h4>
 
 <bmb-accordion
-  *ngFor="let evaluationStructure of evaluationStructures"
+  *ngFor="let evaluationStructure of filteredEvaluations"
   [icon]="'keyboard_arrow_down'"
   [borderRadius]="'m'"
   [margin]="'s'"
@@ -61,7 +62,7 @@
           *ngFor="let descriptor of evaluationStructure.descriptors"
           [borderRadius]="'none'"
           [margin]="'s'"
-          [type]="evalResult.isEvaluated === true && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level ? 'succes':'normal'">
+          [type]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level ? 'succes':'normal'">
           <bmb-card-header padding="s">
             <h3>
               <bmb-icon [icon]="'menu'" [size]="20" [dotNotification]="0"></bmb-icon>
@@ -76,10 +77,10 @@
       <div class="footer-container">
         <bmb-input
           [placeholder]="'Introduce tus comentarios aquí'"
-          [disabled]="false"
           [isRequired]="true"
-          [value]="''"
-          [name]="''"
+          [disabled]="evalResult.isEvaluated"
+          [value]="evalResult.comments"
+          [name]="'comments'"
           [maxlength]="500"
           [showMaxTextLength]="true"
           [label]="'Comentarios'"
@@ -87,6 +88,7 @@
         ></bmb-input>
         <div class="button-row">
           <button
+            *ngIf="!evalResult.isEvaluated"
             bmbButton
             appearance="secondary-filled"
             icon="cancel"
@@ -100,6 +102,7 @@
             Cancelar
           </button>
           <button
+            *ngIf="!evalResult.isEvaluated"
             bmbButton
             appearance="primary"
             icon="save"
