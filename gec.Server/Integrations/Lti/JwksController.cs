@@ -1,5 +1,4 @@
 using gec.Application.Contracts.Infrastructure.Lti;
-using gec.Application.Contracts.Server.Session;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gec.Server.Integrations.Lti;
@@ -9,7 +8,7 @@ public class JwksController : ControllerBase
 {
     private readonly ILtiService _ltiService;
 
-    public JwksController(ILtiService ltiService, ISessionStorageService sessionStorageService)
+    public JwksController(ILtiService ltiService)
     {
         _ltiService = ltiService;
     }

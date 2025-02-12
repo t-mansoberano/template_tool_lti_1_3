@@ -3,6 +3,7 @@
 on:
   push:
     branches:
+      - develop
       - t-mansoberano
       - t-mansoberano-limpia
   pull_request:
