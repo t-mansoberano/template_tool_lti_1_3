@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - t-mansoberano
+      - t-mansoberano-limpia
   pull_request:
     branches:
       - develop
