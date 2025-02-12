@@ -144,27 +144,27 @@ public class LtiControllerTests
         redirectResult.Url.Should().Be(redirectUrl);
     }
 
-    [Test]
-    public void GetJwks_ShouldReturnKeys()
-    {
-        // Arrange
-        var expectedKeys = TestHelper.GetSampleKeys();
-        _mockLtiService
-            .Setup(s => s.GetJwks())
-            .Returns(Result.Success(expectedKeys));
-
-        // Act
-        var result = _controller.GetJwks();
-
-        // Assert
-        result.Should().BeOfType<OkObjectResult>();
-        var okResult = result as OkObjectResult;
-
-        var envelope = okResult.Value as Envelope<Result<string>>;
-        envelope.Should().NotBeNull();
-        envelope.Result.IsSuccess.Should().BeTrue();
-        envelope.Result.Value.Should().Be(expectedKeys);
-    }
+    // [Test]
+    // public void GetJwks_ShouldReturnKeys()
+    // {
+    //     // Arrange
+    //     var expectedKeys = TestHelper.GetSampleKeys();
+    //     _mockLtiService
+    //         .Setup(s => s.GetJwks())
+    //         .Returns(Result.Success(expectedKeys));
+    //
+    //     // Act
+    //     var result = _controller.GetJwks();
+    //
+    //     // Assert
+    //     result.Should().BeOfType<OkObjectResult>();
+    //     var okResult = result as OkObjectResult;
+    //
+    //     var envelope = okResult.Value as Envelope<Result<string>>;
+    //     envelope.Should().NotBeNull();
+    //     envelope.Result.IsSuccess.Should().BeTrue();
+    //     envelope.Result.Value.Should().Be(expectedKeys);
+    // }
 
 }
 

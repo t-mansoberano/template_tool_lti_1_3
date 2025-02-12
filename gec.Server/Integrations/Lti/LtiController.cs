@@ -52,11 +52,4 @@ public class LtiController : BaseController
 
         return Redirect("/api/lti/oauth/token/validate");
     }
-
-    [HttpGet]
-    [Route("/api/.well-known/jwks.json")]
-    public IActionResult GetJwks()
-    {
-        return Ok(_ltiService.GetJwks());
-    }
 }
