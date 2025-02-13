@@ -9,7 +9,7 @@
 </h4>
 
 <bmb-accordion
-  *ngFor="let evaluationStructure of filteredEvaluations"
+  *ngFor="let evaluationStructure of filteredEvaluations; let i = index"
   [icon]="'keyboard_arrow_down'"
   [borderRadius]="'m'"
   [margin]="'s'"
@@ -17,9 +17,9 @@
   [paddingContent]="'m'"
   [hideToggle]="false"
   [active]="false"
-  [expanded]="expandedAccordion === evaluationStructure.id"
+  [expanded]="expandedStates[i]"
   [disabled]="false"
-  (click)="toggleAccordion(evaluationStructure.id)"
+  (onClick)="onAccordionToggle(i)"
 >
   <ng-container *ngIf="getEvaluationResult(evaluationStructure.id) as evalResult">
     <ng-template #bmbAccordionHeader class="bmb_card-header">

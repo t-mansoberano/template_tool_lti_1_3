@@ -46,11 +46,13 @@ export class StudentEvaluationComponent implements OnInit {
   filteredEvaluations: EvaluationStructureModel[] = [];
   currentFilter: 'all' | 'evaluated' | 'pending' = 'all';
 
-  // Variable para llevar el control del acordeón expandido
-  expandedAccordion: string | null = null;
+  // Array para mantener el estado de expansión de cada acordeón
+  expandedStates: boolean[] = [];
 
   ngOnInit(): void {
     this.filteredEvaluations = this.evaluationStructures;
+    // Inicializa el estado de expansión en 'false' para todos los acordeones
+    this.expandedStates = new Array(this.filteredEvaluations.length).fill(false);
   }
 
   getEvaluationResult(evaluationId: string): EvaluationResultModel {
@@ -69,9 +71,10 @@ export class StudentEvaluationComponent implements OnInit {
     }
   }
 
-  toggleAccordion(id: string): void {
-    // Si el acordeón ya está expandido, se contrae; de lo contrario, se expande
-    this.expandedAccordion = this.expandedAccordion === id ? null : id;
+  // Método que se ejecuta cuando el acordeón es toggled
+  onAccordionToggle(index: number): void {
+    // Alterna el estado de expansión del acordeón
+    this.expandedStates[index] = !this.expandedStates[index];
   }
 
   handleCheckboxChange(evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {
