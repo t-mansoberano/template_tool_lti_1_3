@@ -1,14 +1,22 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {
-  BmbAccordionComponent, BmbBadgeComponent, BmbButtonDirective, BmbButtonGroupDirective,
+  BmbAccordionComponent,
+  BmbBadgeComponent,
+  BmbButtonDirective,
+  BmbButtonGroupDirective,
   BmbCardComponent,
-  BmbCardContentComponent, BmbCardHeaderComponent, BmbCheckboxComponent, BmbIconComponent, BmbInputComponent
+  BmbCardContentComponent,
+  BmbCardHeaderComponent,
+  BmbCheckboxComponent,
+  BmbInputComponent,
+  BmbRadialComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
 import {StudentEvaluationResultsModel} from '../../models/student-evaluation-results.model';
 import {EvaluationResultModel} from '../../models/evaluation-result.model';
 import {ReactiveFormsModule} from '@angular/forms';
+import {DescriptorModel} from '../../models/descriptor.model';
 
 @Component({
   selector: 'app-student-evaluation',
@@ -22,11 +30,11 @@ import {ReactiveFormsModule} from '@angular/forms';
     BmbCheckboxComponent,
     BmbBadgeComponent,
     BmbInputComponent,
-    BmbIconComponent,
     BmbButtonDirective,
     BmbButtonGroupDirective,
     NgIf,
     ReactiveFormsModule,
+    BmbRadialComponent,
   ],
   templateUrl: './student-evaluation.component.html',
   styleUrl: './student-evaluation.component.css'
@@ -58,4 +66,7 @@ export class StudentEvaluationComponent implements OnInit {
     }
   }
 
+  handleCheckboxChange(evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {
+    console.log(evaluationStructure, descriptor);
+  }
 }

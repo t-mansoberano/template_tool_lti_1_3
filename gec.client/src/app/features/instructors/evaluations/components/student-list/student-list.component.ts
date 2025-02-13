@@ -37,6 +37,7 @@ import {CourseStateModel} from '../../models/course-state.model';
   styleUrl: './student-list.component.css'
 })
 export class StudentListComponent implements OnInit {
+  @Input() selectedStudentId?: number;
   /**
    * 1) Convertimos `students` en un setter de @Input para asignar a un Signal interno.
    *    De esta forma, cada vez que se reciba un nuevo array de estudiantes, actualizamos el Signal.

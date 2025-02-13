@@ -1,6 +1,6 @@
 <h4 class="bmb_margin-s">
   Competencias:
-  <section bmbButtonGroup class="bmb_border-radius-s" [appearance]="'secondary-filled'" [size]="'small'">
+  <section bmbButtonGroup class="bmb_border-radius-s" [appearance]="'secondary-outlined'" [size]="'large'">
     <button (click)="filterEvaluations('all')" [class.active]="currentFilter === 'all'">Todos</button>
     <button (click)="filterEvaluations('evaluated')" [class.active]="currentFilter === 'evaluated'">Evaluados</button>
     <button (click)="filterEvaluations('pending')" [class.active]="currentFilter === 'pending'">Pendientes por evaluar
@@ -64,10 +64,18 @@
           [margin]="'s'"
           [type]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level ? 'succes':'normal'">
           <bmb-card-header padding="s">
-            <h3>
-              <bmb-icon [icon]="'menu'" [size]="20" [dotNotification]="0"></bmb-icon>
-              <span>{{ descriptor.level }}</span>
-            </h3>
+            <bmb-badge
+              [appearance]="descriptor.level === 'Destacado'? 'success':descriptor.level === 'Sólido'? 'mitec_green':descriptor.level === 'Básico'? 'mitec_light_green':descriptor.level === 'Incipiente'? 'creative_licorice':'normal'"
+              [text]="descriptor.level"
+              [container]="true"
+            ></bmb-badge>
+            <bmb-radial
+              [name]="evaluationStructure.id"
+              [label]="' '"
+              [checked]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level"
+              [disabled]="evalResult.isEvaluated"
+              (change)="handleCheckboxChange(evaluationStructure, descriptor)"
+            ></bmb-radial>
           </bmb-card-header>
           <bmb-card-content>
             {{ descriptor.description }}
@@ -85,19 +93,20 @@
           [showMaxTextLength]="true"
           [label]="'Comentarios'"
           [labelPosition]="'after'"
+          class="bmb_margin-s"
         ></bmb-input>
         <div class="button-row">
           <button
             *ngIf="!evalResult.isEvaluated"
             bmbButton
-            appearance="secondary-filled"
-            icon="cancel"
+            appearance="secondary-outlined"
             size="small"
             position="left"
             [case]="false"
             [isToggleActive]="false"
             [enableButtonToggle]="false"
             [isRounded]="true"
+            class="bmb_margin-s"
           >
             Cancelar
           </button>

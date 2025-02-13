@@ -1,9 +1,0 @@
-bmb-badge {
-  display: inline-block; /* Asegura que el badge ocupe solo el espacio necesario */
-  float: right; /* Lo alinea a la derecha */
-  margin-right: 20px; /* Añade una separación de 16px con el siguiente elemento */
-}
-
-.without-margin-aside-left {
-  margin-left: 0;
-}

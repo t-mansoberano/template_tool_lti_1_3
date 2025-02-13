@@ -1,5 +1,7 @@
 import {Component, Input} from '@angular/core';
-import { BmbDividerComponent, BmbIconComponent } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {
+  BmbDividerComponent, BmbIconComponent
+} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {CourseModel} from '../../models/course.model';
 
 @Component({
@@ -11,4 +13,5 @@ import {CourseModel} from '../../models/course.model';
 })
 export class CourseSummaryComponent {
   @Input() course!: CourseModel;
+  protected readonly String = String;
 }

@@ -30,6 +30,7 @@
       <app-student-list
         [students]="students()!"
         [courseState]="courseState()!"
+        [selectedStudentId]="selectedStudent()?.id"
         (studentSelected)="onStudentSelected($event)">
       </app-student-list>
     </aside>
