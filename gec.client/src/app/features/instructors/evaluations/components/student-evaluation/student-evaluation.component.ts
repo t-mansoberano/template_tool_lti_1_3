@@ -51,8 +51,7 @@ export class StudentEvaluationComponent implements OnInit {
 
   ngOnInit(): void {
     this.filteredEvaluations = this.evaluationStructures;
-    // Inicializa el estado de expansión en 'false' para todos los acordeones
-    this.expandedStates = new Array(this.filteredEvaluations.length).fill(false);
+    this.initializeExpandedStates();
   }
 
   getEvaluationResult(evaluationId: string): EvaluationResultModel {
@@ -69,6 +68,15 @@ export class StudentEvaluationComponent implements OnInit {
         return filter === 'evaluated' ? evalResult.isEvaluated : !evalResult.isEvaluated;
       });
     }
+
+    // Después de cambiar el filtro, asegúrate de que expandedStates se inicialice correctamente
+    this.initializeExpandedStates();
+  }
+
+  // Método para inicializar expandedStates según el tamaño de filteredEvaluations
+  initializeExpandedStates(): void {
+    // Rellena expandedStates con 'false' para cada elemento en filteredEvaluations
+    this.expandedStates = new Array(this.filteredEvaluations.length).fill(false);
   }
 
   // Método que se ejecuta cuando el acordeón es toggled
