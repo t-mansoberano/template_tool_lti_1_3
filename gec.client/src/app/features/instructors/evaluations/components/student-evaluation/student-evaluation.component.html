@@ -17,8 +17,9 @@
   [paddingContent]="'m'"
   [hideToggle]="false"
   [active]="false"
-  [expanded]="true"
+  [expanded]="expandedAccordion === evaluationStructure.id"
   [disabled]="false"
+  (click)="toggleAccordion(evaluationStructure.id)"
 >
   <ng-container *ngIf="getEvaluationResult(evaluationStructure.id) as evalResult">
     <ng-template #bmbAccordionHeader class="bmb_card-header">
