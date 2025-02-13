@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {
   BmbButtonDirective,
   BmbCardComponent,
@@ -19,7 +19,8 @@ import {StudentEvidencesModel} from '../../models/student-evidences.model';
     BmbButtonDirective,
     BmbTextLinkComponent,
     NgIf,
-    BmbIconComponent
+    BmbIconComponent,
+    NgClass
   ],
   templateUrl: './evidence-list.component.html',
   styleUrl: './evidence-list.component.css'
@@ -30,8 +31,16 @@ export class EvidenceListComponent {
   // Estado global para colapsar o expandir la lista
   isCollapsed: boolean = true;
 
+  // Tipos de archivo para botones
+  fileTypes: string[] = ['audio', 'video', 'other'];
+
   // Método para alternar entre colapsado y expandido
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
   }
+
+  trackByFn(index: number, item: any): number {
+    return item.id; // O cualquier identificador único
+  }
+
 }

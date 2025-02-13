@@ -17,8 +17,6 @@
 
 <div [hidden]="!isCollapsed">
   <!-- Mostrar solo la primera tarjeta -->
-  <div class="evidence-card" *ngIf="evidences.evidences.length > 0">
-  </div>
   <bmb-card
     *ngIf="evidences.evidences.length > 0"
     [borderRadius]="'none'"
@@ -81,7 +79,7 @@
 
 <div [hidden]="isCollapsed">
   <bmb-card
-    *ngFor="let evidence of evidences.evidences"
+    *ngFor="let evidence of evidences.evidences; trackBy: trackByFn"
     [borderRadius]="'none'"
     [margin]="'s'"
     [type]="'normal'">
@@ -103,39 +101,21 @@
       </p>
     </bmb-card-content>
     <bmb-card-footer padding="xs">
-      <a
-        bmbButton
-        [appearance]="evidence.fileType === 'audio' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidence.fileType === 'audio' ? evidence.previewUrl : null"
-        [attr.target]="evidence.fileType === 'audio' ? '_blank' : null"
-        icon="mic"
-        size="micro"
-        position="left"
-        class="bmb_margin-s"
-      >
-      </a>
-      <a
-        bmbButton
-        [appearance]="evidence.fileType === 'video' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidence.fileType === 'video' ? evidence.previewUrl : null"
-        [attr.target]="evidence.fileType === 'video' ? '_blank' : null"
-        icon="video_call"
-        size="micro"
-        position="left"
-        class="bmb_margin-s"
-      >
-      </a>
-      <a
-        bmbButton
-        [appearance]="evidence.fileType === 'other' ? 'primary' : 'secondary-filled'"
-        [attr.href]="evidence.fileType === 'other' ? evidence.previewUrl : null"
-        [attr.target]="evidence.fileType === 'other' ? '_blank' : null"
-        icon="attach_file"
-        size="micro"
-        position="left"
-        class="bmb_margin-s"
-      >
-      </a>
+      <ng-container *ngFor="let type of fileTypes">
+        <a
+          bmbButton
+          [ngClass]="{
+              'primary': evidence.fileType === type,
+              'secondary-filled': evidence.fileType !== type
+            }"
+          [attr.href]="evidence.fileType === type ? evidence.previewUrl : null"
+          [attr.target]="evidence.fileType === type ? '_blank' : null"
+          [icon]="type === 'audio' ? 'mic' : type === 'video' ? 'video_call' : 'attach_file'"
+          size="micro"
+          position="left"
+          class="bmb_margin-s"
+        ></a>
+      </ng-container>
     </bmb-card-footer>
   </bmb-card>
   <div class="list-header-parent">
