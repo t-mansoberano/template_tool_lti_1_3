@@ -1,5 +1,5 @@
 export interface DescriptorModel {
   id: string;
-  level: string;
+  level: 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes';
   description: string;
 }

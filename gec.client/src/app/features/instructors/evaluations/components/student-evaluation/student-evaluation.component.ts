@@ -45,6 +45,7 @@ export class StudentEvaluationComponent implements OnInit {
 
   filteredEvaluations: EvaluationStructureModel[] = [];
   currentFilter: 'all' | 'evaluated' | 'pending' = 'all';
+  private evaluationCache: { [id: string]: EvaluationResultModel } = {};
 
   // Array para mantener el estado de expansión de cada acordeón
   expandedStates: boolean[] = [];
@@ -55,7 +56,12 @@ export class StudentEvaluationComponent implements OnInit {
   }
 
   getEvaluationResult(evaluationId: string): EvaluationResultModel {
-    return this.evaluationResults.evaluationResults.find(result => result.id === evaluationId) || {} as EvaluationResultModel;
+    if (this.evaluationCache[evaluationId]) {
+      return this.evaluationCache[evaluationId];
+    }
+    const result = this.evaluationResults.evaluationResults.find(result => result.id === evaluationId) || {} as EvaluationResultModel;
+    this.evaluationCache[evaluationId] = result;
+    return result;
   }
 
   filterEvaluations(filter: 'all' | 'evaluated' | 'pending') {
@@ -83,6 +89,21 @@ export class StudentEvaluationComponent implements OnInit {
   onAccordionToggle(index: number): void {
     // Alterna el estado de expansión del acordeón
     this.expandedStates[index] = !this.expandedStates[index];
+  }
+
+  trackByEvaluationId(index: number, evaluation: EvaluationStructureModel): string {
+    return evaluation.id;
+  }
+
+  getBadgeAppearance(level: 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes'): string {
+    const levels: { [key in 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes']: string } = {
+      'Destacado': 'success',
+      'Sólido': 'mitec_green',
+      'Básico': 'mitec_light_green',
+      'Incipiente': 'creative_licorice',
+      'NoElementosSuficientes': 'normal',
+    };
+    return levels[level] || 'normal';
   }
 
   handleCheckboxChange(evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {

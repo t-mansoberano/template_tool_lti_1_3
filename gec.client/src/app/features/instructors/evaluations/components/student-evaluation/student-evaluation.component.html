@@ -1,15 +1,15 @@
 <h4 class="bmb_margin-s">
   Competencias:
   <section bmbButtonGroup class="bmb_border-radius-s" [appearance]="'secondary-outlined'" [size]="'large'">
-    <button (click)="filterEvaluations('all')" [class.active]="currentFilter === 'all'">Todos</button>
-    <button (click)="filterEvaluations('evaluated')" [class.active]="currentFilter === 'evaluated'">Evaluados</button>
-    <button (click)="filterEvaluations('pending')" [class.active]="currentFilter === 'pending'">Pendientes por evaluar
+    <button (click)="filterEvaluations('all')">Todos</button>
+    <button (click)="filterEvaluations('evaluated')">Evaluados</button>
+    <button (click)="filterEvaluations('pending')">Pendientes por evaluar
     </button>
   </section>
 </h4>
 
 <bmb-accordion
-  *ngFor="let evaluationStructure of filteredEvaluations; let i = index"
+  *ngFor="let evaluationStructure of filteredEvaluations; let i = index; trackBy: trackByEvaluationId"
   [icon]="'keyboard_arrow_down'"
   [borderRadius]="'m'"
   [margin]="'s'"
@@ -66,7 +66,7 @@
           [type]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level ? 'succes':'normal'">
           <bmb-card-header padding="s">
             <bmb-badge
-              [appearance]="descriptor.level === 'Destacado'? 'success':descriptor.level === 'Sólido'? 'mitec_green':descriptor.level === 'Básico'? 'mitec_light_green':descriptor.level === 'Incipiente'? 'creative_licorice':'normal'"
+              [appearance]="getBadgeAppearance(descriptor.level)"
               [text]="descriptor.level"
               [container]="true"
             ></bmb-badge>
