@@ -1,3 +1,4 @@
+using System.Net;
 using gec.Server.Startup;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
@@ -86,7 +87,6 @@ public class Program
             }
         );
 #endif
-
 
 
         // Configurar middleware
