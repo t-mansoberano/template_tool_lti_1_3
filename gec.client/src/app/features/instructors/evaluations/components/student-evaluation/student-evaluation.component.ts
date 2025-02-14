@@ -10,7 +10,7 @@ import {
   BmbCardHeaderComponent,
   BmbCheckboxComponent,
   BmbInputComponent,
-  BmbRadialComponent
+  BmbRadialComponent, IBbmBgAppearance
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
 import {StudentEvaluationResultsModel} from '../../models/student-evaluation-results.model';
@@ -95,8 +95,8 @@ export class StudentEvaluationComponent implements OnInit {
     return evaluation.id;
   }
 
-  getBadgeAppearance(level: 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes'): string {
-    const levels: { [key in 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes']: string } = {
+  getBadgeAppearance(level: 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes'): IBbmBgAppearance  {
+    const levels: { [key in 'Destacado' | 'Sólido' | 'Básico' | 'Incipiente' | 'NoElementosSuficientes']: IBbmBgAppearance } = {
       'Destacado': 'success',
       'Sólido': 'mitec_green',
       'Básico': 'mitec_light_green',

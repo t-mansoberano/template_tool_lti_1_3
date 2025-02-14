@@ -16,7 +16,7 @@
         </form>
         <bmb-list-group [borderRadius]="'none'" [margin]="'none'" [borderType]="'flush'">
           <bmb-list-group-item
-            *ngFor="let student of filteredStudents()" id="{{student.id}}; trackBy: trackByStudentId"
+            *ngFor="let student of filteredStudents(); trackBy: trackByStudentId" id="{{student.id}};"
             [isActive]="student.id === selectedStudentId"
             (click)="selectStudent(student)">
             <div class="student-container">

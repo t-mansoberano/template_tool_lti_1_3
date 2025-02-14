@@ -69,7 +69,6 @@ export class StudentListComponent implements OnInit {
 
   // 5) Formulario reactivo (opcional, lo combinamos con el signal)
   filterForm = new FormGroup({
-    // Tipar con <string> si usas Angular >=14
     search: new FormControl<string>('', {nonNullable: true})
   });
 
@@ -85,10 +84,10 @@ export class StudentListComponent implements OnInit {
     const search = this.searchSignal().toLowerCase().trim();
 
     // Filtra según la pestaña
-    const tabFiltered = this.getTabFiltered(students, tabId);
+    const tabFiltered = this.filterByTab(students, tabId);
 
     // Aplica el filtro de búsqueda
-    return this.getSearchFiltered(tabFiltered, search);
+    return this.filterBySearch(tabFiltered, search);
   });
 
   /**
@@ -110,7 +109,7 @@ export class StudentListComponent implements OnInit {
   /**
    * Filtra estudiantes según la pestaña activa
    */
-  private getTabFiltered(students: StudentModel[], activeTabId: number): StudentModel[] {
+  private filterByTab(students: StudentModel[], activeTabId: number): StudentModel[] {
     switch (activeTabId) {
       case 2: // 'Evaluados'
         return students.filter(s => s.status === 'Completed');
@@ -124,7 +123,7 @@ export class StudentListComponent implements OnInit {
   /**
    * Aplica el filtro de búsqueda
    */
-  private getSearchFiltered(students: StudentModel[], searchTerm: string): StudentModel[] {
+  private filterBySearch(students: StudentModel[], searchTerm: string): StudentModel[] {
     if (!searchTerm) return students;
     return students.filter(
       s => s.loginId.toLowerCase().includes(searchTerm) ||
