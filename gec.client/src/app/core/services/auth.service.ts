@@ -4,6 +4,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {HttpService} from './http.service';
 import {Resolve} from '../models/resolve.model';
 import {Context} from '../models/context.model';
+import { UserClaims } from '../models/userclaims.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,25 @@ export class AuthService {
     // Verifica si la aplicación está embebida dentro de Canvas LMS
     return window.location.ancestorOrigins?.[0]?.includes('instructure.com') || false;
   }
+
+
+  getUserClaims(): Observable<UserClaims> {
+    debugger;
+    return this.apiService.get('/api/Home/GetUserClaims').pipe(
+      map((respondModel) => {
+        debugger;
+        const userClaims = respondModel.result as UserClaims;
+        console.log('User Claims:', respondModel);
+        debugger;
+        return userClaims;
+      }),
+      catchError((err) => {
+        console.error('Error fetching user claims', err);
+        throw err;
+      })
+    );
+  }
+
 
   private getLtiContext(): Observable<Context> {
     return this.apiService.get('/api/lti').pipe(

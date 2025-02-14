@@ -5,23 +5,27 @@ import {authGuard} from './core/guards/auth.guard';
 import {ParentComponent} from './core/components/parent/parent.component';
 import {LoadingComponent} from './core/components/loading/loading.component';
 import {EvaluationComponent as Intructor} from './features/instructors/evaluations/evaluation.component';
-import {EvaluationsByCompetenciesComponent} from './features/instructors/evaluations-by-competencies/evaluations-by-competencies.component';
+import {
+  EvaluationsByCompetenciesComponent
+} from './features/instructors/evaluations-by-competencies/evaluations-by-competencies.component';
 import {EvaluationComponent as Student} from './features/students/evaluations/evaluation.component';
 import {
   EvaluationComponent as ExternelCollaborator
 } from './features/external-collaborators/evaluations/evaluation.component';
+import {UserClaimsResolver} from './core/resolvers/user-claims.resolver';
 
 export const appRoutes: Routes = [
   {
     path: '',
     component: ParentComponent,
-    resolve: {context: ltiContextResolver},
+    resolve: {context: ltiContextResolver, userClaims: UserClaimsResolver},
     children: [
       {path: '', redirectTo: '/loading-view', pathMatch: 'full'},
       {
         path: 'loading-view',
         component: LoadingComponent
       },
+
       {
         path: 'instructor',
         component: Intructor,

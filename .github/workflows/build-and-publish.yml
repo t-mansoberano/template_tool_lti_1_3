@@ -6,6 +6,7 @@ on:
       - develop
       - t-mansoberano
       - t-mansoberano-limpia
+      - Federado
   pull_request:
     branches:
       - develop

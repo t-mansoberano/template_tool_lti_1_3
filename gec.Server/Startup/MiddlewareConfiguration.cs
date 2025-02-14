@@ -18,6 +18,7 @@ public static class MiddlewareConfiguration
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
         app.MapFallbackToFile("/index.html");
