@@ -1,23 +1,27 @@
 <bmb-loader
-    [title]="'Cargando...'"
-    [subtitle]="''"
-    [overlay]="true"
-    [isVisible]="loading()"
-    [errorState]="false"
-    [actions]="false"
+  [title]="'Cargando...'"
+  [subtitle]="''"
+  [overlay]="true"
+  [isVisible]="loading()"
+  [errorState]="false"
+  [actions]="false"
 ></bmb-loader>
 
-<div *ngIf="error();">
-  <p class="error-message">{{ error() }}</p>
+<div *ngIf="error() as err">
+  <p class="error-message">{{ err }}</p>
 </div>
 
 <div *ngIf="!loading()">
-  <app-course-summary [course]="course()!"></app-course-summary>
-  <bmb-badge
-    [appearance]="'warning'"
-    [text]="courseState()!.evaluationStatus"
-    [container]="true"
-  ></bmb-badge>
+  <ng-container *ngIf="course() as course; else noCourse">
+    <app-course-summary [course]="course"></app-course-summary>
+  </ng-container>
+  <ng-container *ngIf="courseState() as courseState">
+    <bmb-badge
+      appearance="warning"
+      [text]="courseState.evaluationStatus"
+      [container]="true">
+    </bmb-badge>
+  </ng-container>
 
   <bmb-tabs
     [format]="'uppercase'"
@@ -27,21 +31,31 @@
 
   <div class="bmb_template-aside-first">
     <aside class="bmb_template-aside-first-aside without-margin-aside-left">
-      <app-student-list
-        [students]="students()!"
-        [courseState]="courseState()!"
-        [selectedStudentId]="selectedStudent()?.id"
-        (studentSelected)="onStudentSelected($event)">
-      </app-student-list>
+      <ng-container *ngIf="students() as students">
+        <ng-container *ngIf="courseState() as courseState">
+          <app-student-list
+            [students]="students"
+            [courseState]="courseState"
+            [selectedStudentId]="selectedStudent()?.id"
+            (studentSelected)="onStudentSelected($event)">
+          </app-student-list>
+        </ng-container>
+      </ng-container>
     </aside>
     <main class="bmb_template-aside-first-main">
-      <app-student-detail
-        *ngIf="selectedStudent()"
-        [student]="selectedStudent()!"
-        [studentEvidences]="studentEvidences()!"
-        [studentEvaluationResults]="studentEvaluationResults()!"
-        [evaluationStructures]="evaluationStructures()">
-      </app-student-detail>
+      <ng-container *ngIf="selectedStudent() as selected">
+        <app-student-detail
+          [student]="selected"
+          [studentEvidences]="studentEvidences()!"
+          [studentEvaluationResults]="studentEvaluationResults()!"
+          [evaluationStructures]="evaluationStructures()">
+        </app-student-detail>
+      </ng-container>
     </main>
   </div>
 </div>
+
+
+<ng-template #noCourse>
+  <!-- Opcional: contenido a mostrar si no se dispone de course -->
+</ng-template>

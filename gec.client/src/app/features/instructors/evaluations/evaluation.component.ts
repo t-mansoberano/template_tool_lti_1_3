@@ -31,18 +31,18 @@ export class EvaluationComponent implements OnInit {
   private readonly stateService = inject(StateService);
 
   // Acceso a señales expuestas como solo lectura desde el servicio
-  viewModel = this.stateService.viewModel;
-  loading = this.stateService.loading;
-  error = this.stateService.error;
+  readonly viewModel = this.stateService.viewModel;
+  readonly loading = this.stateService.loading;
+  readonly error = this.stateService.error;
 
   // Variables locales para simplificar el HTML
-  course = computed(() => this.viewModel()?.course || null);
-  courseState = computed(() => this.viewModel()?.courseState || null);
-  students = computed(() => this.viewModel()?.students || null);
-  selectedStudent = computed(() => this.viewModel()?.selectedStudent || null);
-  studentEvidences = computed(() => this.viewModel()?.studentEvidences || null);
-  studentEvaluationResults = computed(() => this.viewModel()?.studentEvaluationResults || null);
-  evaluationStructures = computed(() => this.viewModel()?.evaluationStructures || []);
+  readonly course = computed(() => this.viewModel()?.course || null);
+  readonly courseState = computed(() => this.viewModel()?.courseState || null);
+  readonly students = computed(() => this.viewModel()?.students || null);
+  readonly selectedStudent = computed(() => this.viewModel()?.selectedStudent || null);
+  readonly studentEvidences = computed(() => this.viewModel()?.studentEvidences || null);
+  readonly studentEvaluationResults = computed(() => this.viewModel()?.studentEvaluationResults || null);
+  readonly evaluationStructures = computed(() => this.viewModel()?.evaluationStructures || []);
 
   tabs = this.stateService.tabs;
 
