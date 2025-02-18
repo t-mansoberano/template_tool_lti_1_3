@@ -44,6 +44,9 @@
       <None Update="certificate.crt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="certificate.pfx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="private.key">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
