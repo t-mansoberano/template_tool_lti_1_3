@@ -60,11 +60,11 @@ jobs:
         run: npx ng build --configuration=production
         working-directory: gec.client
 
-      # 🔹 Copy Angular Build to .NET wwwroot
-      - name: Copy Angular Build to .NET wwwroot
-        run: |
-          mkdir -p gec.Server/wwwroot
-          cp -r gec.client/dist/gec.client/* gec.Server/wwwroot/
+#      # 🔹 Copy Angular Build to .NET wwwroot
+#      - name: Copy Angular Build to .NET wwwroot
+#        run: |
+#          mkdir -p gec.Server/wwwroot
+#          cp -r gec.client/dist/gec.client/* gec.Server/wwwroot/
 
       # 🔹 Build and Publish Backend
       - name: Build and Publish Backend
