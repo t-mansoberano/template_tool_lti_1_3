@@ -37,6 +37,7 @@
 
     <ItemGroup>
         <Folder Include="Integrations\" />
+        <Folder Include="wwwroot\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -46,6 +47,10 @@
       <None Update="private.key">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+        <Content Include="wwwroot\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>        
     </ItemGroup>
 
 </Project>
