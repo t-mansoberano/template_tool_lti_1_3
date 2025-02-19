@@ -8,14 +8,14 @@ import {
   BmbCardComponent,
   BmbCardContentComponent,
   BmbCardHeaderComponent,
-  BmbCheckboxComponent,
-  BmbInputComponent,
+  BmbCheckboxComponent, BmbIconComponent,
+  BmbInputComponent, BmbLayoutDirective, BmbLayoutItemDirective, BmbListGroupComponent, BmbListGroupItemComponent,
   BmbRadialComponent, IBbmBgAppearance
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
 import {StudentEvaluationResultsModel} from '../../models/student-evaluation-results.model';
 import {EvaluationResultModel} from '../../models/evaluation-result.model';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {DescriptorModel} from '../../models/descriptor.model';
 
 @Component({
@@ -35,6 +35,11 @@ import {DescriptorModel} from '../../models/descriptor.model';
     NgIf,
     ReactiveFormsModule,
     BmbRadialComponent,
+    BmbListGroupComponent,
+    BmbListGroupItemComponent,
+    BmbIconComponent,
+    BmbLayoutDirective,
+    BmbLayoutItemDirective,
   ],
   templateUrl: './student-evaluation.component.html',
   styleUrl: './student-evaluation.component.css'
@@ -46,6 +51,26 @@ export class StudentEvaluationComponent implements OnInit {
   filteredEvaluations: EvaluationStructureModel[] = [];
   currentFilter: 'all' | 'evaluated' | 'pending' = 'all';
   private evaluationCache: { [id: string]: EvaluationResultModel } = {};
+
+  public commentControls: { [evaluationId: string]: FormControl } = {};
+  getOrCreateControl(evaluationId: string, initialValue: string): FormControl {
+    // Si ya existe un control para esa evaluación, lo retornamos.
+    if (this.commentControls[evaluationId]) {
+      return this.commentControls[evaluationId];
+    }
+    // Si no, creamos uno nuevo y lo almacenamos en el diccionario.
+    const newControl = new FormControl(initialValue, [Validators.required]);
+    this.commentControls[evaluationId] = newControl;
+    return newControl;
+  }
+  // commentForm: FormGroup = new FormGroup({
+  //   comments: new FormControl<string>("", Validators.required),
+  // });
+  //
+  // getFormControl(name: string, value: string): FormControl {
+  //   this.commentForm.get(name)?.setValue(value);
+  //   return this.commentForm.get(name) as FormControl;
+  // }
 
   // Array para mantener el estado de expansión de cada acordeón
   expandedStates: boolean[] = [];
@@ -109,4 +134,6 @@ export class StudentEvaluationComponent implements OnInit {
   handleCheckboxChange(evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {
     console.log(evaluationStructure, descriptor);
   }
+
+  protected readonly String = String;
 }

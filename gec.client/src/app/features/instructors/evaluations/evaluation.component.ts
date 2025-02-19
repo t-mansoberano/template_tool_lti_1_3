@@ -4,7 +4,7 @@ import {CourseSummaryComponent} from './components/course-summary/course-summary
 import {StudentListComponent} from './components/student-list/student-list.component';
 import {StudentDetailComponent} from './components/student-detail/student-detail.component';
 import {
-  BmbBadgeComponent,
+  BmbBadgeComponent, BmbLayoutDirective, BmbLayoutItemDirective,
   BmbLoaderComponent,
   BmbTabsComponent,
   IBmbTab
@@ -23,6 +23,8 @@ import {StudentModel} from './models/student.model';
     BmbTabsComponent,
     BmbLoaderComponent,
     BmbBadgeComponent,
+    BmbLayoutDirective,
+    BmbLayoutItemDirective,
   ],
   templateUrl: './evaluation.component.html',
   styleUrl: './evaluation.component.css'

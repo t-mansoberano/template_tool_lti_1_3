@@ -33,6 +33,12 @@ export class AuthService {
   }
 
   private isEmbeddedInCanvas(): boolean {
+    // Si en la URL aparece ?forceEmbeddedInCanvas=true, forzamos acceso normal
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('forceEmbeddedInCanvas') === 'true') {
+      return true;
+    }
+
     // Verifica si la aplicación está embebida dentro de Canvas LMS
     return window.location.ancestorOrigins?.[0]?.includes('instructure.com') || false;
   }

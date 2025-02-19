@@ -3,7 +3,7 @@ import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {
   BmbButtonDirective,
   BmbCardComponent,
-  BmbCardContentComponent, BmbCardFooterComponent, BmbIconComponent,
+  BmbCardContentComponent, BmbCardFooterComponent, BmbIconComponent, BmbLayoutDirective, BmbLayoutItemDirective,
   BmbTextLinkComponent
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {StudentEvidencesModel} from '../../models/student-evidences.model';
@@ -20,7 +20,9 @@ import {StudentEvidencesModel} from '../../models/student-evidences.model';
     BmbTextLinkComponent,
     NgIf,
     BmbIconComponent,
-    NgClass
+    NgClass,
+    BmbLayoutDirective,
+    BmbLayoutItemDirective
   ],
   templateUrl: './evidence-list.component.html',
   styleUrl: './evidence-list.component.css'

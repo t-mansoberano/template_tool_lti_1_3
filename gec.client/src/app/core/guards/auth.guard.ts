@@ -21,10 +21,10 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  if (route.routeConfig?.path === 'external-collaborator' && !authService.isExternalCollaborator()) {
-    router.navigate(['/error']);
-    return false;
-  }
+  // if (route.routeConfig?.path === 'external-collaborator' && !authService.isExternalCollaborator()) {
+  //   router.navigate(['/error']);
+  //   return false;
+  // }
 
   return true; // Permite el acceso si cumple con el rol
 };

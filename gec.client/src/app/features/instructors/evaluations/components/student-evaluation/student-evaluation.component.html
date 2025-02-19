@@ -10,12 +10,11 @@
 
 <bmb-accordion
   *ngFor="let evaluationStructure of filteredEvaluations; let i = index; trackBy: trackByEvaluationId"
-  [icon]="'keyboard_arrow_down'"
   [borderRadius]="'m'"
   [margin]="'s'"
-  [paddingHeader]="'m'"
+  [paddingHeader]="'xs'"
   [paddingContent]="'m'"
-  [hideToggle]="false"
+  [hideToggle]="true"
   [active]="false"
   [expanded]="expandedStates[i]"
   [disabled]="false"
@@ -23,29 +22,42 @@
 >
   <ng-container *ngIf="getEvaluationResult(evaluationStructure.id) as evalResult">
     <ng-template #bmbAccordionHeader class="bmb_card-header">
-      <h3>
-        <bmb-badge
-          *ngIf="!evalResult.isEvaluated"
-          [appearance]="'warning'"
-          [text]="'Pendiente'"
-          [container]="true">
-        </bmb-badge>
-        <bmb-badge
-          *ngIf="evalResult.isEvaluated"
-          [appearance]="'success'"
-          [text]="'Completado'"
-          [container]="true">
-        </bmb-badge>
-        {{ evaluationStructure.id }} - {{ evaluationStructure.name }}
+      <h3 bmbLayout alignItems="center" justify="spaceBetween" margin="none" class="bmb_padding-none">
+        <div bmbLayout alignItems="center" justify="start" margin="s">
+          <bmb-icon
+            [icon]="'add_box'"
+            [size]="30"
+            bmbLayoutItem
+          ></bmb-icon>
+          <span bmbLayoutItem>{{ evaluationStructure.id }} - {{ evaluationStructure.name }}</span>
+        </div>
+        <div bmbLayout alignItems="center" justify="end" margin="s">
+          <bmb-badge
+            *ngIf="!evalResult.isEvaluated"
+            [appearance]="'warning'"
+            [text]="'Pendiente'"
+            [container]="true"
+            bmbLayoutItem
+          >
+          </bmb-badge>
+          <bmb-badge
+            *ngIf="evalResult.isEvaluated"
+            [appearance]="'success'"
+            [text]="'Completado'"
+            [container]="true"
+            bmbLayoutItem
+          >
+          </bmb-badge>
+        </div>
       </h3>
     </ng-template>
     <ng-template #bmbAccordionContent>
-      <div class="display-flex-space-between">
-        <h3>Rúbricas</h3>
+      <div bmbLayout alignItems="center" justify="spaceBetween" margin="s">
+        <h3 bmbLayoutItem>Rúbricas</h3>
         <bmb-checkbox
+          bmbLayoutItem
           [id]="'checkbox1'"
           [checked]="evalResult.isEvaluated && evalResult.achievementLevel === 'NoElementosSuficientes'"
-          [disabled]="evalResult.isEvaluated"
           [indeterminate]="false"
           [required]="false"
           [value]="''"
@@ -58,38 +70,31 @@
         ></bmb-checkbox>
       </div>
       <div class="card-container">
-        <bmb-card
-          class="bmb-card"
-          *ngFor="let descriptor of evaluationStructure.descriptors"
-          [borderRadius]="'none'"
-          [margin]="'s'"
-          [type]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level ? 'succes':'normal'">
-          <bmb-card-header padding="s">
-            <bmb-badge
-              [appearance]="getBadgeAppearance(descriptor.level)"
-              [text]="descriptor.level"
-              [container]="true"
-            ></bmb-badge>
-            <bmb-radial
-              [name]="evaluationStructure.id"
-              [label]="' '"
-              [checked]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level"
-              [disabled]="evalResult.isEvaluated"
-              (change)="handleCheckboxChange(evaluationStructure, descriptor)"
-            ></bmb-radial>
-          </bmb-card-header>
-          <bmb-card-content>
-            {{ descriptor.description }}
-          </bmb-card-content>
-        </bmb-card>
+        <bmb-list-group [borderRadius]="'none'" [margin]="'none'" [borderType]="'rounded'" [showControls]="true">
+          <bmb-list-group-item
+            *ngFor="let descriptor of evaluationStructure.descriptors" [id]="descriptor.level"
+            [isActive]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level"
+            (click)="handleCheckboxChange(evaluationStructure, descriptor)"
+          >
+            <div class="student-container">
+              <div class="student-info">
+                <bmb-badge
+                  [appearance]="getBadgeAppearance(descriptor.level)"
+                  [text]="descriptor.level"
+                  [container]="true"
+                ></bmb-badge>
+                <p class="bmb_margin-s">{{ descriptor.description }}</p>
+              </div>
+            </div>
+          </bmb-list-group-item>
+        </bmb-list-group>
       </div>
       <div class="footer-container">
         <bmb-input
           [placeholder]="'Introduce tus comentarios aquí'"
           [isRequired]="true"
-          [disabled]="evalResult.isEvaluated"
-          [value]="evalResult.comments"
-          [name]="'comments'"
+          [type]="'text'"
+          [control]="getOrCreateControl(evalResult.id, evalResult.comments)"
           [maxlength]="500"
           [showMaxTextLength]="true"
           [label]="'Comentarios'"

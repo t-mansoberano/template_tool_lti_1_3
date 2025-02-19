@@ -11,7 +11,7 @@ import {
   BmbListGroupItemComponent,
   BmbInputComponent,
   BmbBadgeComponent,
-  IBmbTab,
+  IBmbTab, BmbLayoutDirective, BmbLayoutItemDirective,
 } from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 
 import {StudentModel} from '../../models/student.model';
@@ -31,7 +31,9 @@ import {CourseStateModel} from '../../models/course-state.model';
     BmbListGroupComponent,
     BmbListGroupItemComponent,
     BmbInputComponent,
-    BmbBadgeComponent
+    BmbBadgeComponent,
+    BmbLayoutDirective,
+    BmbLayoutItemDirective
   ],
   templateUrl: './student-list.component.html',
   styleUrl: './student-list.component.css'

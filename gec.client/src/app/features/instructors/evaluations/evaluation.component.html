@@ -16,11 +16,15 @@
     <app-course-summary [course]="course"></app-course-summary>
   </ng-container>
   <ng-container *ngIf="courseState() as courseState">
-    <bmb-badge
-      appearance="warning"
-      [text]="courseState.evaluationStatus"
-      [container]="true">
-    </bmb-badge>
+    <div bmbLayout justify="end">
+      <bmb-badge
+        appearance="warning"
+        [text]="courseState.evaluationStatus"
+        [container]="true"
+        bmbLayoutItem
+      >
+      </bmb-badge>
+    </div>
   </ng-container>
 
   <bmb-tabs

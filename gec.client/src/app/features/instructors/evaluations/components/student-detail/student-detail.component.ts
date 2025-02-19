@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {StudentEvaluationComponent} from '../student-evaluation/student-evaluation.component';
 import {EvidenceListComponent} from '../evidence-list/evidence-list.component';
-import {BmbDividerComponent} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
+import {BmbDividerComponent, BmbLayoutItemDirective} from '@ti-tecnologico-de-monterrey-oficial/ds-ng';
 import {StudentModel} from '../../models/student.model';
 import {EvaluationStructureModel} from '../../models/evaluation-structure.model';
 import {StudentEvidencesModel} from '../../models/student-evidences.model';
@@ -13,7 +13,8 @@ import {StudentEvaluationResultsModel} from '../../models/student-evaluation-res
   imports: [
     StudentEvaluationComponent,
     EvidenceListComponent,
-    BmbDividerComponent
+    BmbDividerComponent,
+    BmbLayoutItemDirective
   ],
   templateUrl: './student-detail.component.html',
   styleUrl: './student-detail.component.css'

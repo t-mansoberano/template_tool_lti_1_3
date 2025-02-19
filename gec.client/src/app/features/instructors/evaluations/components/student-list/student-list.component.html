@@ -14,23 +14,21 @@
           >
           </bmb-input>
         </form>
-        <bmb-list-group [borderRadius]="'none'" [margin]="'none'" [borderType]="'flush'">
+        <bmb-list-group [borderRadius]="'none'" [margin]="'none'" [padding]="'xs'" [borderType]="'flush'">
           <bmb-list-group-item
             *ngFor="let student of filteredStudents(); trackBy: trackByStudentId" id="{{student.id}};"
             [isActive]="student.id === selectedStudentId"
             (click)="selectStudent(student)">
-            <div class="student-container">
-              <div class="student-info">
+            <div bmbLayout alignItems="center" justify="spaceBetween">
+              <div bmbLayoutItem>
                 <h3>{{ student.loginId }}</h3>
                 <span>{{ student.name }}</span>
               </div>
-              <div class="student-badge">
-                <bmb-badge
-                  [appearance]="student.status === 'Completed' ? 'success' : 'info'"
-                  [text]="String(student.completedEvaluations) + '/' + String(student.totalEvaluations)"
-                  [container]="false">
-                </bmb-badge>
-              </div>
+              <bmb-badge
+                [appearance]="student.status === 'Completed' ? 'success' : 'info'"
+                [text]="String(student.completedEvaluations) + '/' + String(student.totalEvaluations)"
+                [container]="false">
+              </bmb-badge>
             </div>
           </bmb-list-group-item>
         </bmb-list-group>
