@@ -24,7 +24,7 @@ public class LtiControllerTests
     {
         _mockLtiService = new Mock<ILtiService>();
         _mockSessionStorageService = new Mock<ISessionStorageService>();
-        _controller = new LtiController(_mockLtiService.Object, _mockSessionStorageService.Object);
+        // _controller = new LtiController(_mockLtiService.Object, _mockSessionStorageService.Object);
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class LtiControllerTests
         // Arrange
         const string errorMessage = TestConstants.SESSION_NOT_FOUND;
         _mockSessionStorageService
-            .Setup(s => s.Retrieve<LtiContext>("LtiContext"))
+            .Setup(s => s.Retrieve<LtiContext>(LtiContext.Key))
             .Returns(Result.Failure<LtiContext>(errorMessage));
 
         // Act
@@ -52,7 +52,7 @@ public class LtiControllerTests
         // Arrange
         var ltiContext = TestHelper.GetSampleLtiContext();
         _mockSessionStorageService
-            .Setup(s => s.Retrieve<LtiContext>("LtiContext"))
+            .Setup(s => s.Retrieve<LtiContext>(LtiContext.Key))
             .Returns(Result.Success(ltiContext));
 
         // Act
@@ -138,7 +138,7 @@ public class LtiControllerTests
         var result = await _controller.HandleRedirect(form);
 
         // Assert
-        _mockSessionStorageService.Verify(s => s.Store("LtiContext", ltiContext), Times.Once);
+        _mockSessionStorageService.Verify(s => s.Store(LtiContext.Key, ltiContext), Times.Once);
         result.Should().BeOfType<RedirectResult>();
         var redirectResult = result as RedirectResult;
         redirectResult.Url.Should().Be(redirectUrl);
