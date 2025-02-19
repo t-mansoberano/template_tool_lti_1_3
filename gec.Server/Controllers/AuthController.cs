@@ -48,7 +48,7 @@ namespace decisiones_estudiantiles.Server.Controllers
         {
             _logger.LogInformation("2.-Login");
             var binding = new Saml2RedirectBinding();
-            binding.SetRelayStateQuery(new Dictionary<string, string> { { relayStateReturnUrl, returnUrl ?? Url.Content("~/Index.html") } });
+            binding.SetRelayStateQuery(new Dictionary<string, string> { { relayStateReturnUrl, returnUrl ?? Url.Content("~/redirect") } });
 
             return binding.Bind(new Saml2AuthnRequest(Saml2Config)).ToActionResult();
         }
@@ -72,24 +72,24 @@ namespace decisiones_estudiantiles.Server.Controllers
                 await saml2AuthnResponse.CreateSession(HttpContext, lifetime: new TimeSpan(1, 0, 0, 0), claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
 
                 var relayStateQuery = binding.GetRelayStateQuery();
-                var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/index.html");
+                var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/redirect");
                 //var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
 
 
 
                 if (saml2AuthnResponse.Status == Saml2StatusCodes.Success)
                 {
-                    Log.Error("#21  Url  Redirect AssertionConsumerService #", returnUrl);
+                    _logger.LogInformation("#Url  Redirect: redirect #", returnUrl);
                     //GetUsuarioSesion();
                 }
 
 
-                _logger.LogInformation("4.-returnUrl");
+                _logger.LogInformation("4.-redirect");
                 return Redirect(returnUrl);
             }
             catch (Exception e)
             {
-                Log.Error(e, "Exception Auth/AssertionConsumerService");
+                _logger.LogError(e, "Exception Auth/redirect");
                 throw new Exception("Ocurrió un error en AssertionConsumerService", e);
             }
         }
@@ -382,13 +382,13 @@ namespace decisiones_estudiantiles.Server.Controllers
             if (User.Identity.IsAuthenticated)
             {
               
-                return Redirect(Url.Content("~/Index.html"));
+                return Redirect(Url.Content("~/redirect"));
 
             }
             else
             {
                 
-                return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2FIndex.html"));
+                return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2Fredirect"));
 
 
             }
