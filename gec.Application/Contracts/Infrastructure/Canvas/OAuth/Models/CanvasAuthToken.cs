@@ -2,6 +2,7 @@
 
 public class CanvasAuthToken
 {
+    public const string Key = "CanvasAuthToken";
     public string AccessToken { get; set; } = null!;
     public string TokenType { get; set; } = null!;
     public int ExpiresIn { get; set; }

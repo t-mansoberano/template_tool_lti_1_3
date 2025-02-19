@@ -1,3 +1,5 @@
+using gec.Application.Contracts.Server.Configuration;
+using gec.Application.Contracts.Server.Fake;
 using gec.Application.Features.Instructors.Evaluations.Queries.GetCompleteEvaluationsView;
 using gec.Server.Common;
 using MediatR;
@@ -11,16 +13,25 @@ namespace gec.Server.Features.Instructors.Evaluations;
 public class GetCompleteEvaluationsViewController : BaseController
 {
     private readonly IMediator _mediator;
+    private readonly IFakeDataService _fakeDataService;
+    private readonly IAppSettingsService _appSettingsService;
 
-    public GetCompleteEvaluationsViewController(IMediator mediator)
+    public GetCompleteEvaluationsViewController(IMediator mediator, IFakeDataService fakeDataService,
+        IAppSettingsService appSettingsService)
     {
         _mediator = mediator;
+        _fakeDataService = fakeDataService;
+        _appSettingsService = appSettingsService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetStudentsByCourseAsync([FromRoute] string courseId,
         [FromQuery] GetCompleteEvaluationsViewQuery query)
     {
+        if (_appSettingsService.Fake.UseFakeApiCanvas)
+            return Ok(_fakeDataService.GetFakeData<dynamic>(_appSettingsService.Fake.FakeCompleteEvaluationsViewPath)
+                .Value);
+
         query.CourseId = courseId;
         var result = await _mediator.Send(query);
         if (result.IsFailure)

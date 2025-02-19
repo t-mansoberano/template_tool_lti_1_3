@@ -91,7 +91,7 @@ public class CanvasApiClient : ICanvasApiClient
         CancellationToken cancellationToken)
     {
         // Retrieve Bearer Token
-        var canvasAuthData = _sessionStorageService.Retrieve<CanvasAuthToken>("CanvasAuthToken");
+        var canvasAuthData = _sessionStorageService.Retrieve<CanvasAuthToken>(CanvasAuthToken.Key);
         if (canvasAuthData.IsFailure) return Result.Failure<T>(canvasAuthData.Error);
 
         _httpClient.DefaultRequestHeaders.Authorization =

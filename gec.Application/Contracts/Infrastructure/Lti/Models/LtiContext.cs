@@ -2,6 +2,7 @@
 
 public class LtiContext
 {
+    public const string Key = "LtiContext";
     public User User { get; set; } = new();
     public Course Course { get; set; } = new();
 }

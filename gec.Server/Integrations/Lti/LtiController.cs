@@ -1,5 +1,7 @@
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Infrastructure.Lti.Models;
+using gec.Application.Contracts.Server.Configuration;
+using gec.Application.Contracts.Server.Fake;
 using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +14,25 @@ public class LtiController : BaseController
 {
     private readonly ILtiService _ltiService;
     private readonly ISessionStorageService _sessionStorageService;
+    private readonly IAppSettingsService _appSettingsService;
+    private readonly IFakeDataService _fakeDataService;
 
-    public LtiController(ILtiService ltiService, ISessionStorageService sessionStorageService)
+    public LtiController(ILtiService ltiService, ISessionStorageService sessionStorageService,
+        IAppSettingsService appSettingsService, IFakeDataService fakeDataService)
     {
         _ltiService = ltiService;
         _sessionStorageService = sessionStorageService;
+        _appSettingsService = appSettingsService;
+        _fakeDataService = fakeDataService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var ltiContext = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
+        if (_appSettingsService.Fake.UseFakeLti) 
+            return Ok(_fakeDataService.GetFakeData<LtiContext>(_appSettingsService.Fake.FakeLtiContextPath).Value);
+
+        var ltiContext = _sessionStorageService.Retrieve<LtiContext>(LtiContext.Key);
         if (ltiContext.IsFailure)
             return Error(ltiContext.Error);
 
@@ -48,7 +58,7 @@ public class LtiController : BaseController
         if (context.IsFailure)
             return Error(context.Error);
 
-        _sessionStorageService.Store("LtiContext", context.Value);
+        _sessionStorageService.Store(LtiContext.Key, context.Value);
 
         return Redirect("/api/lti/oauth/token/validate");
     }

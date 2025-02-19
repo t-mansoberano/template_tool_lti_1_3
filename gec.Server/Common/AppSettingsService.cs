@@ -8,7 +8,8 @@ public class AppSettingsService : IAppSettingsService
 {
     public AppSettingsService(IOptions<CanvasSettings> canvasSettings, IOptions<LtiSettings> ltiSettings,
         IOptions<CorsSettings> corsSettings, IOptions<SentrySettings> sentrySettings,
-        IOptions<LoggingSettings> loggingSettings, IOptions<SessionSettings> sessionSettings)
+        IOptions<LoggingSettings> loggingSettings, IOptions<SessionSettings> sessionSettings,
+        IOptions<FakeSettings> fakeSettings)
     {
         Canvas = canvasSettings.Value;
         Lti = ltiSettings.Value;
@@ -16,6 +17,7 @@ public class AppSettingsService : IAppSettingsService
         Sentry = sentrySettings.Value;
         Logging = loggingSettings.Value;
         Session = sessionSettings.Value;
+        Fake = fakeSettings.Value;
     }
 
     public CanvasSettings Canvas { get; }
@@ -24,4 +26,5 @@ public class AppSettingsService : IAppSettingsService
     public SentrySettings Sentry { get; }
     public LoggingSettings Logging { get; }
     public SessionSettings Session { get; }
+    public FakeSettings Fake { get; }
 }

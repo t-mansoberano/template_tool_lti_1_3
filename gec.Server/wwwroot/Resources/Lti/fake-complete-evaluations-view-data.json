@@ -1,0 +1,649 @@
+﻿{
+  "course": {
+    "id": "563421",
+    "key": "FAKE-101",
+    "name": "Curso Dummy"
+  },
+  "courseState": {
+    "totalStudents": 1,
+    "evaluatedStudents": 0,
+    "pendingStudents": 1,
+    "evaluationStatus": "Faltan estudiantes por evaluar"
+  },
+  "students": [
+    {
+      "id": 9909,
+      "loginId": "A30000110",
+      "name": "Alumno Dummy A30000110 ",
+      "status": "Completed",
+      "totalEvaluations": 5,
+      "completedEvaluations": 5,
+      "pendingEvaluations": 0
+    }
+  ],
+  "selectedStudent": null,
+  "studentEvidences": null,
+  "studentEvaluationResults": null,
+  "evaluationStructures": [
+    {
+      "id": "1",
+      "key": "Key-1",
+      "name": "Competencia 1",
+      "description": "Descripción de la competencia 1",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "9bee49da-5d0b-49d7-916e-11ae348e417c",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "46557f44-082f-450d-addd-5c26430ba845",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "b70e001f-f774-47e8-8772-9a86e57118be",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "169600c4-c072-4782-bf33-2c9807b358d1",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "key": "Key-2",
+      "name": "Competencia 2",
+      "description": "Descripción de la competencia 2",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "d7202a31-ab8a-44b6-813e-62c246846859",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "ac2e8cf5-2fa7-4723-9fc7-e80d944aa9be",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "f5fd8def-17ab-4fde-9a95-4a880073b96f",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "aa17a42f-d5bd-42de-b73d-d69271b18c8d",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "key": "Key-3",
+      "name": "Competencia 3",
+      "description": "Descripción de la competencia 3",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "636e6d5c-e7e6-442d-9100-43c97c6781b8",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "f6e350a1-d5e6-480e-b83a-304f3f8123b2",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "976f2652-dd4e-4235-b09a-d0368b6690e9",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "9e49df05-175a-4b9e-8704-3b1c41795569",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "key": "Key-4",
+      "name": "Competencia 4",
+      "description": "Descripción de la competencia 4",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "43921b18-d1cd-476b-98ad-84ae4dbf9a66",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "ebd88544-3ec6-47b2-b37e-86f6bfd2bb66",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "f3316d5a-cc25-4412-ae25-97475f38bc87",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "5a75edd0-33e2-4058-b358-7a8d51dddc6d",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "key": "Key-5",
+      "name": "Competencia 5",
+      "description": "Descripción de la competencia 5",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "86770b36-28e2-42e8-ad99-74ff858c63e1",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "5fefcf0c-9346-4cde-b343-a551513d6bbb",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "dc747e49-0140-46d0-84ef-cfdd99002dfa",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "47eb1896-f0d3-4785-b892-02318a9cc26f",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "key": "Key-6",
+      "name": "Competencia 6",
+      "description": "Descripción de la competencia 6",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "4bc0e0d8-35b1-4284-8647-a05b6908aca2",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "ac680bbf-8123-4e39-bde7-e4680898f51e",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "f17ee801-d0d7-47fd-a7dc-6e34cc0a5768",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "d332e99b-8218-4253-8617-2526f2ec700f",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "key": "Key-7",
+      "name": "Competencia 7",
+      "description": "Descripción de la competencia 7",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "363e7005-170a-49ec-bc70-275a1f1849bf",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "11e073fe-66dc-469e-ba47-ef9cd68a95ba",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "d18c87e4-b20c-4211-ab9d-e9dd808622ee",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "35a23f57-6434-4b80-a0c6-fc75f8c71e78",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "key": "Key-8",
+      "name": "Competencia 8",
+      "description": "Descripción de la competencia 8",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "a25a8858-41ce-4e08-8afd-3d867a93ee68",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "a14b38c8-8bc7-4123-921d-e8cbb78c7048",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "7de49d76-1aed-43c6-874a-8763ae61e5f0",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "1a63a133-9736-4175-81d4-0b2df8a72793",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "key": "Key-9",
+      "name": "Competencia 9",
+      "description": "Descripción de la competencia 9",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "c3ad6531-f27c-4445-8d41-a9f5bdcf7537",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "da854c65-601e-4b44-9ebb-6eeeda0b370e",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "fa2cc20d-ae30-40a9-9d03-370c4da26764",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "549ef50d-3861-4edd-a04a-85a08c08ab8c",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "key": "Key-10",
+      "name": "Competencia 10",
+      "description": "Descripción de la competencia 10",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "4724c99e-d26d-435b-a445-a391e138168c",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "9bdf4c43-e244-4a67-ac2b-a299ad4052d6",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "6ee2b519-196b-4288-afda-4ea5a9fccc51",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "437326c5-9e94-4dce-a073-87f6d26cb0ab",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "key": "Key-11",
+      "name": "Competencia 11",
+      "description": "Descripción de la competencia 11",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "23dbe642-8deb-4150-9c9b-254c51ef9c69",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "d54645cc-efc1-4bfb-846d-0c127a7b06bc",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "8bbb9c43-886e-4411-ad52-73fca202f684",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "61a47587-052d-472b-a27d-adcae5d7dc88",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "key": "Key-12",
+      "name": "Competencia 12",
+      "description": "Descripción de la competencia 12",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "a8b85af8-2877-4d5a-a8b2-0be120df570e",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "9296a02c-f94e-419d-8ddb-2d559efe7a28",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "472d8020-297d-4ddc-80f8-9d305c50c923",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "9cedb5d1-12c4-4289-99b0-5d0b72026d2c",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "key": "Key-13",
+      "name": "Competencia 13",
+      "description": "Descripción de la competencia 13",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "7352a931-4191-4a1e-aa20-572369bf79c9",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "1c100f85-961a-49bf-a85c-45e7291db12f",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "460206ac-a7e5-4f0c-8bce-f4686da0778b",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "a7a7bebb-4d49-4747-abd1-0dcda6f7d41e",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "key": "Key-14",
+      "name": "Competencia 14",
+      "description": "Descripción de la competencia 14",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "b088b982-f4ea-47fa-8319-ae0221d37666",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "02198024-cadd-49be-a49d-99a601e26130",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "e5618c79-c429-4832-8997-af6d2b93d192",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "b4a64519-5d98-4661-a4aa-ae56e81d5449",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "key": "Key-15",
+      "name": "Competencia 15",
+      "description": "Descripción de la competencia 15",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "cc20ad64-a6cb-47bf-8649-44a5b2ce3d17",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "66a16d10-515c-4ed0-8645-05600da8a845",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "6f3b177a-52f9-403b-89a8-dd60be3625c2",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "67ff6294-31c7-45b7-855b-966b9224f652",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "key": "Key-16",
+      "name": "Competencia 16",
+      "description": "Descripción de la competencia 16",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "d34009f8-797e-4a85-bd4a-a7375f0247c8",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "4b110600-60bb-40f5-8a58-63930e4ef812",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "62b9a52f-d201-4e89-99c2-a99fcdea48f1",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "9c5353d4-23f4-4c44-a39e-54acdae30478",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "key": "Key-17",
+      "name": "Competencia 17",
+      "description": "Descripción de la competencia 17",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "a230f195-8d45-4b49-821d-93f53390c382",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "757e9832-bca2-4fe8-a01a-a84eaa5ce006",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "85273442-f901-4289-9fe5-f6132b8871fa",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "4712e3f9-f435-4c35-ae5b-cbe7755dffa1",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "key": "Key-18",
+      "name": "Competencia 18",
+      "description": "Descripción de la competencia 18",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "c498b5d4-41e5-4e22-8c8e-6d18f7d28b95",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "e5f39fc2-e9d1-489c-a9fa-76a0c43a22d4",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "73b8460a-86da-4eee-9592-0de533aec630",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "7c0f4c34-670b-4775-9b90-fbc457d614a3",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "key": "Key-19",
+      "name": "Competencia 19",
+      "description": "Descripción de la competencia 19",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "ab0cf7eb-de55-4132-8f25-7569cdbfa9f3",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "ede432bd-d368-4329-973e-ee440d57d9f0",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "d40d7628-c4ba-462a-a3ba-98e4cb97da08",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "6a9bdca7-286b-4bdc-9104-f1b62d921313",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "key": "Key-20",
+      "name": "Competencia 20",
+      "description": "Descripción de la competencia 20",
+      "type": "Competency",
+      "parentId": null,
+      "parentName": null,
+      "descriptors": [
+        {
+          "id": "40572544-13f8-4fe4-8659-13c25ff34538",
+          "level": "Destacado",
+          "description": "Descripción para el nivel Destacado"
+        },
+        {
+          "id": "9f30a76d-43ca-45c9-9436-4a8deabb5bf1",
+          "level": "Sólido",
+          "description": "Descripción para el nivel Sólido"
+        },
+        {
+          "id": "22aeeb05-108f-4142-ae93-6d4528617576",
+          "level": "Básico",
+          "description": "Descripción para el nivel Básico"
+        },
+        {
+          "id": "fb971654-5452-4056-968d-a9dccf9f77d1",
+          "level": "Incipiente",
+          "description": "Descripción para el nivel Incipiente"
+        }
+      ]
+    }
+  ]
+}

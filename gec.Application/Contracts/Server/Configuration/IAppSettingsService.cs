@@ -10,4 +10,5 @@ public interface IAppSettingsService
     SentrySettings Sentry { get; }
     LoggingSettings Logging { get; }
     SessionSettings Session { get; }
+    FakeSettings Fake { get; }
 }

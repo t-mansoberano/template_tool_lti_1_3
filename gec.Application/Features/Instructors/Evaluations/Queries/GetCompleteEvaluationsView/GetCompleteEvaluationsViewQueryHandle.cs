@@ -36,7 +36,7 @@ public class GetCompleteEvaluationsViewHandle : IRequestHandler<GetCompleteEvalu
             if (!validationResult.IsValid)
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(validationResult.ErrorMessages());
 
-            var ltiContex = _sessionStorageService.Retrieve<LtiContext>("LtiContext");
+            var ltiContex = _sessionStorageService.Retrieve<LtiContext>(LtiContext.Key);
             if (ltiContex.IsFailure)
                 return Result.Failure<GetCompleteEvaluationsViewRespond>(ltiContex.Error);
 

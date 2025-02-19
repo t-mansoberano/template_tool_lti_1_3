@@ -36,7 +36,7 @@ public class CanvasController : BaseController
         if (tokenResponse.IsFailure)
             return Error(tokenResponse.Error);
 
-        _sessionStorageService.Store("CanvasAuthToken", tokenResponse.Value);
+        _sessionStorageService.Store(CanvasAuthToken.Key, tokenResponse.Value);
 
         return Redirect("/");
     }
@@ -45,7 +45,7 @@ public class CanvasController : BaseController
     [Route("api/lti/oauth/token/validate")]
     public async Task<IActionResult> ValidateOrRefreshToken()
     {
-        var canvasAuthToken = _sessionStorageService.Retrieve<CanvasAuthToken>("CanvasAuthToken");
+        var canvasAuthToken = _sessionStorageService.Retrieve<CanvasAuthToken>(CanvasAuthToken.Key);
         if (canvasAuthToken.IsFailure)
             return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
 
@@ -53,7 +53,7 @@ public class CanvasController : BaseController
         if (canvasAuthToken.IsFailure)
             return Redirect(_canvasOAuthService.BuildAuthorizationUrl());
 
-        _sessionStorageService.Store("CanvasAuthToken", canvasAuthToken.Value);
+        _sessionStorageService.Store(CanvasAuthToken.Key, canvasAuthToken.Value);
 
         return Redirect("/");
     }

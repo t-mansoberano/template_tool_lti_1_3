@@ -41,17 +41,17 @@ public class GetStudentCourseEvaluationsViewQueryHandle : IRequestHandler<GetStu
         var instructorsResult = await _enrollmentsService.GetInstructorsByCourseAsync(request.CourseId);
         if (instructorsResult.IsFailure)
             return Result.Failure<GetStudentCourseEvaluationsViewRespond>(instructorsResult.Error);
-
+        
         var instructorIds = instructorsResult.Value.Select(e => e.UserId).ToList();
-
+        
         var submissionsResult =
             await _submissionsService.GetSubmissionsByStudentAsync(request.CourseId, request.UserId);
         if (submissionsResult.IsFailure)
             return Result.Failure<GetStudentCourseEvaluationsViewRespond>(submissionsResult.Error);
-
+        
         var studentsEvidences =
             _canvasSubmissionStudentEvidenceMapper.MapWithDependencies(submissionsResult.Value, instructorIds);
-
+        
         var studentEvaluationResults = await _getStudentEvaluationsRepository.Get(request.CourseId, request.UserId);
         if (studentEvaluationResults.IsFailure)
             return Result.Failure<GetStudentCourseEvaluationsViewRespond>(studentEvaluationResults.Error);

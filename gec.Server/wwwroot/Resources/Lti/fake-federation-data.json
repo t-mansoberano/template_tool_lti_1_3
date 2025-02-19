@@ -1,0 +1,18 @@
+{
+  "user": {
+    "name": "Tester Fake",
+    "email": "tester@fake.com",
+    "userId": "U9999",
+    "isInstructor": false,
+    "isStudent": false,
+    "isExternalCollaborator": true,
+    "isWithoutRole": false,
+    "picture": "https://via.placeholder.com/128"
+  },
+  "course": {
+    "id": "563421",
+    "label": "FAKE-101",
+    "title": "Curso Dummy",
+    "type": "Mock"
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "studentEvidences": {
+    "studentId": "9909",
+    "evidences": [
+      {
+        "id": "473322728",
+        "name": "Evidencia.1.Prueba con punto para factibilidad 170125",
+        "feedback": "No ve nada de entrega, favor de subir información",
+        "grade": 0,
+        "speedGraderLink": "https://tecdemonterrey.test.instructure.com/courses/563421/gradebook/speed_grader?assignment_id=18344143",
+        "fileType": "",
+        "previewUrl": "https://tecdemonterrey.test.instructure.com/courses/563421/assignments/18344143/submissions/9909?preview=1&version=1"
+      },
+      {
+        "id": "473323128",
+        "name": "Evidencia.1.Prueba factibilidad 170125",
+        "feedback": "Muy bien, sugiero agregar una portada y algunos ejemplos ilustrativos",
+        "grade": 90,
+        "speedGraderLink": "https://tecdemonterrey.test.instructure.com/courses/563421/gradebook/speed_grader?assignment_id=18344157",
+        "fileType": "other",
+        "previewUrl": "https://tecdemonterrey.test.instructure.com/courses/563421/assignments/18344157/submissions/9909?preview=1&version=2"
+      },
+      {
+        "id": "473329236",
+        "name": "Evidencia.2.Prueba factibilidad fuera de modulo evidencias170125",
+        "feedback": "nada puso texto Uy qué triste okay",
+        "grade": 100,
+        "speedGraderLink": "https://tecdemonterrey.test.instructure.com/courses/563421/gradebook/speed_grader?assignment_id=18344474",
+        "fileType": "video",
+        "previewUrl": "https://tecdemonterrey.test.instructure.com/courses/563421/assignments/18344474/submissions/9909?preview=1&version=3"
+      }
+    ]
+  },
+  "studentEvaluationResults": {
+    "studentId": "1",
+    "evaluationResults": [
+      {
+        "id": "1",
+        "achievementLevel": "",
+        "comments": "Dummy comment 802",
+        "isEvaluated": false
+      },
+      {
+        "id": "2",
+        "achievementLevel": "",
+        "comments": "Dummy comment 885",
+        "isEvaluated": false
+      },
+      {
+        "id": "3",
+        "achievementLevel": "Incipiente",
+        "comments": "Dummy comment 518",
+        "isEvaluated": true
+      },
+      {
+        "id": "4",
+        "achievementLevel": "",
+        "comments": "Dummy comment 641",
+        "isEvaluated": false
+      },
+      {
+        "id": "5",
+        "achievementLevel": "Incipiente",
+        "comments": "Dummy comment 111",
+        "isEvaluated": true
+      },
+      {
+        "id": "6",
+        "achievementLevel": "",
+        "comments": "Dummy comment 902",
+        "isEvaluated": false
+      },
+      {
+        "id": "7",
+        "achievementLevel": "",
+        "comments": "Dummy comment 571",
+        "isEvaluated": false
+      },
+      {
+        "id": "8",
+        "achievementLevel": "Destacado",
+        "comments": "Dummy comment 237",
+        "isEvaluated": true
+      },
+      {
+        "id": "9",
+        "achievementLevel": "NoElementosSuficientes",
+        "comments": "Dummy comment 822",
+        "isEvaluated": true
+      },
+      {
+        "id": "10",
+        "achievementLevel": "",
+        "comments": "Dummy comment 627",
+        "isEvaluated": false
+      },
+      {
+        "id": "11",
+        "achievementLevel": "Sólido",
+        "comments": "Dummy comment 824",
+        "isEvaluated": true
+      },
+      {
+        "id": "12",
+        "achievementLevel": "",
+        "comments": "Dummy comment 394",
+        "isEvaluated": false
+      },
+      {
+        "id": "13",
+        "achievementLevel": "NoElementosSuficientes",
+        "comments": "Dummy comment 144",
+        "isEvaluated": true
+      },
+      {
+        "id": "14",
+        "achievementLevel": "",
+        "comments": "Dummy comment 308",
+        "isEvaluated": false
+      },
+      {
+        "id": "15",
+        "achievementLevel": "",
+        "comments": "Dummy comment 543",
+        "isEvaluated": false
+      },
+      {
+        "id": "16",
+        "achievementLevel": "Básico",
+        "comments": "Dummy comment 113",
+        "isEvaluated": true
+      },
+      {
+        "id": "17",
+        "achievementLevel": "",
+        "comments": "Dummy comment 769",
+        "isEvaluated": false
+      },
+      {
+        "id": "18",
+        "achievementLevel": "",
+        "comments": "Dummy comment 764",
+        "isEvaluated": false
+      },
+      {
+        "id": "19",
+        "achievementLevel": "",
+        "comments": "Dummy comment 147",
+        "isEvaluated": false
+      },
+      {
+        "id": "20",
+        "achievementLevel": "Básico",
+        "comments": "Dummy comment 145",
+        "isEvaluated": true
+      }
+    ]
+  }
+}
