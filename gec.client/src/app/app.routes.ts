@@ -45,6 +45,11 @@ export const appRoutes: Routes = [
         path: 'external-collaborator',
         component: ExternelCollaborator,
         canActivate: [authGuard]
+      },
+      {
+        path: 'redirect',
+        component: ExternelCollaborator,
+        canActivate: [authGuard]
       }
     ],
   },

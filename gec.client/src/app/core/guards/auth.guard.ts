@@ -21,6 +21,11 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
+  if (route.routeConfig?.path === 'redirect') {
+    router.navigate(['/external-collaborator']);
+    return false;
+  }
+
   // if (route.routeConfig?.path === 'external-collaborator' && !authService.isExternalCollaborator()) {
   //   router.navigate(['/error']);
   //   return false;
