@@ -50,7 +50,6 @@ export class StudentEvaluationComponent implements OnInit {
 
   filteredEvaluations: EvaluationStructureModel[] = [];
   currentFilter: 'all' | 'evaluated' | 'pending' = 'all';
-  private evaluationCache: { [id: string]: EvaluationResultModel } = {};
 
   public commentControls: { [evaluationId: string]: FormControl } = {};
   getOrCreateControl(evaluationId: string, initialValue: string): FormControl {
@@ -63,14 +62,6 @@ export class StudentEvaluationComponent implements OnInit {
     this.commentControls[evaluationId] = newControl;
     return newControl;
   }
-  // commentForm: FormGroup = new FormGroup({
-  //   comments: new FormControl<string>("", Validators.required),
-  // });
-  //
-  // getFormControl(name: string, value: string): FormControl {
-  //   this.commentForm.get(name)?.setValue(value);
-  //   return this.commentForm.get(name) as FormControl;
-  // }
 
   // Array para mantener el estado de expansión de cada acordeón
   expandedStates: boolean[] = [];
@@ -81,11 +72,7 @@ export class StudentEvaluationComponent implements OnInit {
   }
 
   getEvaluationResult(evaluationId: string): EvaluationResultModel {
-    if (this.evaluationCache[evaluationId]) {
-      return this.evaluationCache[evaluationId];
-    }
     const result = this.evaluationResults.evaluationResults.find(result => result.id === evaluationId) || {} as EvaluationResultModel;
-    this.evaluationCache[evaluationId] = result;
     return result;
   }
 
@@ -131,8 +118,37 @@ export class StudentEvaluationComponent implements OnInit {
     return levels[level] || 'normal';
   }
 
-  handleCheckboxChange(evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {
-    console.log(evaluationStructure, descriptor);
+  handleCheckboxChange($event: any, evaluationStructure: EvaluationStructureModel, descriptor: DescriptorModel) {
+    const evalResult = this.getEvaluationResult(evaluationStructure.id);
+
+    // Si el evento proviene del checkbox (descriptor.level === 'NoElementosSuficientes')
+    if (descriptor.level === 'NoElementosSuficientes') {
+      // Si actualmente se tenía seleccionado algún list-group-item (es decir, achievementLevel no es "NoElementosSuficientes" ni vacío)
+      if ($event.currentTarget.checked) {
+        // Se deselecciona el list-group-item y se activa el checkbox
+        evalResult.achievementLevel = 'NoElementosSuficientes';
+        evalResult.isEvaluated = true;
+      } else {
+        // Si ya estaba seleccionado el checkbox, se lo deselecciona (opción: asignar cadena vacía)
+        evalResult.achievementLevel = '';
+        evalResult.isEvaluated = false;
+      }
+    } else {
+      // Si el evento proviene de un list-group-item
+      // Si el checkbox estaba seleccionado, se deselecciona asignando el valor del item clickeado
+      if (evalResult.achievementLevel === 'NoElementosSuficientes') {
+        evalResult.achievementLevel = descriptor.level;
+        evalResult.isEvaluated = true;
+      } else if (evalResult.achievementLevel === descriptor.level) {
+        // Si se hace clic sobre el mismo item activo, se puede alternar el estado (lo deselecciona)
+        evalResult.achievementLevel = '';
+        evalResult.isEvaluated = false;
+      } else {
+        // Si se hace clic en un item distinto, se asigna ese valor
+        evalResult.achievementLevel = descriptor.level;
+        evalResult.isEvaluated = true;
+      }
+    }
   }
 
   protected readonly String = String;

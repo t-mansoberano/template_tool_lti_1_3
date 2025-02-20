@@ -45,13 +45,10 @@ export class AuthService {
 
 
   getUserClaims(): Observable<UserClaims> {
-    debugger;
     return this.apiService.get('/api/Home/GetUserClaims').pipe(
       map((respondModel) => {
-        debugger;
         const userClaims = respondModel.result as UserClaims;
         console.log('User Claims:', respondModel);
-        debugger;
         return userClaims;
       }),
       catchError((err) => {

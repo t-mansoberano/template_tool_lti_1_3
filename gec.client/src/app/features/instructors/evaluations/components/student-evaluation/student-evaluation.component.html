@@ -67,25 +67,23 @@
           [ariaDescribedby]="''"
           [ariaLabel]="''"
           [ariaLabelledby]="''"
+          (change)="handleCheckboxChange($event, evaluationStructure, {id: 'NoElementosSuficientes', level: 'NoElementosSuficientes', description: ''})"
         ></bmb-checkbox>
       </div>
-      <div class="card-container">
+      <div>
         <bmb-list-group [borderRadius]="'none'" [margin]="'none'" [borderType]="'rounded'" [showControls]="true">
           <bmb-list-group-item
-            *ngFor="let descriptor of evaluationStructure.descriptors" [id]="descriptor.level"
+            *ngFor="let descriptor of evaluationStructure.descriptors"
+            [id]="String(evaluationStructure.id) + String(descriptor.level)"
             [isActive]="evalResult.isEvaluated && evalResult.id === evaluationStructure.id && evalResult.achievementLevel === descriptor.level"
-            (click)="handleCheckboxChange(evaluationStructure, descriptor)"
+            (click)="handleCheckboxChange({}, evaluationStructure, descriptor)"
           >
-            <div class="student-container">
-              <div class="student-info">
-                <bmb-badge
-                  [appearance]="getBadgeAppearance(descriptor.level)"
-                  [text]="descriptor.level"
-                  [container]="true"
-                ></bmb-badge>
-                <p class="bmb_margin-s">{{ descriptor.description }}</p>
-              </div>
-            </div>
+            <bmb-badge
+              [appearance]="getBadgeAppearance(descriptor.level)"
+              [text]="descriptor.level"
+              [container]="true"
+            ></bmb-badge>
+            <p class="bmb_margin-s">{{ descriptor.description }}</p>
           </bmb-list-group-item>
         </bmb-list-group>
       </div>
@@ -103,7 +101,6 @@
         ></bmb-input>
         <div class="button-row">
           <button
-            *ngIf="!evalResult.isEvaluated"
             bmbButton
             appearance="secondary-outlined"
             size="small"
@@ -117,7 +114,6 @@
             Cancelar
           </button>
           <button
-            *ngIf="!evalResult.isEvaluated"
             bmbButton
             appearance="primary"
             icon="save"
