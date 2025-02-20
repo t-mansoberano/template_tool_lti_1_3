@@ -13,9 +13,7 @@ Aplicación LTI para evaluaciones por competencias desde Canvas.
 3. [Ventajas de la Arquitectura](docs/ventajas.md)
 4. [Justificación Técnica](docs/justificacion_tecnica.md)
 5. [Paquetes Externos Utilizados](docs/paquetes_externos.md)
-6. [Pruebas Unitarias](docs/pruebas_unitarias.md)
-    - [Pruebas en .NET Core](docs/pruebas_net_core.md)
-    - [Pruebas en Angular](docs/pruebas_angular.md)
+6. [Pruebas Unitarias](docs/pruebas_net_core.md)
 7. [Conclusión](docs/conclusion.md)
 8. Anexos
    - [Diagrama de Dominio](docs/anexos_diagrama_dominio.md)

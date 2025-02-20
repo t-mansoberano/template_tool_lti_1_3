@@ -2,6 +2,8 @@
 using FluentAssertions;
 using gec.Application.Contracts.Infrastructure.Lti;
 using gec.Application.Contracts.Infrastructure.Lti.Models;
+using gec.Application.Contracts.Server.Configuration;
+using gec.Application.Contracts.Server.Fake;
 using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
 using gec.Server.Integrations.Lti;
@@ -17,6 +19,8 @@ public class LtiControllerTests
 {
     private Mock<ILtiService> _mockLtiService;
     private Mock<ISessionStorageService> _mockSessionStorageService;
+    private Mock<IAppSettingsService> _mockAppSettingsService;
+    private Mock<IFakeDataService> _mockFakeDataService;
     private LtiController _controller;
 
     [SetUp]
@@ -24,7 +28,9 @@ public class LtiControllerTests
     {
         _mockLtiService = new Mock<ILtiService>();
         _mockSessionStorageService = new Mock<ISessionStorageService>();
-        // _controller = new LtiController(_mockLtiService.Object, _mockSessionStorageService.Object);
+        _mockAppSettingsService = new Mock<IAppSettingsService>();
+        _mockFakeDataService = new Mock<IFakeDataService>();
+        _controller = new LtiController(_mockLtiService.Object, _mockSessionStorageService.Object, _mockAppSettingsService.Object, _mockFakeDataService.Object);
     }
 
     [Test]

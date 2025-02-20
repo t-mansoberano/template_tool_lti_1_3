@@ -30,4 +30,9 @@
         <ProjectReference Include="..\gec.Server\gec.Server.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Application\Features\Instructors\Evaluations\Queries\GetCompleteEvaluationsView\" />
+      <Folder Include="Server\Features\Instructors\Evaluations\" />
+    </ItemGroup>
+
 </Project>
