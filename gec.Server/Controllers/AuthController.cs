@@ -370,30 +370,35 @@ namespace decisiones_estudiantiles.Server.Controllers
             return StatusCode(401);
         }
 
-
         [Route("/")]
         public IActionResult Index()
         {
-
-#if DEBUG
-            return Redirect(Url.Content("~/"));
-#else
-
-            if (User.Identity.IsAuthenticated)
-            {
-              
-                return Redirect(Url.Content("~/redirect"));
-
-            }
-            else
-            {
-                
-                return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2Fredirect"));
-
-
-            }
-#endif
+           return Redirect(Url.Content("~/"));
         }
+
+//         [Route("/")]
+//         public IActionResult Index()
+//         {
+//
+// #if DEBUG
+//             return Redirect(Url.Content("~/"));
+// #else
+//
+//             if (User.Identity.IsAuthenticated)
+//             {
+//               
+//                 return Redirect(Url.Content("~/redirect"));
+//
+//             }
+//             else
+//             {
+//                 
+//                 return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2Fredirect"));
+//
+//
+//             }
+// #endif
+//         }
 
 
 
