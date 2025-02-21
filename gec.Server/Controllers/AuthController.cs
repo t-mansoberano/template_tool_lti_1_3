@@ -373,35 +373,19 @@ namespace decisiones_estudiantiles.Server.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-           return Redirect(Url.Content("~/redirect"));
+#if DEBUG
+            return Redirect(Url.Content("~/"));
+#else
+            if (User.Identity.IsAuthenticated)
+            {
+                return Redirect(Url.Content("~/redirect"));
+            }
+            else
+            {
+                return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2Fredirect"));
+            }
+#endif
         }
-
-//         [Route("/")]
-//         public IActionResult Index()
-//         {
-//
-// #if DEBUG
-//             return Redirect(Url.Content("~/"));
-// #else
-//
-//             if (User.Identity.IsAuthenticated)
-//             {
-//               
-//                 return Redirect(Url.Content("~/redirect"));
-//
-//             }
-//             else
-//             {
-//                 
-//                 return Redirect(Url.Content("~/Auth/Login?ReturnUrl=%2Fredirect"));
-//
-//
-//             }
-// #endif
-//         }
-
-
-
 
     }
 }
