@@ -24,12 +24,12 @@ public class Program
         builder.WebHost.ConfigureSentry(builder.Configuration);
 
         // Integrar la federación mediante métodos de extensión
-        builder.Services.AddFederationServices(builder.Configuration);
+        // builder.Services.AddFederationServices(builder.Configuration);
 
         var app = builder.Build();
 
         // Configurar middleware de federación
-        app.UseFederationMiddleware();
+        // app.UseFederationMiddleware();
 
         // Configurar middleware
         app.UseCustomMiddleware();
