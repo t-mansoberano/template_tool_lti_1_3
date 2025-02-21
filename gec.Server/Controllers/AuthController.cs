@@ -373,7 +373,7 @@ namespace decisiones_estudiantiles.Server.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-           return Redirect(Url.Content("~/"));
+           return Redirect(Url.Content("~/redirect"));
         }
 
 //         [Route("/")]
