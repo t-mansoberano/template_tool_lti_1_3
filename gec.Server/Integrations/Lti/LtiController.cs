@@ -4,11 +4,13 @@ using gec.Application.Contracts.Server.Configuration;
 using gec.Application.Contracts.Server.Fake;
 using gec.Application.Contracts.Server.Session;
 using gec.Server.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gec.Server.Integrations.Lti;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/lti")]
 public class LtiController : BaseController
 {

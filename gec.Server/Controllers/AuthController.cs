@@ -51,6 +51,7 @@ namespace decisiones_estudiantiles.Server.Controllers
             binding.SetRelayStateQuery(new Dictionary<string, string> { { relayStateReturnUrl, returnUrl ?? Url.Content("~/redirect") } });
 
             return binding.Bind(new Saml2AuthnRequest(Saml2Config)).ToActionResult();
+            //return Redirect("/redirect");
         }
 
         [Route("AssertionConsumerService")]

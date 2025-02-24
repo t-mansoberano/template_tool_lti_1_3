@@ -70,20 +70,20 @@ namespace gec.Server.Startup;
             // Solo aplicar la configuración de federación en ambientes de publicación
             app.UseSaml2();
 
-            // Ejemplo de mapeo de rutas para forzar autenticación en ciertos endpoints (por ejemplo, API)
-            app.MapWhen(context =>
-            {
-                return !context.User.Identity.IsAuthenticated &&
-                       context.Request.Path.Value.StartsWith("/api/", StringComparison.OrdinalIgnoreCase);
-            },
-            config =>
-            {
-                config.Run(async context =>
-                {
-                    context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-                    await context.Response.CompleteAsync();
-                });
-            });
+            //// Ejemplo de mapeo de rutas para forzar autenticación en ciertos endpoints (por ejemplo, API)
+            //app.MapWhen(context =>
+            //{
+            //    return !context.User.Identity.IsAuthenticated &&
+            //           context.Request.Path.Value.StartsWith("/api/", StringComparison.OrdinalIgnoreCase);
+            //},
+            //config =>
+            //{
+            //    config.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+            //        await context.Response.CompleteAsync();
+            //    });
+            //});
 #endif
             return app;
         }
